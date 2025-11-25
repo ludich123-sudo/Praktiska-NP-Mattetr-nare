@@ -15,7 +15,9 @@
                             red: '#E3004F', // Praktiskas rosa/röda färg
                             dark: '#1F2937', // Mörkgrå för text
                             light: '#F9FAFB', // Ljus bakgrund
-                            hover: '#C10042'  // Mörkare nyans för hover
+                            hover: '#C10042',  // Mörkare nyans för hover
+                            gray: '#b9b9b9',   // Ny neutral grå
+                            orange: '#f66909'  // Din valda orange färg
                         }
                     },
                     fontFamily: {
@@ -25,9 +27,24 @@
             }
         }
     </script>
+    
+    <!-- FIX: Konfigurera MathJax ATT acceptera dollartecken ($) som matematik -->
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
         
+        /* HÄR LÄGGER VI TILL DIN SPECIFIKA FONT */
+        .font-praktiska-stencil {
+            font-family: "PF DIN Stencil B Light", "Inter", sans-serif;
+        }
+
         mjx-container { display: inline-block; margin: 0; padding: 0; font-size: 1.1rem; text-align: left; }
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
         #progressBar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -101,11 +118,11 @@
         }
         .calculator-wrapper { transition: opacity 0.3s, transform 0.3s; }
 
-        /* Custom Scrollbar för snyggare look */
+        /* Custom Scrollbar för snyggare look - NEUTRAL GRÅ (#b9b9b9) */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #E3004F; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #C10042; }
+        ::-webkit-scrollbar-thumb { background: #b9b9b9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #999999; }
 
     </style>
 </head>
@@ -116,14 +133,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20">
                 <div class="flex-shrink-0 flex items-center">
-                    <!-- Logotyp / Text -->
-                    <div class="flex flex-col">
-                        <span class="text-2xl font-extrabold text-gray-900 tracking-tight">PRAKTISKA</span>
-                        <span class="text-xs font-semibold text-praktiska-red tracking-widest uppercase">Gymnasiet</span>
-                    </div>
+                    <!-- Logotyp (BILD) -->
+                    <img src="https://praktiska.se/wp-content/uploads/2025/11/praktiskalogorgb.svg" alt="Praktiska Gymnasiet" class="h-12 w-auto">
                 </div>
                 <div class="flex items-center">
-                     <button id="toggleCalculatorBtn" class="bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium py-2 px-4 rounded-full transition flex items-center gap-2">
+                     <!-- Kalkylatorknapp med #f66909 text -->
+                     <button id="toggleCalculatorBtn" class="bg-gray-100 text-[#f66909] hover:bg-gray-200 font-medium py-2 px-4 rounded-full transition flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                         <span class="hidden sm:inline">Kalkylator</span>
                     </button>
@@ -169,8 +184,10 @@
                 
                 <!-- Toppdel med Rubrik -->
                 <div class="bg-white p-8 pb-4 border-b border-gray-100">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Matematiktränare</h1>
-                    <p class="text-gray-500">Träna inför de nationella proven</p>
+                    <!-- Rubrik med färg #f66909 -->
+                    <h1 class="text-3xl md:text-4xl font-bold text-[#f66909] mb-2 font-praktiska-stencil">Matematiktränare</h1>
+                    <!-- Texten under nu vänsterjusterad (borttagen text-center) -->
+                    <p class="text-gray-500 mb-6 text-left">Träna på typiska uppgifter för Nationella proven</p>
                 </div>
 
                 <div class="p-6 md:p-8">
@@ -179,7 +196,7 @@
                     <div id="modeSelector" class="mb-8">
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Välj Läge</label>
                         <div class="relative">
-                            <select id="trainingMode" class="block w-full pl-4 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-praktiska-red focus:border-praktiska-red sm:text-sm rounded-lg bg-gray-50">
+                            <select id="trainingMode" class="block w-full pl-4 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange sm:text-sm rounded-lg bg-gray-50">
                                 <option value="campaign">🚀 Kapitelträning (Strukturerad)</option>
                                 <option value="free">🎯 Typuppgifter nationella proven</option>
                             </select>
@@ -193,12 +210,13 @@
                     <div class="flex items-center justify-between mb-2 px-1">
                         <div class="text-sm font-medium text-gray-500">Dina framsteg</div>
                         <div class="flex gap-4 text-sm font-bold">
-                            <span class="text-praktiska-red">Rätt: <span id="scoreDisplay">0</span></span>
+                            <span class="text-green-600">Rätt: <span id="scoreDisplay">0</span></span>
                             <span class="text-gray-400">Totalt: <span id="totalDisplay">0</span></span>
                         </div>
                     </div>
+                    <!-- Progressbar (Orange) -->
                     <div class="w-full bg-gray-100 rounded-full h-3 mb-8 overflow-hidden">
-                        <div id="progressBar" class="bg-praktiska-red h-3 rounded-full" style="width: 0%"></div>
+                        <div id="progressBar" class="bg-praktiska-orange h-3 rounded-full" style="width: 0%"></div>
                     </div>
 
                     <!-- Streak-box (Endast kampanj) -->
@@ -216,7 +234,7 @@
                         <!-- Typuppgifter Filters (Utan Svårighetsgrad) -->
                         <div id="freeTrainingFilters" class="grid grid-cols-1 sm:grid-cols-2 gap-4 hidden">
                             <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nivå</label>
-                                <select id="levelFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-red focus:border-praktiska-red"><option value="Alla">Alla Nivåer</option><option value="Åk 9">Åk 9</option><option value="Ma 1">Ma 1</option><option value="Ma 2">Ma 2</option></select>
+                                <select id="levelFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-orange focus:border-praktiska-orange"><option value="Alla">Alla Nivåer</option><option value="Åk 9">Åk 9</option><option value="Ma 1">Ma 1</option><option value="Ma 2">Ma 2</option></select>
                             </div>
                             <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ämne</label>
                                 <select id="topicFilter" disabled class="w-full p-2.5 border border-gray-300 rounded-md bg-gray-100"><option value="Alla">Alla Ämnen</option></select>
@@ -226,7 +244,7 @@
                         <!-- Kampanj Filters -->
                         <div id="campaignFilters" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="md:col-span-1"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kampanj</label>
-                                <select id="campaignNameFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-red focus:border-praktiska-red">
+                                <select id="campaignNameFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-orange focus:border-praktiska-orange">
                                     <option value="Procent">Procent</option>
                                     <option value="Sannolikhet">Sannolikhet</option>
                                     <option value="FunktionerSamband">Funktioner</option>
@@ -237,21 +255,21 @@
                                 </select>
                             </div>
                             <div class="md:col-span-1"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Årskurs</label>
-                                <select id="campaignLevelFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-red focus:border-praktiska-red">
+                                <select id="campaignLevelFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-orange focus:border-praktiska-orange">
                                     <option value="Åk 9">Åk 9</option>
                                     <option value="Ma 1">Ma 1</option>
                                     <option value="Ma 2">Ma 2</option>
                                 </select>
                             </div>
                             <div class="md:col-span-3"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kapitel Del</label>
-                                <select id="chapterPartFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-red focus:border-praktiska-red"></select>
+                                <select id="chapterPartFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-orange focus:border-praktiska-orange"></select>
                             </div>
                         </div>
                     </div>
 
                     <!-- Status & Laddare -->
                     <div id="statusMessage" class="text-center py-12 hidden">
-                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-200 border-t-praktiska-red mb-2"></div>
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-200 border-t-praktiska-orange mb-2"></div>
                         <p class="text-gray-500">Laddar uppgifter...</p>
                     </div>
 
@@ -266,7 +284,8 @@
                         <div id="answerContainer" class="mb-8"></div>
 
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <button id="checkAnswerBtn" class="flex-1 bg-praktiska-red text-white text-lg font-bold py-4 px-6 rounded-xl shadow-md hover:bg-praktiska-hover transform hover:-translate-y-0.5 transition duration-200">
+                            <!-- Orange knapp -->
+                            <button id="checkAnswerBtn" class="flex-1 bg-praktiska-orange text-white text-lg font-bold py-4 px-6 rounded-xl shadow-md hover:bg-[#d55a08] transform hover:-translate-y-0.5 transition duration-200">
                                 Rätta Svar
                             </button>
                             <button id="nextProblemBtn" class="flex-1 bg-gray-800 text-white text-lg font-bold py-4 px-6 rounded-xl shadow-md hover:bg-gray-900 transform hover:-translate-y-0.5 transition duration-200" style="display: none;">
@@ -305,7 +324,7 @@
 
     <!-- JAVASCRIPT -->
     <script type="module">
-        console.log("Laddar math_trainer.html (Praktiska Design + Single Count)...");
+        console.log("Laddar math_trainer.html (Praktiska + Orange UI)...");
         
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
@@ -401,7 +420,6 @@
         window.userId = null;
         window.appId = appId;
         
-        // Appens variabler
         let allProblems = []; 
         let currentProblem = null;
         let filteredProblems = [];
@@ -437,7 +455,6 @@
         
         const levelFilter = document.getElementById('levelFilter');
         const topicFilter = document.getElementById('topicFilter');
-        // difficultyFilter BORTTAGET
         
         const campaignNameFilter = document.getElementById('campaignNameFilter');
         const campaignLevelFilter = document.getElementById('campaignLevelFilter');
@@ -447,7 +464,7 @@
         const solutionText = document.getElementById('solutionText');
         const showSolutionBtn = document.getElementById('showSolutionBtn');
         const toggleCalculatorBtn = document.getElementById('toggleCalculatorBtn'); 
-        const calculatorWrapper = document.getElementById('calculatorWrapper'); 
+        const calculatorWrapper = document.getElementById('calculatorWrapper');  
         const calcDisplay = document.getElementById('calcDisplay'); 
 
         
@@ -466,10 +483,17 @@
             }
         }
         
-        // --- LÄGESHANTERING ---
+        function formatMathText(text) {
+            if (!text) return "";
+            if (text.includes("\\frac")) return text;
+            
+            return text.replace(/(\d+)\/(\d+)/g, (match, p1, p2) => {
+                return `$\\frac{${p1}}{${p2}}$`;
+            });
+        }
+
         function switchMode() {
             currentMode = trainingMode.value;
-            
             resetScore();
             seenProblemIndices = [];
             problemCard.style.display = 'none';
@@ -484,11 +508,8 @@
                 campaignFilters.classList.remove('hidden');
                 modeDescription.textContent = "Träna strukturerat kapitel för kapitel. Klara 7 uppgifter i rad för att få en pokal! 🏆";
             }
-            
             loadAllProblems();
         }
-
-        // --- KÄRNFUNKTIONER ---
 
         function initializeFirebase() {
             try {
@@ -617,7 +638,6 @@
             if (currentMode === 'free') {
                 const selectedLevel = levelFilter.value;
                 const selectedTopic = topicFilter.value;
-                // Svårighetsgrad borttagen
                 
                 if (selectedLevel !== 'Alla') {
                     tempFiltered = tempFiltered.filter(p => p.level === selectedLevel);
@@ -670,11 +690,13 @@
         function renderProblem(problem) {
             if (!problem) return;
 
-            const question = problem.question_sv || '';
+            let question = problem.question_sv || '';
+            question = formatMathText(question);
+
             if (question.trim() === '') {
                 problemText.textContent = "(Uppgiftstext saknas i databasen!)";
             } else {
-                problemText.textContent = question;
+                problemText.innerHTML = question;
             }
 
             feedback.style.display = "none";
@@ -697,12 +719,12 @@
             if (type === 'number') {
                 answerContainer.innerHTML = `
                     <label for="answerInput" class="block text-sm font-bold text-gray-700 mb-1">Svar (endast siffror):</label>
-                    <input type="number" id="answerInput" class="w-full p-3.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-red focus:border-praktiska-red focus:outline-none text-lg placeholder-gray-400" placeholder="Skriv ditt svar...">
+                    <input type="number" id="answerInput" class="w-full p-3.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400" placeholder="Skriv ditt svar...">
                 `;
             } else if (type === 'text') {
                 answerContainer.innerHTML = `
                     <label for="answerInput" class="block text-sm font-bold text-gray-700 mb-1">Svar:</label>
-                    <input type="text" id="answerInput" class="w-full p-3.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-red focus:border-praktiska-red focus:outline-none text-lg placeholder-gray-400" placeholder="Skriv ditt svar...">
+                    <input type="text" id="answerInput" class="w-full p-3.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400" placeholder="Skriv ditt svar...">
                 `;
             }
 
@@ -724,18 +746,48 @@
                 return;
             }
 
-            const userAnswer = answerInput.value.trim();
-            const correctAnswer = String(currentProblem.correctAnswer).trim();
+            // 1. Hämta och normalisera (små bokstäver, byt , mot .)
+            const rawUserAnswer = answerInput.value.trim();
+            const rawCorrectAnswer = String(currentProblem.correctAnswer).trim();
             
             let isCorrect = false;
 
-            if (currentProblem.answerType === 'number') {
-                isCorrect = parseFloat(userAnswer) === parseFloat(correctAnswer);
-            } else {
-                isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+            // --- HELPER: Städa bort enheter och text (behåll siffror, . -)
+            function stripUnits(str) {
+                // Ersätt kommatecken med punkt
+                let cleaned = str.replace(/,/g, '.');
+                // Ta bort allt som INTE är siffror, punkt, minus eller snedstreck (för bråk)
+                // Men vi vill behålla enkla decimaltal.
+                // En enkel regex som sparar siffror och .
+                cleaned = cleaned.replace(/[^0-9.\-]/g, ''); 
+                return cleaned;
             }
 
-            currentTotal++; 
+            // 2. Gör en "ren" numerisk jämförelse först
+            const userClean = stripUnits(rawUserAnswer);
+            const correctClean = stripUnits(rawCorrectAnswer);
+            
+            const userNum = parseFloat(userClean);
+            const correctNum = parseFloat(correctClean);
+
+            // Är båda giltiga tal?
+            if (!isNaN(userNum) && !isNaN(correctNum)) {
+                // Jämför med liten tolerans (för flyttal)
+                if (Math.abs(userNum - correctNum) < 0.000001) {
+                    isCorrect = true;
+                }
+            }
+
+            // 3. Fallback: Om numerisk misslyckades, gör strikt textjämförelse (case-insensitive)
+            // Bra för svar som "x=5" där vi kanske råkade städa bort x:et ovan.
+            if (!isCorrect) {
+                if (rawUserAnswer.toLowerCase() === rawCorrectAnswer.toLowerCase()) {
+                    isCorrect = true;
+                }
+            }
+
+            // --- FIX FÖR DUBBELRÄKNING (RADEN ÄR BORTTAGEN HÄR!) ---
+            // currentTotal++; 
 
             if (isCorrect) {
                 feedback.textContent = "Rätt svar!";
@@ -743,7 +795,7 @@
                 currentScore++; 
                 campaignStreak++; 
             } else {
-                feedback.textContent = `Inte riktigt! Rätt svar var: ${correctAnswer}. Klicka på 'Visa förklaring' för att se hur man gör.`;
+                feedback.textContent = `Inte riktigt! Rätt svar var: ${rawCorrectAnswer}. Klicka på 'Visa förklaring' för att se hur man gör.`;
                 feedback.className = "mt-4 text-center font-medium p-3 rounded-lg bg-red-100 text-red-700";
                 campaignStreak = 0; 
             }
@@ -784,7 +836,7 @@
             if (!currentProblem || !currentProblem.explanation_sv) {
                 solutionText.textContent = "Det finns tyvärr ingen förklaring till den här uppgiften.";
             } else {
-                solutionText.textContent = currentProblem.explanation_sv;
+                solutionText.innerHTML = formatMathText(currentProblem.explanation_sv);
             }
             
             solutionInline.style.display = "block"; 
@@ -896,7 +948,6 @@
 
         levelFilter.addEventListener('change', () => { resetScore(true); populateFilters(); applyFiltersAndRender(); });
         topicFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
-        // difficultyFilter BORTTAGET
 
         checkAnswerBtn.addEventListener('click', checkAnswer);
         nextProblemBtn.addEventListener('click', applyFiltersAndRender);
@@ -990,12 +1041,14 @@
             }
         }
         
+        // --- EXPOSING FUNCTIONS GLOBALLY (Fixat) ---
         window.switchMode = switchMode;
         window.loadAllProblems = loadAllProblems;
         window.applyFiltersAndRender = applyFiltersAndRender;
         window.checkAnswer = checkAnswer;
         window.showSolution = showSolution;
         
+        // --- STARTA APPEN ---
         initializeFirebase();
         
     </script>
