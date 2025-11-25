@@ -324,7 +324,7 @@
 
     <!-- JAVASCRIPT -->
     <script type="module">
-        console.log("Laddar math_trainer.html (Praktiska + Orange UI)...");
+        console.log("Laddar math_trainer.html (Praktiska + Orange UI + Regex Fix)...");
         
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
@@ -483,12 +483,14 @@
             }
         }
         
+        // UPPDATERAD REGEX: Hanterar variabel / siffra med mellanslag
         function formatMathText(text) {
             if (!text) return "";
             if (text.includes("\\frac")) return text;
             
-            return text.replace(/(\d+)\/(\d+)/g, (match, p1, p2) => {
-                return `$\\frac{${p1}}{${p2}}$`;
+            // Mönster: (Siffra eller Bokstav) (Eventuellt mellanslag) / (Eventuellt mellanslag) (Siffra eller Bokstav)
+            return text.replace(/([a-zA-Z0-9]+)\s*\/\s*([a-zA-Z0-9]+)/g, (match, täljare, nämnare) => {
+                return `$\\frac{${täljare}}{${nämnare}}$`;
             });
         }
 
