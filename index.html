@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="sv" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,27 +8,31 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?v=3" async></script>
     <script>
         tailwind.config = {
+            darkMode: 'class', // Aktiverar manuellt dark mode
             theme: {
                 extend: {
                     colors: {
                         praktiska: {
-                            red: '#E3004F', // Praktiskas rosa/röda färg
-                            dark: '#1F2937', // Mörkgrå för text
-                            light: '#F9FAFB', // Ljus bakgrund
-                            hover: '#C10042',  // Mörkare nyans för hover
-                            gray: '#b9b9b9',   // Ny neutral grå
-                            orange: '#f66909'  // Din valda orange färg
+                            red: '#E3004F',
+                            dark: '#1F2937',
+                            light: '#F9FAFB',
+                            hover: '#C10042',
+                            gray: '#b9b9b9',
+                            orange: '#f66909'
                         }
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
         }
     </script>
     
-    <!-- FIX: Konfigurera MathJax ATT acceptera dollartecken ($) som matematik -->
     <script>
     window.MathJax = {
       tex: {
@@ -40,105 +44,146 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
         
-        /* HÄR LÄGGER VI TILL DIN SPECIFIKA FONT */
         .font-praktiska-stencil {
             font-family: "PF DIN Stencil B Light", "Inter", sans-serif;
         }
 
         mjx-container { display: inline-block; margin: 0; padding: 0; font-size: 1.1rem; text-align: left; }
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        body { font-family: 'Inter', sans-serif; }
         #progressBar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* Stil för kalkylatorn */
+        /* Eld-effekter för Streak */
+        @keyframes burn-low {
+            0% { box-shadow: 0 0 5px #f66909; border-color: #f66909; }
+            50% { box-shadow: 0 0 15px #f66909, 0 0 5px #E3004F; border-color: #E3004F; }
+            100% { box-shadow: 0 0 5px #f66909; border-color: #f66909; }
+        }
+        @keyframes burn-med {
+            0% { box-shadow: 0 0 10px #f66909, 0 0 20px #E3004F; transform: scale(1); }
+            50% { box-shadow: 0 0 25px #f66909, 0 0 50px #E3004F; transform: scale(1.02); }
+            100% { box-shadow: 0 0 10px #f66909, 0 0 20px #E3004F; transform: scale(1); }
+        }
+        @keyframes burn-high {
+            0% { box-shadow: 0 0 20px #fcd34d, 0 0 40px #f66909, 0 0 60px #E3004F; transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.05) rotate(-1deg); }
+            50% { box-shadow: 0 0 40px #fcd34d, 0 0 80px #f66909, 0 0 100px #E3004F; transform: scale(1.05) rotate(1deg); }
+            75% { transform: scale(1.05) rotate(-1deg); }
+            100% { box-shadow: 0 0 20px #fcd34d, 0 0 40px #f66909, 0 0 60px #E3004F; transform: scale(1) rotate(0deg); }
+        }
+
+        .fire-low { animation: burn-low 2s infinite; background-color: #fff7ed !important; }
+        .fire-med { animation: burn-med 1s infinite; background-color: #fff7ed !important; }
+        .fire-high { animation: burn-high 0.5s infinite; background-color: #fff1f2 !important; border: 2px solid #E3004F !important; }
+
+        /* Dark mode adjustments for fire */
+        .dark .fire-low { background-color: #371b1b !important; }
+        .dark .fire-med { background-color: #371b1b !important; }
+        .dark .fire-high { background-color: #371b1b !important; }
+
+
+        /* Kalkylator */
+        .calculator-wrapper {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            z-index: 40;
+            width: 300px;
+            touch-action: none;
+        }
         .calculator {
             width: 100%;
-            max-width: 300px;
-            background-color: #1f2937; /* Mörkgrå */
+            background-color: #1f2937;
             border-radius: 20px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .calc-display {
-            color: white;
-            font-size: 3.5rem;
-            font-weight: 300;
-            text-align: right;
-            padding: 30px 20px 10px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-            white-space: nowrap;
         }
-        .calc-button {
+        .calc-handle {
+            background-color: #111827;
+            color: #9CA3AF;
+            padding: 8px 15px;
+            cursor: grab;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            height: 65px;
-            width: 65px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            font-weight: 500;
-            cursor: pointer;
             user-select: none;
-            transition: all 0.1s;
-            margin: 6px;
-            color: white;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
         }
+        .calc-handle:active { cursor: grabbing; }
+        .calc-close { cursor: pointer; font-size: 1.2rem; line-height: 1; }
+        .calc-close:hover { color: white; }
+        .calc-display { color: white; font-size: 3.5rem; font-weight: 300; text-align: right; padding: 10px 20px 10px; overflow: hidden; white-space: nowrap; }
+        .calc-button { display: flex; align-items: center; justify-content: center; height: 60px; width: 60px; border-radius: 50%; font-size: 1.5rem; font-weight: 500; cursor: pointer; user-select: none; transition: all 0.1s; margin: 5px; color: white; }
         .calc-button:active { transform: scale(0.95); }
-
-        /* Funktioner (Ljusgrå) */
         .calc-func { background-color: #9CA3AF; color: black; }
-        /* Operatörer (Praktiska Rosa) */
         .calc-op { background-color: #E3004F; }
-        /* NY STIL: MARKERAD OPERATÖR (Vit med rosa text) */
-        .calc-op-active { 
-            background-color: #ffffff !important; 
-            color: #E3004F !important; 
-        }
-        /* Siffror (Mörkare grå) */
+        .calc-op-active { background-color: #ffffff !important; color: #E3004F !important; }
         .calc-num { background-color: #374151; }
-        /* Stor noll-knapp */
-        .calc-zero { width: 142px; border-radius: 35px; justify-content: start; padding-left: 25px; }
+        .calc-zero { width: 130px; border-radius: 35px; justify-content: start; padding-left: 25px; }
 
-        /* Responsiv layout */
+        /* Layout */
         #mainContainer {
             display: flex;
-            gap: 40px;
-            align-items: flex-start;
             justify-content: center;
             width: 100%;
-            max-width: 1100px;
+            max-width: 1400px; /* Breddare layout */
         }
-        @media (max-width: 1024px) {
-            #mainContainer {
-                flex-direction: column;
-                align-items: center;
-            }
-            .calculator-wrapper {
-                order: -1;
-                margin-bottom: 20px;
-            }
-        }
-        .calculator-wrapper { transition: opacity 0.3s, transform 0.3s; }
-
-        /* Custom Scrollbar för snyggare look - NEUTRAL GRÅ (#b9b9b9) */
+        
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #b9b9b9; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #999999; }
+        
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
 
+        /* Partiklar */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+            animation: fly 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        @keyframes fly {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(var(--rot)); opacity: 0; }
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- Header / Meny (Liknar Praktiska.se) -->
-    <nav class="bg-white shadow-md w-full z-10">
+    <!-- STOR Inaktivitets-indikator (Fullskärm) -->
+    <div id="inactivityOverlay" class="fixed inset-0 bg-black bg-opacity-90 z-[100] hidden flex flex-col items-center justify-center text-center cursor-pointer backdrop-blur-sm transition-opacity duration-500">
+        <div class="text-9xl mb-6 animate-bounce-slow">😴</div>
+        <h2 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg">Hallå där!</h2>
+        <p class="text-2xl md:text-3xl text-praktiska-orange font-bold animate-pulse">Klicka var som helst för att fortsätta räkna!</p>
+        <p class="text-gray-400 mt-12 text-sm">Pausar du? Ingen fara, vi väntar.</p>
+    </div>
+
+    <!-- Header -->
+    <nav class="bg-white dark:bg-gray-800 shadow-md w-full z-10 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20">
-                <div class="flex-shrink-0 flex items-center">
-                    <!-- Logotyp (BILD) -->
+            <div class="flex justify-between h-24">
+                <div class="flex-shrink-0 flex items-center gap-4">
+                    <!-- Praktiska Logotyp -->
                     <img src="https://praktiska.se/wp-content/uploads/2025/11/praktiskalogorgb.svg" alt="Praktiska Gymnasiet" class="h-12 w-auto">
                 </div>
-                <div class="flex items-center">
-                     <!-- Kalkylatorknapp med #f66909 text -->
-                     <button id="toggleCalculatorBtn" class="bg-gray-100 text-[#f66909] hover:bg-gray-200 font-medium py-2 px-4 rounded-full transition flex items-center gap-2">
+                <div class="flex items-center gap-4">
+                     <!-- Dark Mode Toggle -->
+                     <button id="toggleDarkModeBtn" class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 font-medium p-3 rounded-full transition" title="Byt färgtema">
+                        <!-- Moon Icon -->
+                        <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <!-- Sun Icon -->
+                        <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
+
+                     <!-- Kalkylatorknapp -->
+                     <button id="toggleCalculatorBtn" class="bg-gray-100 dark:bg-gray-700 text-[#f66909] hover:bg-gray-200 dark:hover:bg-gray-600 font-medium py-2 px-4 rounded-full transition flex items-center gap-2 border border-transparent hover:border-[#f66909]">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                         <span class="hidden sm:inline">Kalkylator</span>
                     </button>
@@ -147,184 +192,202 @@
         </div>
     </nav>
     
+    <!-- Kalkylatorn -->
+    <div id="calculatorWrapper" class="calculator-wrapper" style="display: none;">
+        <div class="calculator">
+            <div id="calcHandle" class="calc-handle">
+                <span>::: DRA HÄR</span>
+                <span id="closeCalculator" class="calc-close">&times;</span>
+            </div>
+            <div id="calcDisplay" class="calc-display">0</div>
+            <div id="calcButtons" class="grid grid-cols-4 p-3 gap-1">
+                <div class="calc-button calc-func" data-value="AC">AC</div>
+                <div class="calc-button calc-func" data-value="±">±</div>
+                <div class="calc-button calc-func" data-value="%">%</div>
+                <div class="calc-button calc-op" data-value="÷">÷</div>
+                <div class="calc-button calc-num" data-value="7">7</div>
+                <div class="calc-button calc-num" data-value="8">8</div>
+                <div class="calc-button calc-num" data-value="9">9</div>
+                <div class="calc-button calc-op" data-value="×">×</div>
+                <div class="calc-button calc-num" data-value="4">4</div>
+                <div class="calc-button calc-num" data-value="5">5</div>
+                <div class="calc-button calc-num" data-value="6">6</div>
+                <div class="calc-button calc-op" data-value="-">-</div>
+                <div class="calc-button calc-num" data-value="1">1</div>
+                <div class="calc-button calc-num" data-value="2">2</div>
+                <div class="calc-button calc-num" data-value="3">3</div>
+                <div class="calc-button calc-op" data-value="+">+</div>
+                <div class="calc-button calc-num calc-zero col-span-2" data-value="0">0</div>
+                <div class="calc-button calc-num" data-value=".">.</div>
+                <div class="calc-button calc-op" data-value="=">=</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Huvudinnehåll -->
     <div class="flex-grow flex justify-center p-4 pt-8">
-        <div id="mainContainer">
-
-            <!-- Kalkylatorn -->
-            <div id="calculatorWrapper" class="calculator-wrapper w-full max-w-sm lg:w-[300px]" style="display: none;">
-                <div class="calculator">
-                    <div id="calcDisplay" class="calc-display">0</div>
-                    <div id="calcButtons" class="grid grid-cols-4 p-3 gap-1">
-                        <div class="calc-button calc-func" data-value="AC">AC</div>
-                        <div class="calc-button calc-func" data-value="±">±</div>
-                        <div class="calc-button calc-func" data-value="%">%</div>
-                        <div class="calc-button calc-op" data-value="÷">÷</div>
-                        <div class="calc-button calc-num" data-value="7">7</div>
-                        <div class="calc-button calc-num" data-value="8">8</div>
-                        <div class="calc-button calc-num" data-value="9">9</div>
-                        <div class="calc-button calc-op" data-value="×">×</div>
-                        <div class="calc-button calc-num" data-value="4">4</div>
-                        <div class="calc-button calc-num" data-value="5">5</div>
-                        <div class="calc-button calc-num" data-value="6">6</div>
-                        <div class="calc-button calc-op" data-value="-">-</div>
-                        <div class="calc-button calc-num" data-value="1">1</div>
-                        <div class="calc-button calc-num" data-value="2">2</div>
-                        <div class="calc-button calc-num" data-value="3">3</div>
-                        <div class="calc-button calc-op" data-value="+">+</div>
-                        <div class="calc-button calc-num calc-zero col-span-2" data-value="0">0</div>
-                        <div class="calc-button calc-num" data-value=".">.</div>
-                        <div class="calc-button calc-op" data-value="=">=</div>
+        
+        <!-- Applikationskort -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 w-full max-w-6xl overflow-hidden h-fit transition-colors duration-300">
+            
+            <!-- Toppdel -->
+            <div class="bg-white dark:bg-gray-800 p-8 pb-4 border-b border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 transition-colors duration-300">
+                <div>
+                    <div class="flex items-center gap-4">
+                        <h1 class="text-3xl md:text-5xl font-bold text-[#f66909] mb-2 font-praktiska-stencil">Matematiktränare</h1>
+                        <!-- Hjärnan -->
+                        <img src="image_57d296.png" alt="Hjärna" class="h-12 w-auto animate-pulse-slow hidden md:block" onerror="this.style.display='none'">
+                        <!-- Matte-ikon -->
+                        <svg class="h-10 w-10 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
                     </div>
+                    <p class="text-gray-500 dark:text-gray-400 text-left text-lg">Träna på typiska uppgifter för Nationella proven</p>
                 </div>
             </div>
-            
-            <!-- Applikationskort -->
-            <div class="bg-white rounded-xl shadow-lg border border-gray-100 w-full max-w-3xl overflow-hidden">
+
+            <div class="p-6 md:p-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    <!-- VÄNSTERKOLUMN -->
+                    <div class="lg:col-span-4 space-y-6">
+                        
+                        <!-- Lägesväljare -->
+                        <div id="modeSelector" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition-colors duration-300">
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2">Välj Läge</label>
+                            <div class="relative">
+                                <select id="trainingMode" class="block w-full pl-4 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange sm:text-sm rounded-lg bg-white dark:bg-gray-800 dark:text-white transition-colors">
+                                    <option value="campaign">🚀 Kapitelträning</option>
+                                    <option value="free">🎯 Typuppgifter NP</option>
+                                </select>
+                            </div>
+                            <p id="modeDescription" class="text-sm text-gray-500 dark:text-gray-400 mt-3 italic">
+                                Välj ett kapitel och träna strukturerat.
+                            </p>
+                        </div>
+
+                        <!-- Filter -->
+                        <div id="filtersContainer">
+                            <div id="freeTrainingFilters" class="space-y-4 hidden">
+                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Nivå</label>
+                                    <select id="levelFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"><option value="Alla">Alla Nivåer</option><option value="Åk 9">Åk 9</option><option value="Ma 1">Ma 1</option><option value="Ma 2">Ma 2</option></select>
+                                </div>
+                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Ämne</label>
+                                    <select id="topicFilter" disabled class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-600 dark:text-gray-400"><option value="Alla">Alla Ämnen</option></select>
+                                </div>
+                            </div>
+
+                            <div id="campaignFilters" class="space-y-4">
+                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Kampanj</label>
+                                    <select id="campaignNameFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" onchange="loadAllProblems()">
+                                        <option value="Procent">Procent</option>
+                                        <option value="Sannolikhet">Sannolikhet</option>
+                                        <option value="FunktionerSamband">Funktioner</option>
+                                        <option value="Geometri">Geometri</option>
+                                        <option value="Algebra">Algebra</option>
+                                        <option value="Taluppfattning">Taluppfattning</option>
+                                        <option value="Statistik">Statistik</option>
+                                    </select>
+                                </div>
+                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Årskurs</label>
+                                    <select id="campaignLevelFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" onchange="applyFiltersAndRender()">
+                                        <option value="Åk 9">Åk 9</option>
+                                        <option value="Ma 1">Ma 1</option>
+                                        <option value="Ma 2">Ma 2</option>
+                                    </select>
+                                </div>
+                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Kapitel Del</label>
+                                    <select id="chapterPartFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" onchange="applyFiltersAndRender()"></select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Poäng & Progress -->
+                        <div class="bg-white dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-sm font-medium text-gray-500 dark:text-gray-300">Dina framsteg</div>
+                                <div class="flex gap-4 text-sm font-bold">
+                                    <span class="text-green-600 dark:text-green-400">Rätt: <span id="scoreDisplay">0</span></span>
+                                    <span class="text-gray-400 dark:text-gray-300">Totalt: <span id="totalDisplay">0</span></span>
+                                </div>
+                            </div>
+                            <div class="w-full bg-gray-100 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
+                                <div id="progressBar" class="bg-green-600 h-3 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Streak-box (Gamification) -->
+                        <div id="streakSection" class="hidden animate-fade-in transition-all duration-500">
+                            <div id="streakContainer" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 flex items-center justify-center gap-3 transition-all duration-300">
+                                <span class="text-yellow-600 dark:text-yellow-500 font-semibold">Streak:</span>
+                                <span id="streakDisplay" class="text-2xl font-black text-praktiska-orange">0/7 🔥</span>
+                                <span id="trophyDisplay" class="text-2xl"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- HÖGERKOLUMN: Uppgiftsområdet -->
+                    <div class="lg:col-span-8">
+                        
+                        <div id="statusMessage" class="text-center py-12 hidden">
+                            <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-praktiska-orange mb-4"></div>
+                            <p class="text-gray-500 dark:text-gray-400 text-lg">Laddar uppgifter...</p>
+                        </div>
+
+                        <div id="problemCard" class="hidden animate-fade-in h-full flex flex-col justify-between">
+                            
+                            <div>
+                                <div class="mb-8 flex justify-center">
+                                    <img id="problemImage" src="" alt="Uppgift" class="max-w-full max-h-64 rounded-lg shadow-sm" style="display: none;" onerror="this.style.display='none'; this.src='';">
+                                </div>
+                                
+                                <div id="problemText" class="text-2xl md:text-3xl font-medium text-gray-800 dark:text-gray-100 text-center leading-relaxed mb-8 min-h-[100px] flex items-center justify-center"></div>
+                                
+                                <div id="answerContainer" class="mb-10 max-w-md mx-auto"></div>
+                            </div>
+
+                            <div class="mt-auto">
+                                <div class="flex flex-col sm:flex-row gap-4 justify-center relative">
+                                    <button id="checkAnswerBtn" class="w-full sm:w-2/3 bg-[#f66909] text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition duration-200 relative overflow-hidden">
+                                        Rätta Svar
+                                    </button>
+                                    <button id="nextProblemBtn" class="w-full sm:w-2/3 bg-gray-800 dark:bg-gray-600 text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-gray-900 dark:hover:bg-gray-500 transform hover:-translate-y-1 transition duration-200" style="display: none;">
+                                        Nästa Uppgift
+                                    </button>
+                                </div>
+
+                                <div id="feedback" class="mt-8 text-center font-medium p-6 rounded-xl text-lg hidden border-2"></div>
+                            
+                                <div class="text-center mt-8">
+                                    <button id="showSolutionBtn" class="text-gray-500 dark:text-gray-400 hover:text-[#f66909] dark:hover:text-[#f66909] font-semibold border-b-2 border-transparent hover:border-[#f66909] transition pb-1" style="display: none;">
+                                        Visa hur man gör
+                                    </button>
+                                </div>
+
+                                <div id="solutionInline" class="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-8 border border-blue-100 dark:border-blue-800 hidden">
+                                    <h3 class="text-xl font-bold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-2">
+                                        💡 Lösning & Förklaring
+                                    </h3>
+                                    <div id="solutionText" class="text-blue-800 dark:text-blue-200 prose prose-lg max-w-none"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 
-                <!-- Toppdel med Rubrik -->
-                <div class="bg-white p-8 pb-4 border-b border-gray-100">
-                    <!-- Rubrik med färg #f66909 -->
-                    <h1 class="text-3xl md:text-4xl font-bold text-[#f66909] mb-2 font-praktiska-stencil">Matematiktränare</h1>
-                    <!-- Texten under nu vänsterjusterad (borttagen text-center) -->
-                    <p class="text-gray-500 mb-6 text-left">Träna på typiska uppgifter för Nationella proven</p>
+                <div class="text-center text-xs text-gray-300 dark:text-gray-600 mt-12 pt-6 border-t border-gray-100 dark:border-gray-700">
+                    Elev-ID: <span id="userIdDisplay" class="font-mono">...</span>
                 </div>
 
-                <div class="p-6 md:p-8">
-                    
-                    <!-- Lägesväljare -->
-                    <div id="modeSelector" class="mb-8">
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Välj Läge</label>
-                        <div class="relative">
-                            <select id="trainingMode" class="block w-full pl-4 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange sm:text-sm rounded-lg bg-gray-50">
-                                <option value="campaign">🚀 Kapitelträning (Strukturerad)</option>
-                                <option value="free">🎯 Typuppgifter nationella proven</option>
-                            </select>
-                        </div>
-                        <p id="modeDescription" class="text-sm text-gray-500 mt-3 ml-1 italic">
-                            Välj ett kapitel och träna strukturerat.
-                        </p>
-                    </div>
-
-                    <!-- Poäng & Progress -->
-                    <div class="flex items-center justify-between mb-2 px-1">
-                        <div class="text-sm font-medium text-gray-500">Dina framsteg</div>
-                        <div class="flex gap-4 text-sm font-bold">
-                            <span class="text-green-600">Rätt: <span id="scoreDisplay">0</span></span>
-                            <span class="text-gray-400">Totalt: <span id="totalDisplay">0</span></span>
-                        </div>
-                    </div>
-                    <!-- Progressbar (Orange) -->
-                    <div class="w-full bg-gray-100 rounded-full h-3 mb-8 overflow-hidden">
-                        <div id="progressBar" class="bg-praktiska-orange h-3 rounded-full" style="width: 0%"></div>
-                    </div>
-
-                    <!-- Streak-box (Endast kampanj) -->
-                    <div id="streakSection" class="mb-8 hidden animate-fade-in">
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-center justify-center gap-3">
-                            <span class="text-yellow-600 font-semibold">Nuvarande Streak:</span>
-                            <span id="streakDisplay" class="text-2xl font-black text-praktiska-red">0/7 🔥</span>
-                            <span id="trophyDisplay" class="text-2xl"></span>
-                        </div>
-                    </div>
-
-                    <!-- Filter -->
-                    <div id="filtersContainer" class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-8">
-                        
-                        <!-- Typuppgifter Filters (Utan Svårighetsgrad) -->
-                        <div id="freeTrainingFilters" class="grid grid-cols-1 sm:grid-cols-2 gap-4 hidden">
-                            <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nivå</label>
-                                <select id="levelFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-orange focus:border-praktiska-orange"><option value="Alla">Alla Nivåer</option><option value="Åk 9">Åk 9</option><option value="Ma 1">Ma 1</option><option value="Ma 2">Ma 2</option></select>
-                            </div>
-                            <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ämne</label>
-                                <select id="topicFilter" disabled class="w-full p-2.5 border border-gray-300 rounded-md bg-gray-100"><option value="Alla">Alla Ämnen</option></select>
-                            </div>
-                        </div>
-
-                        <!-- Kampanj Filters -->
-                        <div id="campaignFilters" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="md:col-span-1"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kampanj</label>
-                                <select id="campaignNameFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-orange focus:border-praktiska-orange">
-                                    <option value="Procent">Procent</option>
-                                    <option value="Sannolikhet">Sannolikhet</option>
-                                    <option value="FunktionerSamband">Funktioner</option>
-                                    <option value="Geometri">Geometri</option>
-                                    <option value="Algebra">Algebra</option>
-                                    <option value="Taluppfattning">Taluppfattning</option>
-                                    <option value="Statistik">Statistik</option>
-                                </select>
-                            </div>
-                            <div class="md:col-span-1"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Årskurs</label>
-                                <select id="campaignLevelFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-orange focus:border-praktiska-orange">
-                                    <option value="Åk 9">Åk 9</option>
-                                    <option value="Ma 1">Ma 1</option>
-                                    <option value="Ma 2">Ma 2</option>
-                                </select>
-                            </div>
-                            <div class="md:col-span-3"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kapitel Del</label>
-                                <select id="chapterPartFilter" class="w-full p-2.5 border border-gray-300 rounded-md focus:ring-praktiska-orange focus:border-praktiska-orange"></select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Status & Laddare -->
-                    <div id="statusMessage" class="text-center py-12 hidden">
-                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-200 border-t-praktiska-orange mb-2"></div>
-                        <p class="text-gray-500">Laddar uppgifter...</p>
-                    </div>
-
-                    <!-- UPPGIFTSKORT -->
-                    <div id="problemCard" class="hidden animate-fade-in">
-                        
-                        <div class="mb-6">
-                            <img id="problemImage" src="" alt="Uppgift" class="max-w-full h-auto mx-auto rounded-lg shadow-sm mb-6" style="display: none;" onerror="this.style.display='none'; this.src='';">
-                            <div id="problemText" class="text-xl md:text-2xl font-medium text-gray-800 text-center leading-relaxed"></div>
-                        </div>
-
-                        <div id="answerContainer" class="mb-8"></div>
-
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <!-- Orange knapp -->
-                            <button id="checkAnswerBtn" class="flex-1 bg-praktiska-orange text-white text-lg font-bold py-4 px-6 rounded-xl shadow-md hover:bg-[#d55a08] transform hover:-translate-y-0.5 transition duration-200">
-                                Rätta Svar
-                            </button>
-                            <button id="nextProblemBtn" class="flex-1 bg-gray-800 text-white text-lg font-bold py-4 px-6 rounded-xl shadow-md hover:bg-gray-900 transform hover:-translate-y-0.5 transition duration-200" style="display: none;">
-                                Nästa Uppgift
-                            </button>
-                        </div>
-
-                        <!-- Feedback -->
-                        <div id="feedback" class="mt-6 text-center font-medium p-4 rounded-xl hidden"></div>
-                    
-                        <!-- Lösning Toggle -->
-                        <div class="text-center mt-6">
-                            <button id="showSolutionBtn" class="text-praktiska-red hover:text-gray-900 font-semibold border-b-2 border-transparent hover:border-praktiska-red transition" style="display: none;">
-                                Visa hur man gör
-                            </button>
-                        </div>
-
-                        <!-- Lösningsruta -->
-                        <div id="solutionInline" class="mt-6 bg-gray-50 rounded-xl p-6 border border-gray-200 hidden">
-                            <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                                💡 Lösning & Förklaring
-                            </h3>
-                            <div id="solutionText" class="text-gray-700 prose prose-sm max-w-none"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Footer -->
-                    <div class="text-center text-xs text-gray-400 mt-12 pt-6 border-t border-gray-100">
-                        ID: <span id="userIdDisplay" class="font-mono">...</span>
-                    </div>
-
-                </div>
             </div>
         </div>
     </div>
 
     <!-- JAVASCRIPT -->
     <script type="module">
-        console.log("Laddar math_trainer.html (Praktiska + Orange UI + Regex Fix)...");
+        console.log("Laddar math_trainer.html (Fixes + Brain + Layout + Total)");
         
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
@@ -433,8 +496,9 @@
         const STREAK_TO_PASS = 7; 
 
         let isCheckingAnswer = false; 
+        let inactivityTimer;
 
-        // DOM Elements (Declare ONCE)
+        // DOM Elements
         const problemCard = document.getElementById('problemCard');
         const problemText = document.getElementById('problemText');
         const answerContainer = document.getElementById('answerContainer');
@@ -445,6 +509,8 @@
         const totalDisplay = document.getElementById('totalDisplay');
         const progressBar = document.getElementById('progressBar');
 
+        const streakSection = document.getElementById('streakSection');
+        const streakContainer = document.getElementById('streakContainer');
         const streakDisplay = document.getElementById('streakDisplay'); 
         const trophyDisplay = document.getElementById('trophyDisplay'); 
         
@@ -463,9 +529,19 @@
         const solutionInline = document.getElementById('solutionInline');
         const solutionText = document.getElementById('solutionText');
         const showSolutionBtn = document.getElementById('showSolutionBtn');
+        
         const toggleCalculatorBtn = document.getElementById('toggleCalculatorBtn'); 
-        const calculatorWrapper = document.getElementById('calculatorWrapper');  
+        const calculatorWrapper = document.getElementById('calculatorWrapper'); 
+        
         const calcDisplay = document.getElementById('calcDisplay'); 
+        const calcHandle = document.getElementById('calcHandle');
+        const closeCalculator = document.getElementById('closeCalculator');
+
+        // Dark Mode Toggle
+        const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
+        toggleDarkModeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
 
         
         function getTopicIcon(topic) {
@@ -483,12 +559,9 @@
             }
         }
         
-        // UPPDATERAD REGEX: Hanterar variabel / siffra med mellanslag
         function formatMathText(text) {
             if (!text) return "";
             if (text.includes("\\frac")) return text;
-            
-            // Mönster: (Siffra eller Bokstav) (Eventuellt mellanslag) / (Eventuellt mellanslag) (Siffra eller Bokstav)
             return text.replace(/([a-zA-Z0-9]+)\s*\/\s*([a-zA-Z0-9]+)/g, (match, täljare, nämnare) => {
                 return `$\\frac{${täljare}}{${nämnare}}$`;
             });
@@ -593,7 +666,10 @@
                     statusMessage.style.display = "block";
                 } else {
                     statusMessage.style.display = "none";
-                    problemCard.style.display = "block";
+                    problemCard.style.display = "flex";
+                    problemCard.classList.remove('hidden'); 
+                    problemCard.classList.add('flex', 'flex-col', 'justify-between'); 
+
                     if(currentMode === 'free') populateFilters();
                     
                     if (currentMode === 'campaign') {
@@ -667,7 +743,7 @@
             }
             
             statusMessage.style.display = "none";
-            problemCard.style.display = "block";
+            problemCard.style.display = "flex"; 
             
             if (seenProblemIndices.length >= filteredProblems.length) {
                 seenProblemIndices = [];
@@ -720,13 +796,13 @@
             const type = problem.answerType || 'text';
             if (type === 'number') {
                 answerContainer.innerHTML = `
-                    <label for="answerInput" class="block text-sm font-bold text-gray-700 mb-1">Svar (endast siffror):</label>
-                    <input type="number" id="answerInput" class="w-full p-3.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400" placeholder="Skriv ditt svar...">
+                    <label for="answerInput" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar (endast siffror):</label>
+                    <input type="number" id="answerInput" class="w-full p-3.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400 dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">
                 `;
             } else if (type === 'text') {
                 answerContainer.innerHTML = `
-                    <label for="answerInput" class="block text-sm font-bold text-gray-700 mb-1">Svar:</label>
-                    <input type="text" id="answerInput" class="w-full p-3.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400" placeholder="Skriv ditt svar...">
+                    <label for="answerInput" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar:</label>
+                    <input type="text" id="answerInput" class="w-full p-3.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400 dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">
                 `;
             }
 
@@ -748,57 +824,47 @@
                 return;
             }
 
-            // 1. Hämta och normalisera (små bokstäver, byt , mot .)
-            const rawUserAnswer = answerInput.value.trim();
-            const rawCorrectAnswer = String(currentProblem.correctAnswer).trim();
+            const userAnswer = answerInput.value.trim();
+            const correctAnswer = String(currentProblem.correctAnswer).trim();
             
             let isCorrect = false;
 
-            // --- HELPER: Städa bort enheter och text (behåll siffror, . -)
             function stripUnits(str) {
-                // Ersätt kommatecken med punkt
                 let cleaned = str.replace(/,/g, '.');
-                // Ta bort allt som INTE är siffror, punkt, minus eller snedstreck (för bråk)
-                // Men vi vill behålla enkla decimaltal.
-                // En enkel regex som sparar siffror och .
                 cleaned = cleaned.replace(/[^0-9.\-]/g, ''); 
                 return cleaned;
             }
 
-            // 2. Gör en "ren" numerisk jämförelse först
-            const userClean = stripUnits(rawUserAnswer);
-            const correctClean = stripUnits(rawCorrectAnswer);
+            const userClean = stripUnits(userAnswer);
+            const correctClean = stripUnits(correctAnswer);
             
             const userNum = parseFloat(userClean);
             const correctNum = parseFloat(correctClean);
 
-            // Är båda giltiga tal?
             if (!isNaN(userNum) && !isNaN(correctNum)) {
-                // Jämför med liten tolerans (för flyttal)
                 if (Math.abs(userNum - correctNum) < 0.000001) {
                     isCorrect = true;
                 }
             }
 
-            // 3. Fallback: Om numerisk misslyckades, gör strikt textjämförelse (case-insensitive)
-            // Bra för svar som "x=5" där vi kanske råkade städa bort x:et ovan.
             if (!isCorrect) {
-                if (rawUserAnswer.toLowerCase() === rawCorrectAnswer.toLowerCase()) {
+                if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
                     isCorrect = true;
                 }
             }
-
-            // --- FIX FÖR DUBBELRÄKNING (RADEN ÄR BORTTAGEN HÄR!) ---
-            // currentTotal++; 
+            
+            // FIX: Increment total here
+            currentTotal++; 
 
             if (isCorrect) {
                 feedback.textContent = "Rätt svar!";
-                feedback.className = "mt-4 text-center font-medium p-3 rounded-lg bg-green-100 text-green-700";
+                feedback.className = "mt-6 text-center font-semibold p-4 rounded-xl bg-green-100 text-green-800 border border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-700";
                 currentScore++; 
                 campaignStreak++; 
+                triggerConfetti(checkAnswerBtn); 
             } else {
-                feedback.textContent = `Inte riktigt! Rätt svar var: ${rawCorrectAnswer}. Klicka på 'Visa förklaring' för att se hur man gör.`;
-                feedback.className = "mt-4 text-center font-medium p-3 rounded-lg bg-red-100 text-red-700";
+                feedback.textContent = `Inte riktigt! Rätt svar var: ${correctAnswer}.`;
+                feedback.className = "mt-6 text-center font-semibold p-4 rounded-xl bg-red-100 text-red-800 border border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-700";
                 campaignStreak = 0; 
             }
             
@@ -867,13 +933,16 @@
         }
 
         function updateStreakDisplay() {
-            const streakSection = document.getElementById('streakSection');
-            const streakDisplayEl = document.getElementById('streakDisplay');
-            const trophyDisplayEl = document.getElementById('trophyDisplay');
+            // Fire effect logic
+            streakContainer.className = "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 flex items-center justify-center gap-3 transition-all duration-300";
+            
+            if (campaignStreak >= 3) streakContainer.classList.add('fire-low');
+            if (campaignStreak >= 5) { streakContainer.classList.remove('fire-low'); streakContainer.classList.add('fire-med'); }
+            if (campaignStreak >= 6) { streakContainer.classList.remove('fire-med'); streakContainer.classList.add('fire-high'); }
             
             if (currentMode === 'campaign') {
                 streakSection.classList.remove('hidden');
-                streakDisplayEl.textContent = `${campaignStreak}/${STREAK_TO_PASS} 🔥`;
+                streakDisplay.textContent = `${campaignStreak}/${STREAK_TO_PASS} 🔥`;
                 
                 const campaign = campaignNameFilter.value;
                 const chapter = parseInt(chapterPartFilter.value);
@@ -881,13 +950,13 @@
                 const isCleared = chaptersCleared[campaign] && chaptersCleared[campaign][chapter];
 
                 if (isCleared) {
-                    trophyDisplayEl.innerHTML = '🏆';
-                    streakDisplayEl.classList.remove('text-praktiska-red');
-                    streakDisplayEl.classList.add('text-green-600');
+                    trophyDisplay.innerHTML = '🏆';
+                    streakDisplay.classList.remove('text-praktiska-red');
+                    streakDisplay.classList.add('text-green-600');
                 } else {
-                    trophyDisplayEl.innerHTML = '';
-                    streakDisplayEl.classList.add('text-praktiska-red');
-                    streakDisplayEl.classList.remove('text-green-600');
+                    trophyDisplay.innerHTML = '';
+                    streakDisplay.classList.add('text-praktiska-red');
+                    streakDisplay.classList.remove('text-green-600');
                 }
                 
             } else {
@@ -939,6 +1008,62 @@
             updateStreakDisplay();
         }
 
+        // --- INAKTIVITETS LOGIK (FIXED) ---
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            
+            // Use variables to access elements safely inside the function
+            const msg = document.getElementById('inactivityMessage');
+            const overlay = document.getElementById('inactivityOverlay');
+            
+            if (msg) msg.classList.add('hidden');
+            if (overlay) overlay.classList.add('hidden');
+            
+            inactivityTimer = setTimeout(() => {
+                if (msg) msg.classList.remove('hidden');
+                if (overlay) overlay.classList.remove('hidden');
+            }, 30000); 
+        }
+        
+        window.addEventListener('mousemove', resetInactivityTimer);
+        window.addEventListener('keydown', resetInactivityTimer);
+        window.addEventListener('click', resetInactivityTimer);
+        resetInactivityTimer(); 
+
+        // --- KONFETTI LOGIK (ENORM EXPLOSION) ---
+        function triggerConfetti(element) {
+            const colors = ['#E3004F', '#f66909', '#FCD34D', '#10B981', '#3B82F6'];
+            const rect = element.getBoundingClientRect();
+            const center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.width = Math.random() * 12 + 6 + 'px';
+                particle.style.height = particle.style.width;
+                
+                particle.style.left = center.x + 'px';
+                particle.style.top = center.y + 'px';
+                particle.style.borderRadius = '50%'; 
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 400 + 100; 
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                particle.style.setProperty('--rot', `${Math.random() * 720 - 360}deg`);
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => { particle.remove(); }, 1500);
+            }
+        }
+
 
         // --- EVENT LISTENERS ---
         
@@ -958,11 +1083,67 @@
         toggleCalculatorBtn.addEventListener('click', () => {
             const isVisible = calculatorWrapper.style.display !== 'none';
             calculatorWrapper.style.display = isVisible ? 'none' : 'block';
-            toggleCalculatorBtn.textContent = isVisible ? 'Visa Kalkylator' : 'Dölj Kalkylator';
+            toggleCalculatorBtn.textContent = isVisible ? 'Dölj Kalkylator' : 'Visa Kalkylator';
         });
+        
+        // STÄNG-KNAPP FÖR KALYKULATOR
+        document.getElementById('closeCalculator').addEventListener('click', () => {
+             calculatorWrapper.style.display = 'none';
+             toggleCalculatorBtn.textContent = 'Visa Kalkylator';
+        });
+        
+        // Kalkylator-drag-logik
+        let isDragging = false;
+        let currentX, currentY, initialX, initialY;
+        let xOffset = 0, yOffset = 0;
+        // calcHandle är redan definierad ovan
+
+        calcHandle.addEventListener("mousedown", dragStart);
+        calcHandle.addEventListener("touchstart", dragStart, {passive: false});
+        document.addEventListener("mouseup", dragEnd);
+        document.addEventListener("touchend", dragEnd);
+        document.addEventListener("mousemove", drag);
+        document.addEventListener("touchmove", drag, {passive: false});
+
+        function dragStart(e) {
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+            if (e.target === calcHandle || calcHandle.contains(e.target)) {
+                isDragging = true;
+            }
+        }
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                if (e.type === "touchmove") {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+                xOffset = currentX;
+                yOffset = currentY;
+                setTranslate(currentX, currentY, calculatorWrapper);
+            }
+        }
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+        }
 
         // Kalkylator-logik
         const calcButtons = document.getElementById('calcButtons');
+        // calcDisplay redan definierad ovan
         let currentInput = '0';
         let operator = null;
         let firstOperand = null;
@@ -971,7 +1152,6 @@
         function clearOperatorHighlight() {
             document.querySelectorAll('.calc-op').forEach(btn => {
                 btn.classList.remove('calc-op-active');
-                btn.style.backgroundColor = '#E3004F'; 
             });
         }
 
@@ -982,15 +1162,12 @@
             
             if (event.target.classList.contains('calc-num') || value === '.') {
                 clearOperatorHighlight(); 
-                
                 if (awaitingSecondOperand) {
                     currentInput = value === '.' ? '0.' : value;
                     awaitingSecondOperand = false;
                 } else if (currentInput === '0' && value !== '.') {
                     currentInput = value;
-                } else if (value === '.' && currentInput.includes('.')) {
-                    
-                } else {
+                } else if (value === '.' && currentInput.includes('.')) { } else {
                     currentInput += value;
                 }
             } else if (event.target.classList.contains('calc-op')) {
@@ -1005,7 +1182,6 @@
                 } else {
                     clearOperatorHighlight();
                     event.target.classList.add('calc-op-active');
-
                     if (firstOperand === null) {
                         firstOperand = parseFloat(currentInput);
                     } else if (operator) {
@@ -1029,7 +1205,6 @@
                     currentInput = String(parseFloat(currentInput) / 100);
                 }
             }
-            
             calcDisplay.textContent = currentInput.substring(0, 10);
         });
 
