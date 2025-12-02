@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?v=3" async></script>
     <script>
         tailwind.config = {
-            darkMode: 'class', // Aktiverar manuellt dark mode
+            darkMode: 'class', 
             theme: {
                 extend: {
                     colors: {
@@ -37,6 +37,9 @@
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
       }
     };
     </script>
@@ -48,67 +51,33 @@
             font-family: "PF DIN Stencil B Light", "Inter", sans-serif;
         }
 
-        mjx-container { display: inline-block; margin: 0; padding: 0; font-size: 1.1rem; text-align: left; }
+        /* FIX: Matematik flyter snyggt i texten med marginaler */
+        mjx-container { 
+            display: inline !important; 
+            margin: 0 4px !important; 
+            vertical-align: middle !important; 
+        }
+        
         body { font-family: 'Inter', sans-serif; }
         #progressBar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        #dailyProgressBar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* Eld-effekter för Streak */
-        @keyframes burn-low {
-            0% { box-shadow: 0 0 5px #f66909; border-color: #f66909; }
-            50% { box-shadow: 0 0 15px #f66909, 0 0 5px #E3004F; border-color: #E3004F; }
-            100% { box-shadow: 0 0 5px #f66909; border-color: #f66909; }
-        }
-        @keyframes burn-med {
-            0% { box-shadow: 0 0 10px #f66909, 0 0 20px #E3004F; transform: scale(1); }
-            50% { box-shadow: 0 0 25px #f66909, 0 0 50px #E3004F; transform: scale(1.02); }
-            100% { box-shadow: 0 0 10px #f66909, 0 0 20px #E3004F; transform: scale(1); }
-        }
-        @keyframes burn-high {
-            0% { box-shadow: 0 0 20px #fcd34d, 0 0 40px #f66909, 0 0 60px #E3004F; transform: scale(1) rotate(0deg); }
-            25% { transform: scale(1.05) rotate(-1deg); }
-            50% { box-shadow: 0 0 40px #fcd34d, 0 0 80px #f66909, 0 0 100px #E3004F; transform: scale(1.05) rotate(1deg); }
-            75% { transform: scale(1.05) rotate(-1deg); }
-            100% { box-shadow: 0 0 20px #fcd34d, 0 0 40px #f66909, 0 0 60px #E3004F; transform: scale(1) rotate(0deg); }
-        }
-
+        /* Eld-effekter */
+        @keyframes burn-low { 0% { box-shadow: 0 0 5px #f66909; } 50% { box-shadow: 0 0 15px #f66909; } 100% { box-shadow: 0 0 5px #f66909; } }
+        @keyframes burn-med { 0% { box-shadow: 0 0 10px #f66909; transform: scale(1); } 50% { box-shadow: 0 0 25px #f66909; transform: scale(1.02); } 100% { transform: scale(1); } }
+        @keyframes burn-high { 0% { box-shadow: 0 0 20px #fcd34d; transform: rotate(0deg); } 50% { box-shadow: 0 0 40px #fcd34d; transform: rotate(1deg); } 100% { transform: rotate(0deg); } }
         .fire-low { animation: burn-low 2s infinite; background-color: #fff7ed !important; }
         .fire-med { animation: burn-med 1s infinite; background-color: #fff7ed !important; }
         .fire-high { animation: burn-high 0.5s infinite; background-color: #fff1f2 !important; border: 2px solid #E3004F !important; }
 
-        /* Dark mode adjustments for fire */
         .dark .fire-low { background-color: #371b1b !important; }
         .dark .fire-med { background-color: #371b1b !important; }
         .dark .fire-high { background-color: #371b1b !important; }
 
-
         /* Kalkylator */
-        .calculator-wrapper {
-            position: fixed;
-            top: 120px;
-            right: 20px;
-            z-index: 40;
-            width: 300px;
-            touch-action: none;
-        }
-        .calculator {
-            width: 100%;
-            background-color: #1f2937;
-            border-radius: 20px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        .calc-handle {
-            background-color: #111827;
-            color: #9CA3AF;
-            padding: 8px 15px;
-            cursor: grab;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            user-select: none;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
+        .calculator-wrapper { position: fixed; top: 120px; right: 20px; z-index: 40; width: 300px; touch-action: none; }
+        .calculator { width: 100%; background-color: #1f2937; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); overflow: hidden; }
+        .calc-handle { background-color: #111827; color: #9CA3AF; padding: 8px 15px; cursor: grab; display: flex; justify-content: space-between; align-items: center; user-select: none; font-size: 0.8rem; letter-spacing: 1px; }
         .calc-handle:active { cursor: grabbing; }
         .calc-close { cursor: pointer; font-size: 1.2rem; line-height: 1; }
         .calc-close:hover { color: white; }
@@ -122,39 +91,31 @@
         .calc-zero { width: 130px; border-radius: 35px; justify-content: start; padding-left: 25px; }
 
         /* Layout */
-        #mainContainer {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            max-width: 1400px; /* Breddare layout */
-        }
+        #mainContainer { display: flex; justify-content: center; width: 100%; max-width: 1400px; }
         
         /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #b9b9b9; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #999999; }
-        
         .dark ::-webkit-scrollbar-track { background: #1f2937; }
         .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
 
         /* Partiklar */
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            z-index: 100;
-            animation: fly 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
+        .particle { position: absolute; pointer-events: none; z-index: 100; animation: fly 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
         @keyframes fly {
             0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
             100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(var(--rot)); opacity: 0; }
         }
+        
+        .highlight-text { background-color: #fef08a; padding: 0 4px; border-radius: 4px; font-weight: bold; color: #000; }
+        .dark .highlight-text { background-color: #854d0e; color: #fff; }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- STOR Inaktivitets-indikator (Fullskärm) -->
-    <div id="inactivityOverlay" class="fixed inset-0 bg-black bg-opacity-90 z-[100] hidden flex flex-col items-center justify-center text-center cursor-pointer backdrop-blur-sm transition-opacity duration-500">
+    <!-- STOR Inaktivitets-indikator (Startar Dold) -->
+    <div id="inactivityOverlay" style="display: none;" class="hidden fixed inset-0 bg-black bg-opacity-90 z-[100] flex flex-col items-center justify-center text-center cursor-pointer backdrop-blur-sm transition-opacity duration-500">
         <div class="text-9xl mb-6 animate-bounce-slow">😴</div>
         <h2 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg">Hallå där!</h2>
         <p class="text-2xl md:text-3xl text-praktiska-orange font-bold animate-pulse">Klicka var som helst för att fortsätta räkna!</p>
@@ -166,20 +127,14 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-24">
                 <div class="flex-shrink-0 flex items-center gap-4">
-                    <!-- Praktiska Logotyp -->
+                    <img src="image_57d296.png" alt="Hjärna" class="h-12 w-auto animate-pulse-slow hidden md:block" onerror="this.style.display='none'">
                     <img src="https://praktiska.se/wp-content/uploads/2025/11/praktiskalogorgb.svg" alt="Praktiska Gymnasiet" class="h-12 w-auto">
                 </div>
                 <div class="flex items-center gap-4">
                      <!-- Dark Mode Toggle -->
                      <button id="toggleDarkModeBtn" class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 font-medium p-3 rounded-full transition" title="Byt färgtema">
-                        <!-- Moon Icon -->
-                        <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                        </svg>
-                        <!-- Sun Icon -->
-                        <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
+                        <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                        <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                     </button>
 
                      <!-- Kalkylatorknapp -->
@@ -201,25 +156,11 @@
             </div>
             <div id="calcDisplay" class="calc-display">0</div>
             <div id="calcButtons" class="grid grid-cols-4 p-3 gap-1">
-                <div class="calc-button calc-func" data-value="AC">AC</div>
-                <div class="calc-button calc-func" data-value="±">±</div>
-                <div class="calc-button calc-func" data-value="%">%</div>
-                <div class="calc-button calc-op" data-value="÷">÷</div>
-                <div class="calc-button calc-num" data-value="7">7</div>
-                <div class="calc-button calc-num" data-value="8">8</div>
-                <div class="calc-button calc-num" data-value="9">9</div>
-                <div class="calc-button calc-op" data-value="×">×</div>
-                <div class="calc-button calc-num" data-value="4">4</div>
-                <div class="calc-button calc-num" data-value="5">5</div>
-                <div class="calc-button calc-num" data-value="6">6</div>
-                <div class="calc-button calc-op" data-value="-">-</div>
-                <div class="calc-button calc-num" data-value="1">1</div>
-                <div class="calc-button calc-num" data-value="2">2</div>
-                <div class="calc-button calc-num" data-value="3">3</div>
-                <div class="calc-button calc-op" data-value="+">+</div>
-                <div class="calc-button calc-num calc-zero col-span-2" data-value="0">0</div>
-                <div class="calc-button calc-num" data-value=".">.</div>
-                <div class="calc-button calc-op" data-value="=">=</div>
+                <div class="calc-button calc-func" data-value="AC">AC</div><div class="calc-button calc-func" data-value="±">±</div><div class="calc-button calc-func" data-value="%">%</div><div class="calc-button calc-op" data-value="÷">÷</div>
+                <div class="calc-button calc-num" data-value="7">7</div><div class="calc-button calc-num" data-value="8">8</div><div class="calc-button calc-num" data-value="9">9</div><div class="calc-button calc-op" data-value="×">×</div>
+                <div class="calc-button calc-num" data-value="4">4</div><div class="calc-button calc-num" data-value="5">5</div><div class="calc-button calc-num" data-value="6">6</div><div class="calc-button calc-op" data-value="-">-</div>
+                <div class="calc-button calc-num" data-value="1">1</div><div class="calc-button calc-num" data-value="2">2</div><div class="calc-button calc-num" data-value="3">3</div><div class="calc-button calc-op" data-value="+">+</div>
+                <div class="calc-button calc-num calc-zero col-span-2" data-value="0">0</div><div class="calc-button calc-num" data-value=".">.</div><div class="calc-button calc-op" data-value="=">=</div>
             </div>
         </div>
     </div>
@@ -227,17 +168,14 @@
     <!-- Huvudinnehåll -->
     <div class="flex-grow flex justify-center p-4 pt-8">
         
-        <!-- Applikationskort -->
+        <!-- Applikationskort (Minskad Padding i Toppen) -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 w-full max-w-6xl overflow-hidden h-fit transition-colors duration-300">
             
-            <!-- Toppdel -->
-            <div class="bg-white dark:bg-gray-800 p-8 pb-4 border-b border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 transition-colors duration-300">
+            <div class="bg-white dark:bg-gray-800 p-4 pb-2 border-b border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 transition-colors duration-300">
                 <div>
                     <div class="flex items-center gap-4">
-                        <h1 class="text-3xl md:text-5xl font-bold text-[#f66909] mb-2 font-praktiska-stencil">Matematiktränare</h1>
-                        <!-- Hjärnan -->
+                        <h1 class="text-3xl md:text-5xl font-bold text-[#f66909] mb-1 font-praktiska-stencil">Matematiktränare</h1>
                         <img src="image_57d296.png" alt="Hjärna" class="h-12 w-auto animate-pulse-slow hidden md:block" onerror="this.style.display='none'">
-                        <!-- Matte-ikon -->
                         <svg class="h-10 w-10 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
@@ -249,10 +187,8 @@
             <div class="p-6 md:p-10">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     
-                    <!-- VÄNSTERKOLUMN -->
+                    <!-- VÄNSTERKOLLUMN -->
                     <div class="lg:col-span-4 space-y-6">
-                        
-                        <!-- Lägesväljare -->
                         <div id="modeSelector" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition-colors duration-300">
                             <label class="block text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2">Välj Läge</label>
                             <div class="relative">
@@ -261,9 +197,7 @@
                                     <option value="free">🎯 Typuppgifter NP</option>
                                 </select>
                             </div>
-                            <p id="modeDescription" class="text-sm text-gray-500 dark:text-gray-400 mt-3 italic">
-                                Välj ett kapitel och träna strukturerat.
-                            </p>
+                            <p id="modeDescription" class="text-sm text-gray-500 dark:text-gray-400 mt-3 italic">Välj ett kapitel och träna strukturerat.</p>
                         </div>
 
                         <!-- Filter -->
@@ -276,33 +210,21 @@
                                     <select id="topicFilter" disabled class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-600 dark:text-gray-400"><option value="Alla">Alla Ämnen</option></select>
                                 </div>
                             </div>
-
                             <div id="campaignFilters" class="space-y-4">
                                 <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Kampanj</label>
-                                    <select id="campaignNameFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" onchange="loadAllProblems()">
-                                        <option value="Procent">Procent</option>
-                                        <option value="Sannolikhet">Sannolikhet</option>
-                                        <option value="FunktionerSamband">Funktioner</option>
-                                        <option value="Geometri">Geometri</option>
-                                        <option value="Algebra">Algebra</option>
-                                        <option value="Taluppfattning">Taluppfattning</option>
-                                        <option value="Statistik">Statistik</option>
+                                    <select id="campaignNameFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white">
+                                        <option value="Procent">Procent</option><option value="Sannolikhet">Sannolikhet</option><option value="FunktionerSamband">Funktioner</option><option value="Geometri">Geometri</option><option value="Algebra">Algebra</option><option value="Taluppfattning">Taluppfattning</option><option value="Statistik">Statistik</option>
                                     </select>
                                 </div>
                                 <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Årskurs</label>
-                                    <select id="campaignLevelFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" onchange="applyFiltersAndRender()">
-                                        <option value="Åk 9">Åk 9</option>
-                                        <option value="Ma 1">Ma 1</option>
-                                        <option value="Ma 2">Ma 2</option>
-                                    </select>
+                                    <select id="campaignLevelFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"><option value="Åk 9">Åk 9</option><option value="Ma 1">Ma 1</option><option value="Ma 2">Ma 2</option></select>
                                 </div>
                                 <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Kapitel Del</label>
-                                    <select id="chapterPartFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" onchange="applyFiltersAndRender()"></select>
+                                    <select id="chapterPartFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"></select>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Poäng & Progress -->
                         <div class="bg-white dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm transition-colors">
                             <div class="flex items-center justify-between mb-2">
                                 <div class="text-sm font-medium text-gray-500 dark:text-gray-300">Dina framsteg</div>
@@ -311,25 +233,31 @@
                                     <span class="text-gray-400 dark:text-gray-300">Totalt: <span id="totalDisplay">0</span></span>
                                 </div>
                             </div>
-                            <div class="w-full bg-gray-100 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
-                                <div id="progressBar" class="bg-green-600 h-3 rounded-full" style="width: 0%"></div>
-                            </div>
+                            <div class="w-full bg-gray-100 dark:bg-gray-600 rounded-full h-3 overflow-hidden"><div id="progressBar" class="bg-green-600 h-3 rounded-full" style="width: 0%"></div></div>
                         </div>
 
-                        <!-- Streak-box (Gamification) -->
-                        <div id="streakSection" class="hidden animate-fade-in transition-all duration-500">
-                            <div id="streakContainer" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 flex items-center justify-center gap-3 transition-all duration-300">
-                                <span class="text-yellow-600 dark:text-yellow-500 font-semibold">Streak:</span>
-                                <span id="streakDisplay" class="text-2xl font-black text-praktiska-orange">0/7 🔥</span>
-                                <span id="trophyDisplay" class="text-2xl"></span>
+                        <div class="bg-white dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm mt-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-sm font-medium text-gray-500 dark:text-gray-300 flex items-center gap-2"><span>Dagens Mål</span><span class="text-xs text-gray-400">(10 st)</span></div>
+                                <div class="flex gap-2 text-sm font-bold"><span id="dailyCountDisplay" class="text-praktiska-orange">0/10</span></div>
                             </div>
+                            <div class="w-full bg-gray-100 dark:bg-gray-600 rounded-full h-3 overflow-hidden"><div id="dailyProgressBar" class="bg-praktiska-orange h-3 rounded-full" style="width: 0%"></div></div>
                         </div>
 
+                        <div id="streakSection" class="hidden animate-fade-in transition-all duration-500 mt-6">
+                            <div id="streakContainer" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 flex flex-col items-center justify-center gap-1 transition-all duration-300">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-yellow-600 dark:text-yellow-500 font-semibold">Kapitel Streak:</span>
+                                    <span id="streakDisplay" class="text-2xl font-black text-praktiska-orange">0/7 🔥</span>
+                                    <span id="trophyDisplay" class="text-2xl"></span>
+                                </div>
+                                <div id="dailyStreakDisplay" class="text-xs text-gray-500 dark:text-gray-400 font-medium mt-1">Dagar i rad: 0 📅</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- HÖGERKOLUMN: Uppgiftsområdet -->
+                    <!-- HÖGERKOLLUMN -->
                     <div class="lg:col-span-8">
-                        
                         <div id="statusMessage" class="text-center py-12 hidden">
                             <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-praktiska-orange mb-4"></div>
                             <p class="text-gray-500 dark:text-gray-400 text-lg">Laddar uppgifter...</p>
@@ -339,36 +267,36 @@
                             
                             <div>
                                 <div class="mb-8 flex justify-center">
-                                    <img id="problemImage" src="" alt="Uppgift" class="max-w-full max-h-64 rounded-lg shadow-sm" style="display: none;" onerror="this.style.display='none'; this.src='';">
+                                    <img id="problemImage" src="" alt="Uppgift" class="max-w-full max-h-96 rounded-lg shadow-sm" style="display: none;" onerror="this.style.display='none'; this.src='';">
+                                    <canvas id="problemCanvas" class="max-w-full h-auto mx-auto rounded-lg shadow-sm" width="800" height="500" style="display: none;"></canvas>
                                 </div>
+                                <div id="problemText" class="text-2xl md:text-3xl font-medium text-gray-800 dark:text-gray-100 text-center leading-relaxed mb-8 min-h-[100px]"></div>
                                 
-                                <div id="problemText" class="text-2xl md:text-3xl font-medium text-gray-800 dark:text-gray-100 text-center leading-relaxed mb-8 min-h-[100px] flex items-center justify-center"></div>
-                                
+                                <!-- SCAFFOLDING CONTAINER (Flyttad hit för att ligga FÖRE svarsrutan) -->
+                                <div id="scaffoldingContainer" class="hidden mb-6 bg-blue-50 dark:bg-gray-700 p-6 rounded-xl border border-blue-200 dark:border-gray-600">
+                                    <h3 class="text-lg font-bold text-blue-800 dark:text-blue-300 mb-4">🧩 Ledtrådstrappan</h3>
+                                    <div id="scaffoldingContent" class="text-gray-800 dark:text-gray-200 text-lg mb-4"></div>
+                                    <div id="scaffoldingActions" class="flex gap-2 justify-center"></div>
+                                </div>
+
                                 <div id="answerContainer" class="mb-10 max-w-md mx-auto"></div>
                             </div>
 
                             <div class="mt-auto">
                                 <div class="flex flex-col sm:flex-row gap-4 justify-center relative">
-                                    <button id="checkAnswerBtn" class="w-full sm:w-2/3 bg-[#f66909] text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition duration-200 relative overflow-hidden">
-                                        Rätta Svar
-                                    </button>
-                                    <button id="nextProblemBtn" class="w-full sm:w-2/3 bg-gray-800 dark:bg-gray-600 text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-gray-900 dark:hover:bg-gray-500 transform hover:-translate-y-1 transition duration-200" style="display: none;">
-                                        Nästa Uppgift
-                                    </button>
+                                    <button id="checkAnswerBtn" class="w-full sm:w-2/3 bg-[#f66909] text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition duration-200">Rätta Svar</button>
+                                    <button id="helpBtn" class="hidden w-full sm:w-2/3 bg-blue-600 text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-blue-700 transform hover:-translate-y-1 transition duration-200">Jag kör fast - Få hjälp 💡</button>
+                                    <button id="nextProblemBtn" class="w-full sm:w-2/3 bg-gray-800 dark:bg-gray-600 text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-gray-900 dark:hover:bg-gray-500 transform hover:-translate-y-1 transition duration-200" style="display: none;">Nästa Uppgift</button>
                                 </div>
 
                                 <div id="feedback" class="mt-8 text-center font-medium p-6 rounded-xl text-lg hidden border-2"></div>
                             
                                 <div class="text-center mt-8">
-                                    <button id="showSolutionBtn" class="text-gray-500 dark:text-gray-400 hover:text-[#f66909] dark:hover:text-[#f66909] font-semibold border-b-2 border-transparent hover:border-[#f66909] transition pb-1" style="display: none;">
-                                        Visa hur man gör
-                                    </button>
+                                    <button id="showSolutionBtn" class="text-gray-500 dark:text-gray-400 hover:text-[#f66909] dark:hover:text-[#f66909] font-semibold border-b-2 border-transparent hover:border-[#f66909] transition pb-1" style="display: none;">Visa hur man gör</button>
                                 </div>
 
                                 <div id="solutionInline" class="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-8 border border-blue-100 dark:border-blue-800 hidden">
-                                    <h3 class="text-xl font-bold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-2">
-                                        💡 Lösning & Förklaring
-                                    </h3>
+                                    <h3 class="text-xl font-bold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-2">💡 Lösning & Förklaring</h3>
                                     <div id="solutionText" class="text-blue-800 dark:text-blue-200 prose prose-lg max-w-none"></div>
                                 </div>
                             </div>
@@ -376,18 +304,13 @@
 
                     </div>
                 </div>
-                
-                <div class="text-center text-xs text-gray-300 dark:text-gray-600 mt-12 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    Elev-ID: <span id="userIdDisplay" class="font-mono">...</span>
-                </div>
-
+                <div class="text-center text-xs text-gray-300 dark:text-gray-600 mt-12 pt-6 border-t border-gray-100 dark:border-gray-700">ID: <span id="userIdDisplay" class="font-mono">...</span></div>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
     <script type="module">
-        console.log("Laddar math_trainer.html (Fixes + Brain + Layout + Total)");
+        console.log("Laddar math_trainer.html (Final Stabilization + Math Fix)...");
         
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
@@ -402,832 +325,561 @@
             appId: "1:239785866823:web:55ffb3a3485d32984ca362"
         };
         
+        // FIX: Korrekt init av Firebase (samma app instans för db + auth)
+        const firebaseAppInstance = initializeApp(firebaseConfig);
+        let db = getFirestore(firebaseAppInstance);
+        let auth = getAuth(firebaseAppInstance);
+        // ---------------------------------------------------------------
+
         const appId = 'default-app-id'; 
-        
-        const COLLECTION_PATHS = {
-            FREE_TRAINING: `artifacts/${appId}/public/data/math_tasks`,
-            CAMPAIGN_ROOT: `artifacts/${appId}/public/data/campaigns`,
-            USER_SCORE: `artifacts/${appId}/users/`
-        };
-        
-        const CAMPAIGN_LEVELS = {
-            "Procent": [
-                { value: 1, label: "1. Grundläggande procent" },
-                { value: 2, label: "2. Förändring & förändringsfaktor" },
-                { value: 3, label: "3. Procentenheter & jämförelser" },
-                { value: 4, label: "4. Promille & ppm" },
-                { value: 5, label: "5. Ränta & ränta på ränta" },
-                { value: 6, label: "6. Flera procentuella förändringar i rad" },
-                { value: 7, label: "7. Blandad nivå – Nationella provet-stil" }
-            ],
-            "Sannolikhet": [
-                { value: 1, label: "1. Grundläggande begrepp: utfall, händelse, chans" },
-                { value: 2, label: "2. Enkla sannolikheter" },
-                { value: 3, label: "3. Flera utfall & kombinatorik" },
-                { value: 4, label: "4. Medelvärde, median & typvärde" },
-                { value: 5, label: "5. Frekvenstabeller & diagram" },
-                { value: 6, label: "6. Sammansatta sannolikheter" },
-                { value: 7, label: "7. Komplementhändelser" },
-                { value: 8, label: "8. Blandad nivå – Nationella provet-stil" }
-            ],
-            "FunktionerSamband": [
-                { value: 1, label: "1. Proportionalitet & grundläggande funktioner" },
-                { value: 2, label: "2. Tolka grafer & samband" },
-                { value: 3, label: "3. Rät linje: lutning & m-värde" },
-                { value: 4, label: "4. Sätta in och räkna med funktioner" },
-                { value: 5, label: "5. Skärningspunkter & jämförelser mellan grafer" },
-                { value: 6, label: "6. Funktioners förändring (ökning/minskning)" },
-                { value: 7, label: "7. f(x)-uppgifter av olika karaktär" },
-                { value: 8, label: "8. Tillämpningar & textuppgifter" },
-                { value: 9, label: "9. GeoGebra & Nationella provet-nivå (linjära)" }
-            ],
-            "Geometri": [
-                { value: 1, label: "1. Area och omkrets (kvadrat, rektangel, triangel)" },
-                { value: 2, label: "2. Cirkelns area och omkrets" },
-                { value: 3, label: "3. Volym & rymdgeometri" },
-                { value: 4, label: "4. Enhetsomvandlingar (längd, area, volym)" },
-                { value: 5, label: "5. Skala & likformighet" },
-                { value: 6, label: "6. Vinklar & Pythagoras sats" },
-                { value: 7, label: "7. Blandad nivå – Nationella provet-stil" }
-            ],
-            "Algebra": [
-                { value: 1, label: "1. Ekvationer med + och −" },
-                { value: 2, label: "2. Multiplikation & division" },
-                { value: 3, label: "3. x på båda sidor" },
-                { value: 4, label: "4. Parenteser och förenklingar" },
-                { value: 5, label: "5. Bråk och decimaler" },
-                { value: 6, label: "6. Lösa ut variabler ur formler" },
-                { value: 7, label: "7. Faktorisering av uttryck" },
-                { value: 8, label: "8. Kombinerade ekvationer och problemlösning" },
-                { value: 9, label: "9. Blandad nivå – Nationella provet-stil" }
-            ],
-            "Taluppfattning": [
-                { value: 1, label: "1. Grundläggande tal och positionssystem" },
-                { value: 2, label: "2. Negativa tal och tallinjen" },
-                { value: 3, label: "3. Bråk och decimaler" },
-                { value: 4, label: "4. Procent, promille och andelar" },
-                { value: 5, label: "5. Potenser & kvadratrötter" },
-                { value: 6, label: "6. Prefix, avrundning och överslagsräkning" },
-                { value: 7, label: "7. Primtal, faktorisering och delbarhet" },
-                { value: 8, label: "8. Reella tal & jämförelser" },
-                { value: 9, label: "9. Blandad nivå – Nationella provet-stil" }
-            ],
-            "Statistik": [
-                { value: 1, label: "1. Stolp-, cirkel- & linjediagram" },
-                { value: 2, label: "2. Boxplot & spridningsmått" }
-            ]
-        };
+        const COLLECTION_PATHS = { FREE_TRAINING: `artifacts/${appId}/public/data/math_tasks`, CAMPAIGN_ROOT: `artifacts/${appId}/public/data/campaigns`, USER_SCORE: `artifacts/${appId}/users/` };
+        const CAMPAIGN_LEVELS = { "Procent": [{value:1,label:"1. Grundläggande procent"},{value:2,label:"2. Förändring & förändringsfaktor"},{value:3,label:"3. Procentenheter & jämförelser"},{value:4,label:"4. Promille & ppm"},{value:5,label:"5. Ränta & ränta på ränta"},{value:6,label:"6. Flera procentuella förändringar i rad"},{value:7,label:"7. Blandad nivå – Nationella provet-stil"}], "Sannolikhet": [{value:1,label:"1. Grundläggande begrepp"},{value:2,label:"2. Enkla sannolikheter"},{value:3,label:"3. Flera utfall & kombinatorik"},{value:4,label:"4. Medelvärde, median & typvärde"},{value:5,label:"5. Frekvenstabeller & diagram"},{value:6,label:"6. Sammansatta sannolikheter"},{value:7,label:"7. Komplementhändelser"},{value:8,label:"8. Blandad nivå"}], "FunktionerSamband": [{value:1,label:"1. Proportionalitet"},{value:2,label:"2. Tolka grafer"},{value:3,label:"3. Rät linje"},{value:4,label:"4. Sätta in och räkna"},{value:5,label:"5. Skärningspunkter"},{value:6,label:"6. Förändring"},{value:7,label:"7. f(x)-uppgifter"},{value:8,label:"8. Tillämpningar"},{value:9,label:"9. GeoGebra & NP-nivå"}], "Geometri": [{value:1,label:"1. Area och omkrets"},{value:2,label:"2. Cirkelns area"},{value:3,label:"3. Volym & rymd"},{value:4,label:"4. Enhetsomvandlingar"},{value:5,label:"5. Skala & likformighet"},{value:6,label:"6. Vinklar & Pythagoras"},{value:7,label:"7. Blandad nivå"}], "Algebra": [{value:1,label:"1. Ekvationer med + och -"},{value:2,label:"2. Multiplikation & division"},{value:3,label:"3. x på båda sidor"},{value:4,label:"4. Parenteser"},{value:5,label:"5. Bråk och decimaler"},{value:6,label:"6. Lösa ut variabler"},{value:7,label:"7. Faktorisering"},{value:8,label:"8. Problemlösning ekvationer"},{value:9,label:"9. Blandad nivå"}], "Taluppfattning": [{value:1,label:"1. Grundläggande tal"},{value:2,label:"2. Negativa tal"},{value:3,label:"3. Bråk och decimaler"},{value:4,label:"4. Procent, promille"},{value:5,label:"5. Potenser & rötter"},{value:6,label:"6. Prefix & överslag"},{value:7,label:"7. Primtal & delbarhet"},{value:8,label:"8. Reella tal"},{value:9,label:"9. Blandad nivå"}], "Statistik": [{value:1,label:"1. Diagram"},{value:2,label:"2. Boxplot & spridning"}] };
 
-        window.db = null;
-        window.auth = null;
-        window.userId = null;
-        window.appId = appId;
-        
-        let allProblems = []; 
-        let currentProblem = null;
-        let filteredProblems = [];
-        let currentScore = 0;
-        let currentTotal = 0;
-        let seenProblemIndices = [];
-        let currentMode = 'campaign'; 
+        // GLOBALA VARIABLER
+        let userId;
+        let allProblems=[], currentProblem=null, filteredProblems=[], currentScore=0, currentTotal=0, seenProblemIndices=[], currentMode='campaign';
+        let campaignStreak=0, chaptersCleared={}, STREAK_TO_PASS=7, dailyTasks=0, dailyStreak=0, lastStudyDate="";
+        let isCheckingAnswer=false, inactivityTimer;
+        let attempts=0, currentScaffoldStep=0;
 
-        let campaignStreak = 0; 
-        let chaptersCleared = {}; 
-        const STREAK_TO_PASS = 7; 
+        // --- FUNKTIONER ---
 
-        let isCheckingAnswer = false; 
-        let inactivityTimer;
-
-        // DOM Elements
-        const problemCard = document.getElementById('problemCard');
-        const problemText = document.getElementById('problemText');
-        const answerContainer = document.getElementById('answerContainer');
-        const checkAnswerBtn = document.getElementById('checkAnswerBtn');
-        const statusMessage = document.getElementById('statusMessage');
-        const userIdDisplay = document.getElementById('userIdDisplay');
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const totalDisplay = document.getElementById('totalDisplay');
-        const progressBar = document.getElementById('progressBar');
-
-        const streakSection = document.getElementById('streakSection');
-        const streakContainer = document.getElementById('streakContainer');
-        const streakDisplay = document.getElementById('streakDisplay'); 
-        const trophyDisplay = document.getElementById('trophyDisplay'); 
-        
-        const trainingMode = document.getElementById('trainingMode'); 
-        const freeTrainingFilters = document.getElementById('freeTrainingFilters');
-        const campaignFilters = document.getElementById('campaignFilters');
-        const modeDescription = document.getElementById('modeDescription');
-        
-        const levelFilter = document.getElementById('levelFilter');
-        const topicFilter = document.getElementById('topicFilter');
-        
-        const campaignNameFilter = document.getElementById('campaignNameFilter');
-        const campaignLevelFilter = document.getElementById('campaignLevelFilter');
-        const chapterPartFilter = document.getElementById('chapterPartFilter');
-        
-        const solutionInline = document.getElementById('solutionInline');
-        const solutionText = document.getElementById('solutionText');
-        const showSolutionBtn = document.getElementById('showSolutionBtn');
-        
-        const toggleCalculatorBtn = document.getElementById('toggleCalculatorBtn'); 
-        const calculatorWrapper = document.getElementById('calculatorWrapper'); 
-        
-        const calcDisplay = document.getElementById('calcDisplay'); 
-        const calcHandle = document.getElementById('calcHandle');
-        const closeCalculator = document.getElementById('closeCalculator');
-
-        // Dark Mode Toggle
-        const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
-        toggleDarkModeBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-        });
-
-        
-        function getTopicIcon(topic) {
-            switch (topic) {
-                case "Algebra": return "🧮";
-                case "Procent": return "📈";
-                case "Geometri": return "📐";
-                case "Tal": return "🔢";
-                case "Samband": return "📊";
-                case "Sannolikhet": return "🎲";
-                case "Statistik": return "📉";
-                case "FunktionerSamband": return "📈";
-                case "Taluppfattning": return "🔢";
-                default: return "📚";
-            }
-        }
-        
-        function formatMathText(text) {
-            if (!text) return "";
-            if (text.includes("\\frac")) return text;
-            return text.replace(/([a-zA-Z0-9]+)\s*\/\s*([a-zA-Z0-9]+)/g, (match, täljare, nämnare) => {
-                return `$\\frac{${täljare}}{${nämnare}}$`;
-            });
+        function getNiceStep(range){if(range===0)return 1;const t=8,r=range/t,m=Math.pow(10,Math.floor(Math.log10(r))),b=r/m;return b<1.5?1*m:b<3.5?2*m:5*m}
+        function renderDrawData(canvas,d){
+             const ctx = canvas.getContext('2d'); const w=canvas.width,h=canvas.height;
+             ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+             if(d.type==='table'){const cellW=120,cellH=50,startX=(w-cellW*2)/2,startY=(h-cellH*(d.rows.length+1))/2;ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.font='bold 20px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f3f4f6';ctx.fillRect(startX,startY,cellW,cellH);ctx.fillRect(startX+cellW,startY,cellW,cellH);ctx.strokeRect(startX,startY,cellW,cellH);ctx.strokeRect(startX+cellW,startY,cellW,cellH);ctx.fillStyle='#000';ctx.fillText(d.headers[0],startX+cellW/2,startY+cellH/2);ctx.fillText(d.headers[1],startX+cellW+cellW/2,startY+cellH/2);ctx.font='20px Arial';d.rows.forEach((r,i)=>{const y=startY+(i+1)*cellH;ctx.strokeRect(startX,y,cellW,cellH);ctx.strokeRect(startX+cellW,y,cellW,cellH);ctx.fillStyle='#000';ctx.fillText(r[0],startX+cellW/2,y+cellH/2);if(r[1]==='?') {ctx.fillStyle='#e11d48';ctx.font='bold 24px Arial';} else {ctx.fillStyle='#000';ctx.font='20px Arial';}ctx.fillText(r[1],startX+cellW+cellW/2,y+cellH/2);});
+             }else if(d.type==='graph'){const range=d.range,margin=60,plotW=w-2*margin,plotH=h-2*margin,xR=range.xMax-range.xMin,yR=range.yMax-range.yMin,sX=d.forceStepX||getNiceStep(xR),sY=d.forceStepY||getNiceStep(yR),toX=(v)=>margin+((v-range.xMin)/xR)*plotW,toY=(v)=>h-margin-((v-range.yMin)/yR)*plotH;ctx.strokeStyle='#e5e7eb';ctx.lineWidth=1;ctx.beginPath();for(let x=Math.ceil(range.xMin/sX)*sX;x<=range.xMax;x+=sX){if(d.gridOnlyPositive&&x<0)continue;const px=toX(x);ctx.moveTo(px,margin);ctx.lineTo(px,h-margin);}for(let y=Math.ceil(range.yMin/sY)*sY;y<=range.yMax;y+=sY){if(d.gridOnlyPositive&&y<0)continue;const py=toY(y);ctx.moveTo(margin,py);ctx.lineTo(w-margin,py);}ctx.stroke();ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.beginPath();const y0=toY(0);if(y0>=margin&&y0<=h-margin){ctx.moveTo(margin,y0);ctx.lineTo(w-margin,y0);}else if(d.gridOnlyPositive){ctx.moveTo(margin,h-margin);ctx.lineTo(w-margin,h-margin);}const x0=toX(0);if(x0>=margin&&x0<=w-margin){ctx.moveTo(x0,margin);ctx.lineTo(x0,h-margin);}else if(d.gridOnlyPositive){ctx.moveTo(margin,margin);ctx.lineTo(margin,h-margin);}ctx.stroke();ctx.fillStyle='#374151';ctx.font='12px Arial';ctx.textAlign='center';ctx.textBaseline='top';for(let x=Math.ceil(range.xMin/sX)*sX;x<=range.xMax;x+=sX){if(Math.abs(x)<0.0001&&!d.gridOnlyPositive)continue;const px=toX(x);let py=toY(0)+8;if(d.gridOnlyPositive)py=h-margin+8;ctx.fillText(parseFloat(x.toFixed(2)),px,py);}ctx.textAlign='right';ctx.textBaseline='middle';for(let y=Math.ceil(range.yMin/sY)*sY;y<=range.yMax;y+=sY){if(Math.abs(y)<0.0001&&!d.gridOnlyPositive)continue;let px=toX(0)-8;if(d.gridOnlyPositive)px=margin-8;const py=toY(y);ctx.fillText(parseFloat(y.toFixed(2)),px,py);}d.funcs.forEach(f=>{ctx.strokeStyle=f.color;ctx.lineWidth=3;ctx.beginPath();let first=true;for(let px=margin;px<=w-margin;px+=2){const valX=range.xMin+((px-margin)/plotW)*xR;try{const y=Function('x',`return ${f.expression}`)(valX);const py=toY(y);if(py>=margin&&py<=h-margin){if(first){ctx.moveTo(px,py);first=false;}else{ctx.lineTo(px,py);}}else{first=true;}}catch(e){}}ctx.stroke();});if(d.points){d.points.forEach(p=>{const px=toX(p.x),py=toY(p.y);if(p.showLine){ctx.strokeStyle=p.color||'#000';ctx.setLineDash([5,5]);ctx.lineWidth=1;ctx.beginPath();const ya=d.gridOnlyPositive?h-margin:toY(0);const xa=d.gridOnlyPositive?margin:toX(0);ctx.moveTo(px,ya);ctx.lineTo(px,py);ctx.lineTo(xa,py);ctx.stroke();ctx.setLineDash([]);}ctx.fillStyle=p.color||'#000';ctx.beginPath();ctx.arc(px,py,5,0,2*Math.PI);ctx.fill();if(p.label){ctx.font='bold 14px Arial';ctx.fillStyle='#fff';ctx.strokeStyle=p.color;ctx.lineWidth=3;ctx.strokeText(p.label,px+10,py-10);ctx.fillText(p.label,px+10,py-10);}});}}
         }
 
-        function switchMode() {
-            currentMode = trainingMode.value;
-            resetScore();
-            seenProblemIndices = [];
-            problemCard.style.display = 'none';
-            statusMessage.style.display = 'none';
+        function getTopicIcon(t){return "📚"} 
+        function formatMathText(t){
+            if(!t)return"";
+            if(t.includes("\\frac"))return t;
             
-            if (currentMode === 'free') {
-                freeTrainingFilters.classList.remove('hidden');
-                campaignFilters.classList.add('hidden');
-                modeDescription.textContent = "I detta läge tränar du på klassiska typuppgifter som ofta kommer på nationella proven";
-            } else {
-                freeTrainingFilters.classList.add('hidden');
-                campaignFilters.classList.remove('hidden');
-                modeDescription.textContent = "Träna strukturerat kapitel för kapitel. Klara 7 uppgifter i rad för att få en pokal! 🏆";
+            // 1. Ersätt vanliga gångertecken med \cdot
+            let s = t.replace(/\s*\*\s*/g, " \\cdot ");
+            
+            // 2. Ersätt bråk (a/b) med \frac{a}{b}
+            s = s.replace(/(\b[a-zA-Z0-9]+\b)\s*\/\s*(\b[a-zA-Z0-9]+\b)/g, "\\frac{$1}{$2}");
+
+            // 3. Ersätt exponenter (a^b) med ^{b}
+            // VIKTIGT: Fånga även siffran FRAMFÖR variabeln!
+            // Ex: 2x^2 -> 2x^{2}
+            // Regex: (siffra* + bokstav + ^ + exponent)
+            s = s.replace(/([0-9]*[a-zA-Z])\^([0-9a-zA-Z\-]+)/g, "$1^{$2}");
+            
+            // 4. Linda in matematiska uttryck i $...$ om de inte redan har det
+            // Vi letar efter mönster som ser ut som matte men saknar $
+            // Detta gör att 2x^{2} - 3x blir $2x^{2} - 3x$
+            // Enkel heuristik: Om strängen innehåller ^, \frac eller \cdot, men inga $, wrappa allt.
+            if ((s.includes("^{") || s.includes("\\frac") || s.includes("\\cdot")) && !s.includes("$")) {
+                s = `$${s}$`;
             }
-            loadAllProblems();
-        }
 
-        function initializeFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                window.db = getFirestore(app);
-                window.auth = getAuth(app);
-                
-                window.getDoc = getDoc;
-                window.doc = doc;
-                window.setDoc = setDoc;
-                window.collection = collection;
-                window.getDocs = getDocs;
-                window.query = query;
-                window.where = where;
-
-                onAuthStateChanged(window.auth, (user) => {
-                    if (user) {
-                        window.userId = user.uid;
-                        userIdDisplay.textContent = user.uid;
-                        populateChapterPartsFilter(); 
-                        loadScore(); 
-                        loadAllProblems();
-                    } else {
-                        signInAnonymously(window.auth).catch((error) => {
-                            console.error("Anonym inloggning misslyckades:", error);
-                            statusMessage.textContent = "Kunde inte ansluta till servern (Auth).";
-                            statusMessage.style.display = "block";
-                        });
-                    }
-                });
-
-            } catch (error) {
-                console.error("Firebase Initiering Misslyckades:", error);
-                statusMessage.textContent = `Fel vid initiering: ${error.message}`;
-                statusMessage.style.display = "block";
-            }
+            return s;
         }
         
-        function populateChapterPartsFilter() {
-            const selectedCampaign = campaignNameFilter.value; 
-            const parts = CAMPAIGN_LEVELS[selectedCampaign] || []; 
-             
-            chapterPartFilter.innerHTML = '';
-             parts.forEach(part => {
-                const option = document.createElement('option');
-                option.value = part.value; 
-                option.textContent = part.label;
-                chapterPartFilter.appendChild(option);
-            });
-            applyFiltersAndRender();
-        }
-
-
-        async function loadAllProblems() {
-            if (!window.db) return;
+        function updateDailyUI() { 
+            const dCD = document.getElementById('dailyCountDisplay');
+            const dPB = document.getElementById('dailyProgressBar');
+            const dSD = document.getElementById('dailyStreakDisplay');
             
-            let targetPath;
-            if (currentMode === 'free') {
-                targetPath = COLLECTION_PATHS.FREE_TRAINING;
-            } else {
-                const campaign = campaignNameFilter.value; 
-                targetPath = `${COLLECTION_PATHS.CAMPAIGN_ROOT}/${campaign}/tasks`; 
-            }
-            
-            statusMessage.textContent = `Laddar uppgifter...`;
-            statusMessage.style.display = "block";
-            
-            try {
-                const problemsCollection = collection(window.db, targetPath);
-                const querySnapshot = await getDocs(problemsCollection);
-                
-                allProblems = [];
-                querySnapshot.forEach((doc) => {
-                    allProblems.push({ id: doc.id, ...doc.data() });
-                });
-                
-                if (allProblems.length === 0) {
-                    statusMessage.textContent = `Hittade inga uppgifter i mappen '${targetPath.split('/').pop()}'. Kontrollera adminverktyget.`;
-                    statusMessage.style.display = "block";
-                } else {
-                    statusMessage.style.display = "none";
-                    problemCard.style.display = "flex";
-                    problemCard.classList.remove('hidden'); 
-                    problemCard.classList.add('flex', 'flex-col', 'justify-between'); 
-
-                    if(currentMode === 'free') populateFilters();
-                    
-                    if (currentMode === 'campaign') {
-                         populateChapterPartsFilter(); 
-                    } else {
-                        applyFiltersAndRender();
-                    }
-                }
-
-            } catch (error) {
-                console.error("Fel vid laddning av uppgifter: ", error);
-                statusMessage.textContent = `Fel vid laddning. Kontrollera samlingen '${targetPath.split('/').pop()}' existerar. Förväntad sökväg: ${targetPath}`;
-                statusMessage.style.display = "block";
-                problemCard.style.display = "none";
-            }
-        }
-        
-        function populateFilters() {
-            const problemsToFilter = allProblems.filter(p => !p.campaignName); 
-
-            const selectedLevel = levelFilter.value;
-            let problemsByLevel = (selectedLevel === 'Alla') ? problemsToFilter : problemsToFilter.filter(p => p.level === selectedLevel);
-            
-            const topics = [...new Set(problemsByLevel.map(p => p.topic || 'Okänt'))];
-            topics.sort();
-            
-            topicFilter.innerHTML = '<option value="Alla">Alla Ämnen</option>';
-            
-            topics.forEach(topic => {
-                const option = document.createElement('option');
-                option.value = topic;
-                option.textContent = `${getTopicIcon(topic)} ${topic}`;
-                topicFilter.appendChild(option);
-            });
-            
-            topicFilter.disabled = false;
-            topicFilter.classList.remove('bg-gray-100', 'cursor-not-allowed');
-        }
-
-
-        function applyFiltersAndRender() {
-            let tempFiltered = allProblems;
-
-            if (currentMode === 'free') {
-                const selectedLevel = levelFilter.value;
-                const selectedTopic = topicFilter.value;
-                
-                if (selectedLevel !== 'Alla') {
-                    tempFiltered = tempFiltered.filter(p => p.level === selectedLevel);
-                }
-                if (selectedTopic !== 'Alla') {
-                    tempFiltered = tempFiltered.filter(p => p.topic === selectedTopic);
-                }
-            } else {
-                const selectedCampaignLevel = campaignLevelFilter.value; 
-                const selectedChapterPart = parseInt(chapterPartFilter.value); 
-                
-                tempFiltered = tempFiltered.filter(p => 
-                    p.campaignLevel === selectedCampaignLevel && 
-                    p.chapterLevel === selectedChapterPart
-                );
-            }
-            
-            filteredProblems = tempFiltered;
-            
-            if (filteredProblems.length === 0) {
-                statusMessage.textContent = "Inga uppgifter matchade ditt val.";
-                statusMessage.style.display = "block";
-                problemCard.style.display = "none";
-                return;
-            }
-            
-            statusMessage.style.display = "none";
-            problemCard.style.display = "flex"; 
-            
-            if (seenProblemIndices.length >= filteredProblems.length) {
-                seenProblemIndices = [];
-            }
-
-            let newIndex;
-            do {
-                newIndex = Math.floor(Math.random() * filteredProblems.length);
-            } while (seenProblemIndices.includes(newIndex));
-
-            seenProblemIndices.push(newIndex);
-            let currentProblemIndexLocal = newIndex;
-            currentProblem = filteredProblems[currentProblemIndexLocal];
-            
-            if (!currentProblem.question_sv || currentProblem.question_sv.trim() === '') {
-                 problemText.textContent = "(Uppgiftstext saknas i databasen!)";
-            }
-
-            renderProblem(currentProblem);
-        }
-
-        function renderProblem(problem) {
-            if (!problem) return;
-
-            let question = problem.question_sv || '';
-            question = formatMathText(question);
-
-            if (question.trim() === '') {
-                problemText.textContent = "(Uppgiftstext saknas i databasen!)";
-            } else {
-                problemText.innerHTML = question;
-            }
-
-            feedback.style.display = "none";
-            checkAnswerBtn.disabled = false;
-            checkAnswerBtn.style.display = "block";
-            nextProblemBtn.style.display = "none";
-            showSolutionBtn.style.display = "none";
-            solutionInline.style.display = "none"; 
-            answerContainer.innerHTML = ''; 
-
-            const problemImage = document.getElementById('problemImage');
-            if (problem.imageUrl) {
-                problemImage.src = problem.imageUrl;
-                problemImage.style.display = "block";
-            } else {
-                problemImage.style.display = "none";
-            }
-
-            const type = problem.answerType || 'text';
-            if (type === 'number') {
-                answerContainer.innerHTML = `
-                    <label for="answerInput" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar (endast siffror):</label>
-                    <input type="number" id="answerInput" class="w-full p-3.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400 dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">
-                `;
-            } else if (type === 'text') {
-                answerContainer.innerHTML = `
-                    <label for="answerInput" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar:</label>
-                    <input type="text" id="answerInput" class="w-full p-3.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400 dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">
-                `;
-            }
-
-            if (window.MathJax) {
-                MathJax.typesetPromise([problemText]);
-            }
-        }
-        
-        function checkAnswer() {
-            if (isCheckingAnswer) {
-                return; 
-            }
-            isCheckingAnswer = true;
-            checkAnswerBtn.disabled = true; 
-
-            const answerInput = document.getElementById('answerInput');
-            if (!answerInput) {
-                isCheckingAnswer = false;
-                return;
-            }
-
-            const userAnswer = answerInput.value.trim();
-            const correctAnswer = String(currentProblem.correctAnswer).trim();
-            
-            let isCorrect = false;
-
-            function stripUnits(str) {
-                let cleaned = str.replace(/,/g, '.');
-                cleaned = cleaned.replace(/[^0-9.\-]/g, ''); 
-                return cleaned;
-            }
-
-            const userClean = stripUnits(userAnswer);
-            const correctClean = stripUnits(correctAnswer);
-            
-            const userNum = parseFloat(userClean);
-            const correctNum = parseFloat(correctClean);
-
-            if (!isNaN(userNum) && !isNaN(correctNum)) {
-                if (Math.abs(userNum - correctNum) < 0.000001) {
-                    isCorrect = true;
-                }
-            }
-
-            if (!isCorrect) {
-                if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-                    isCorrect = true;
-                }
-            }
-            
-            // FIX: Increment total here
-            currentTotal++; 
-
-            if (isCorrect) {
-                feedback.textContent = "Rätt svar!";
-                feedback.className = "mt-6 text-center font-semibold p-4 rounded-xl bg-green-100 text-green-800 border border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-700";
-                currentScore++; 
-                campaignStreak++; 
-                triggerConfetti(checkAnswerBtn); 
-            } else {
-                feedback.textContent = `Inte riktigt! Rätt svar var: ${correctAnswer}.`;
-                feedback.className = "mt-6 text-center font-semibold p-4 rounded-xl bg-red-100 text-red-800 border border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-700";
-                campaignStreak = 0; 
-            }
-            
-            if (currentMode === 'campaign' && isCorrect && campaignStreak >= STREAK_TO_PASS) {
-                markChapterCleared();
-            }
-
-            updateScoreDisplay();
-            updateStreakDisplay(); 
-            saveScore(); 
-            
-            isCheckingAnswer = false; 
-
-            feedback.style.display = "block";
-            checkAnswerBtn.style.display = "none";
-            nextProblemBtn.style.display = "block";
-            showSolutionBtn.style.display = "inline"; 
-        }
-
-        function markChapterCleared() {
-            const campaign = campaignNameFilter.value;
-            const chapter = parseInt(chapterPartFilter.value);
-            
-            if (!chaptersCleared[campaign]) {
-                chaptersCleared[campaign] = {};
-            }
-            chaptersCleared[campaign][chapter] = true;
-            campaignStreak = 0; 
-            saveScore();
-            updateStreakDisplay();
-            
-            alert(`GRATTIS! Du har klarat ${campaign} - Del ${CAMPAIGN_LEVELS[campaign].find(p => p.value === chapter).label}!`);
-        }
-
-
-        function showSolution() {
-            if (!currentProblem || !currentProblem.explanation_sv) {
-                solutionText.textContent = "Det finns tyvärr ingen förklaring till den här uppgiften.";
-            } else {
-                solutionText.innerHTML = formatMathText(currentProblem.explanation_sv);
-            }
-            
-            solutionInline.style.display = "block"; 
-            showSolutionBtn.style.display = "none"; 
-            
-            if (window.MathJax) {
-                MathJax.typesetPromise([solutionText]);
-            }
+            dCD.textContent = `${dailyTasks}/10`;
+            const pct = Math.min((dailyTasks / 10) * 100, 100);
+            if (dPB) dPB.style.width = `${pct}%`;
+            if(dSD) dSD.textContent = `Dagar i rad: ${dailyStreak} 📅`;
+            if (dailyTasks >= 10) { dCD.classList.add('text-green-600', 'font-black'); dCD.textContent = "MÅL NÅTT! 🎉"; }
         }
 
         function updateScoreDisplay() {
-            scoreDisplay.textContent = currentScore;
-            totalDisplay.textContent = currentTotal;
+            document.getElementById('scoreDisplay').textContent = currentScore;
+            document.getElementById('totalDisplay').textContent = currentTotal;
             updateProgressBar();
         }
 
         function updateProgressBar() {
             let percent;
-             if (currentMode === 'campaign') {
-                percent = (campaignStreak / STREAK_TO_PASS) * 100;
-                if (percent > 100) percent = 100; 
-            } else {
-                percent = (currentTotal === 0) ? 0 : (currentScore / currentTotal) * 100;
-            }
-            progressBar.style.width = `${percent}%`;
+            if (currentMode === 'campaign') { percent = (campaignStreak / STREAK_TO_PASS) * 100; if (percent > 100) percent = 100; }
+            else { percent = (currentTotal === 0) ? 0 : (currentScore / currentTotal) * 100; }
+            document.getElementById('progressBar').style.width = `${percent}%`;
         }
 
         function updateStreakDisplay() {
-            // Fire effect logic
-            streakContainer.className = "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 flex items-center justify-center gap-3 transition-all duration-300";
-            
+            const streakContainer = document.getElementById('streakContainer');
+            const streakSection = document.getElementById('streakSection');
+            const streakDisplay = document.getElementById('streakDisplay');
+            const trophyDisplay = document.getElementById('trophyDisplay');
+            const campaignNameFilter = document.getElementById('campaignNameFilter');
+            const chapterPartFilter = document.getElementById('chapterPartFilter');
+
+            streakContainer.className = "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 flex flex-col items-center justify-center gap-1 transition-all duration-300";
             if (campaignStreak >= 3) streakContainer.classList.add('fire-low');
             if (campaignStreak >= 5) { streakContainer.classList.remove('fire-low'); streakContainer.classList.add('fire-med'); }
             if (campaignStreak >= 6) { streakContainer.classList.remove('fire-med'); streakContainer.classList.add('fire-high'); }
-            
             if (currentMode === 'campaign') {
                 streakSection.classList.remove('hidden');
                 streakDisplay.textContent = `${campaignStreak}/${STREAK_TO_PASS} 🔥`;
-                
                 const campaign = campaignNameFilter.value;
                 const chapter = parseInt(chapterPartFilter.value);
-
                 const isCleared = chaptersCleared[campaign] && chaptersCleared[campaign][chapter];
-
-                if (isCleared) {
-                    trophyDisplay.innerHTML = '🏆';
-                    streakDisplay.classList.remove('text-praktiska-red');
-                    streakDisplay.classList.add('text-green-600');
-                } else {
-                    trophyDisplay.innerHTML = '';
-                    streakDisplay.classList.add('text-praktiska-red');
-                    streakDisplay.classList.remove('text-green-600');
-                }
-                
+                if (isCleared) { trophyDisplay.innerHTML = '🏆'; streakDisplay.classList.remove('text-praktiska-red'); streakDisplay.classList.add('text-green-600'); }
+                else { trophyDisplay.innerHTML = ''; streakDisplay.classList.add('text-praktiska-red'); streakDisplay.classList.remove('text-green-600'); }
             } else {
                 streakSection.classList.add('hidden');
             }
         }
         
         async function loadScore() {
-            if (!window.userId || !window.db) return;
-            const scoreDocPath = `${COLLECTION_PATHS.USER_SCORE}${window.userId}/progress/score_data`;
+            if (!userId || !db) return;
+            const scoreDocPath = `${COLLECTION_PATHS.USER_SCORE}${userId}/progress/score_data`;
             try {
-                const docRef = doc(window.db, scoreDocPath);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    currentScore = data.score || 0;
-                    currentTotal = data.total || 0;
-                    campaignStreak = data.streak || 0; 
-                    chaptersCleared = data.cleared || {}; 
-                }
+                const docRef = doc(db, scoreDocPath);
+                getDoc(docRef).then(docSnap => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        currentScore = data.score || 0; currentTotal = data.total || 0; campaignStreak = data.streak || 0; chaptersCleared = data.cleared || {};
+                        dailyTasks = data.dailyTasks || 0; dailyStreak = data.dailyStreak || 0; lastStudyDate = data.lastStudyDate || "";
+                        const today = new Date().toISOString().split('T')[0];
+                        if (lastStudyDate !== today) dailyTasks = 0;
+                    }
+                    updateScoreDisplay(); updateStreakDisplay(); updateDailyUI();
+                });
             } catch (error) { console.error("Fel vid laddning av poäng:", error); }
-            updateScoreDisplay();
-            updateStreakDisplay(); 
         }
-        
+
         async function saveScore() {
-            if (!window.userId || !window.db) return;
-            const scoreDocPath = `${COLLECTION_PATHS.USER_SCORE}${window.userId}/progress/score_data`;
+            if (!userId || !db) return;
+            const scoreDocPath = `${COLLECTION_PATHS.USER_SCORE}${userId}/progress/score_data`;
             try {
-                const docRef = doc(window.db, scoreDocPath);
-                await setDoc(docRef, { 
-                    score: currentScore, 
-                    total: currentTotal,
-                    streak: campaignStreak, 
-                    cleared: chaptersCleared 
+                setDoc(doc(db, scoreDocPath), { 
+                    score: currentScore, total: currentTotal, streak: campaignStreak, cleared: chaptersCleared,
+                    dailyTasks: dailyTasks, dailyStreak: dailyStreak, lastStudyDate: lastStudyDate
                 }, { merge: true });
             } catch (error) { console.error("Fel vid sparning av poäng:", error); }
         }
 
-        function resetScore(fullReset = true) {
-            if (fullReset) {
-                currentScore = 0;
-                currentTotal = 0;
-                updateScoreDisplay();
-                saveScore(); 
-            }
-            seenProblemIndices = []; 
-            campaignStreak = 0; 
-            updateStreakDisplay();
+        function resetScore(full) {
+            if (full) { currentScore = 0; currentTotal = 0; updateScoreDisplay(); saveScore(); }
+            seenProblemIndices = []; campaignStreak = 0; updateStreakDisplay();
         }
 
-        // --- INAKTIVITETS LOGIK (FIXED) ---
         function resetInactivityTimer() {
             clearTimeout(inactivityTimer);
-            
-            // Use variables to access elements safely inside the function
-            const msg = document.getElementById('inactivityMessage');
-            const overlay = document.getElementById('inactivityOverlay');
-            
-            if (msg) msg.classList.add('hidden');
-            if (overlay) overlay.classList.add('hidden');
-            
-            inactivityTimer = setTimeout(() => {
-                if (msg) msg.classList.remove('hidden');
-                if (overlay) overlay.classList.remove('hidden');
-            }, 30000); 
+            const ol = document.getElementById('inactivityOverlay');
+            if (ol) ol.style.display = 'none';
+            inactivityTimer = setTimeout(() => { if (ol) ol.style.display = 'flex'; }, 120000); 
         }
-        
-        window.addEventListener('mousemove', resetInactivityTimer);
-        window.addEventListener('keydown', resetInactivityTimer);
-        window.addEventListener('click', resetInactivityTimer);
-        resetInactivityTimer(); 
 
-        // --- KONFETTI LOGIK (ENORM EXPLOSION) ---
         function triggerConfetti(element) {
             const colors = ['#E3004F', '#f66909', '#FCD34D', '#10B981', '#3B82F6'];
             const rect = element.getBoundingClientRect();
             const center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-
             for (let i = 0; i < 100; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                particle.style.width = Math.random() * 12 + 6 + 'px';
-                particle.style.height = particle.style.width;
-                
-                particle.style.left = center.x + 'px';
-                particle.style.top = center.y + 'px';
-                particle.style.borderRadius = '50%'; 
-                
-                const angle = Math.random() * Math.PI * 2;
-                const velocity = Math.random() * 400 + 100; 
-                const tx = Math.cos(angle) * velocity;
-                const ty = Math.sin(angle) * velocity;
-                
-                particle.style.setProperty('--tx', `${tx}px`);
-                particle.style.setProperty('--ty', `${ty}px`);
-                
+                particle.style.width = Math.random() * 12 + 6 + 'px'; particle.style.height = particle.style.width;
+                particle.style.left = center.x + 'px'; particle.style.top = center.y + 'px'; particle.style.borderRadius = '50%'; 
+                const angle = Math.random() * Math.PI * 2; const velocity = Math.random() * 400 + 100; 
+                const tx = Math.cos(angle) * velocity; const ty = Math.sin(angle) * velocity;
+                particle.style.setProperty('--tx', `${tx}px`); particle.style.setProperty('--ty', `${ty}px`);
                 particle.style.setProperty('--rot', `${Math.random() * 720 - 360}deg`);
-                
                 document.body.appendChild(particle);
-                
                 setTimeout(() => { particle.remove(); }, 1500);
             }
         }
 
-
-        // --- EVENT LISTENERS ---
-        
-        trainingMode.addEventListener('change', switchMode);
-        
-        campaignNameFilter.addEventListener('change', () => { resetScore(true); loadAllProblems(); });
-        campaignLevelFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
-        chapterPartFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
-
-        levelFilter.addEventListener('change', () => { resetScore(true); populateFilters(); applyFiltersAndRender(); });
-        topicFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
-
-        checkAnswerBtn.addEventListener('click', checkAnswer);
-        nextProblemBtn.addEventListener('click', applyFiltersAndRender);
-        showSolutionBtn.addEventListener('click', showSolution);
-        
-        toggleCalculatorBtn.addEventListener('click', () => {
-            const isVisible = calculatorWrapper.style.display !== 'none';
-            calculatorWrapper.style.display = isVisible ? 'none' : 'block';
-            toggleCalculatorBtn.textContent = isVisible ? 'Dölj Kalkylator' : 'Visa Kalkylator';
-        });
-        
-        // STÄNG-KNAPP FÖR KALYKULATOR
-        document.getElementById('closeCalculator').addEventListener('click', () => {
-             calculatorWrapper.style.display = 'none';
-             toggleCalculatorBtn.textContent = 'Visa Kalkylator';
-        });
-        
-        // Kalkylator-drag-logik
-        let isDragging = false;
-        let currentX, currentY, initialX, initialY;
-        let xOffset = 0, yOffset = 0;
-        // calcHandle är redan definierad ovan
-
-        calcHandle.addEventListener("mousedown", dragStart);
-        calcHandle.addEventListener("touchstart", dragStart, {passive: false});
-        document.addEventListener("mouseup", dragEnd);
-        document.addEventListener("touchend", dragEnd);
-        document.addEventListener("mousemove", drag);
-        document.addEventListener("touchmove", drag, {passive: false});
-
-        function dragStart(e) {
-            if (e.type === "touchstart") {
-                initialX = e.touches[0].clientX - xOffset;
-                initialY = e.touches[0].clientY - yOffset;
-            } else {
-                initialX = e.clientX - xOffset;
-                initialY = e.clientY - yOffset;
-            }
-            if (e.target === calcHandle || calcHandle.contains(e.target)) {
-                isDragging = true;
-            }
-        }
-        function dragEnd(e) {
-            initialX = currentX;
-            initialY = currentY;
-            isDragging = false;
-        }
-        function drag(e) {
-            if (isDragging) {
-                e.preventDefault();
-                if (e.type === "touchmove") {
-                    currentX = e.touches[0].clientX - initialX;
-                    currentY = e.touches[0].clientY - initialY;
-                } else {
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
-                }
-                xOffset = currentX;
-                yOffset = currentY;
-                setTranslate(currentX, currentY, calculatorWrapper);
-            }
-        }
-        function setTranslate(xPos, yPos, el) {
-            el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
-        }
-
-        // Kalkylator-logik
-        const calcButtons = document.getElementById('calcButtons');
-        // calcDisplay redan definierad ovan
-        let currentInput = '0';
-        let operator = null;
-        let firstOperand = null;
-        let awaitingSecondOperand = false;
-        
-        function clearOperatorHighlight() {
-            document.querySelectorAll('.calc-op').forEach(btn => {
-                btn.classList.remove('calc-op-active');
-            });
-        }
-
-        calcButtons.addEventListener('click', (event) => {
-            if (!event.target.classList.contains('calc-button')) return;
-
-            const value = event.target.dataset.value;
+        function loadAllProblems() {
+            if(!db) return;
+            const status = document.getElementById('statusMessage');
+            status.style.display = "block";
             
-            if (event.target.classList.contains('calc-num') || value === '.') {
-                clearOperatorHighlight(); 
-                if (awaitingSecondOperand) {
-                    currentInput = value === '.' ? '0.' : value;
-                    awaitingSecondOperand = false;
-                } else if (currentInput === '0' && value !== '.') {
-                    currentInput = value;
-                } else if (value === '.' && currentInput.includes('.')) { } else {
-                    currentInput += value;
-                }
-            } else if (event.target.classList.contains('calc-op')) {
-                if (value === '=') {
-                    if (operator && firstOperand !== null) {
-                        currentInput = calculate(firstOperand, operator, parseFloat(currentInput));
-                        operator = null;
-                        firstOperand = null;
-                        awaitingSecondOperand = true;
-                    }
-                    clearOperatorHighlight();
-                } else {
-                    clearOperatorHighlight();
-                    event.target.classList.add('calc-op-active');
-                    if (firstOperand === null) {
-                        firstOperand = parseFloat(currentInput);
-                    } else if (operator) {
-                        const result = calculate(firstOperand, operator, parseFloat(currentInput));
-                        firstOperand = result;
-                        currentInput = result;
-                    }
-                    operator = value;
-                    awaitingSecondOperand = true;
-                }
-            } else if (event.target.classList.contains('calc-func')) {
-                clearOperatorHighlight();
-                if (value === 'AC') {
-                    currentInput = '0';
-                    operator = null;
-                    firstOperand = null;
-                    awaitingSecondOperand = false;
-                } else if (value === '±') {
-                    currentInput = String(parseFloat(currentInput) * -1);
-                } else if (value === '%') {
-                    currentInput = String(parseFloat(currentInput) / 100);
-                }
-            }
-            calcDisplay.textContent = currentInput.substring(0, 10);
-        });
-
-        function calculate(num1, op, num2) {
-            switch (op) {
-                case '+': return String(num1 + num2);
-                case '-': return String(num1 - num2);
-                case '×': return String(num1 * num2);
-                case '÷': return String(num1 / num2);
-                default: return num2;
+            if(currentMode === 'free') {
+                const topics = Object.keys(CAMPAIGN_LEVELS);
+                allProblems = []; 
+                const promises = topics.map(async t => {
+                    try {
+                        const s = await getDocs(collection(db, `${COLLECTION_PATHS.FREE_TRAINING}/${t}/tasks`));
+                        const temp = [];
+                        s.forEach(d => temp.push({id:d.id, ...d.data(), topic:t}));
+                        return temp;
+                    } catch(e) { return []; }
+                });
+                Promise.all(promises).then(results => {
+                    allProblems = results.flat();
+                    if(allProblems.length === 0) status.textContent = "Hittade inga typuppgifter.";
+                    else { status.style.display = "none"; document.getElementById('problemCard').style.display = 'flex'; populateFilters(); applyFiltersAndRender(); }
+                });
+            } else {
+                const camp = document.getElementById('campaignNameFilter').value;
+                try {
+                    getDocs(collection(db, `${COLLECTION_PATHS.CAMPAIGN_ROOT}/${camp}/tasks`)).then(s => {
+                        allProblems = []; s.forEach(d => allProblems.push({id:d.id, ...d.data()}));
+                        if(allProblems.length === 0) status.textContent = "Inga uppgifter i detta kapitel.";
+                        else { document.getElementById('statusMessage').style.display = "none"; document.getElementById('problemCard').style.display = 'flex'; populateChapterPartsFilter(); }
+                    });
+                } catch(e) { console.error(e); }
             }
         }
         
-        // --- EXPOSING FUNCTIONS GLOBALLY (Fixat) ---
-        window.switchMode = switchMode;
-        window.loadAllProblems = loadAllProblems;
-        window.applyFiltersAndRender = applyFiltersAndRender;
-        window.checkAnswer = checkAnswer;
-        window.showSolution = showSolution;
+        function populateFilters() {
+            const lvlFilter = document.getElementById('levelFilter').value;
+            let filtered = (lvlFilter === 'Alla') ? allProblems : allProblems.filter(p => p.level === lvlFilter);
+            const topics = [...new Set(filtered.map(p => p.topic || p.campaignName || 'Okänt'))].sort();
+            const el = document.getElementById('topicFilter');
+            el.innerHTML = '<option value="Alla">Alla Ämnen</option>';
+            topics.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; el.appendChild(o); });
+            el.disabled = false; el.classList.remove('bg-gray-100', 'cursor-not-allowed');
+        }
+
+        function applyFiltersAndRender() {
+            let temp = allProblems;
+            if(currentMode === 'free') {
+                const lvl = document.getElementById('levelFilter').value;
+                const top = document.getElementById('topicFilter').value;
+                if(lvl !== 'Alla') {
+                    if(lvl === 'Åk 9' || lvl === 'Ma 1') temp = temp.filter(p => { const l = p.campaignLevel||p.level; return l==='Åk 9'||l==='Ma 1'; });
+                    else temp = temp.filter(p => (p.campaignLevel||p.level) === lvl);
+                }
+                if(top !== 'Alla') temp = temp.filter(p => p.topic === top || p.campaignName === top);
+            } else {
+                const cLvl = document.getElementById('campaignLevelFilter').value;
+                const cPart = parseInt(document.getElementById('chapterPartFilter').value);
+                temp = temp.filter(p => {
+                    const l = p.campaignLevel||p.level;
+                    const match = (cLvl==='Åk 9'||cLvl==='Ma 1') ? (l==='Åk 9'||l==='Ma 1') : l===cLvl;
+                    return match && p.chapterLevel === cPart;
+                });
+            }
+            filteredProblems = temp;
+            if(filteredProblems.length > 0) {
+                seenProblemIndices = [];
+                let idx = Math.floor(Math.random() * filteredProblems.length);
+                currentProblem = filteredProblems[idx];
+                renderProblem(currentProblem);
+            } else {
+                document.getElementById('problemCard').style.display = 'none';
+                document.getElementById('statusMessage').style.display = 'block';
+                document.getElementById('statusMessage').textContent = "Inga uppgifter matchade filtret.";
+            }
+        }
+
+        function switchMode() {
+            currentMode = trainingMode.value;
+
+            if (currentMode === 'free') {
+                freeTrainingFilters.classList.remove('hidden');
+                campaignFilters.classList.add('hidden');
+                modeDescription.textContent = "Välj nivå och ämne för typuppgifter.";
+            } else {
+                campaignFilters.classList.remove('hidden');
+                freeTrainingFilters.classList.add('hidden');
+                modeDescription.textContent = "Välj ett kapitel och träna strukturerat.";
+            }
+
+            resetScore(true);
+            loadAllProblems();
+        }
+
+        function populateChapterPartsFilter() {
+            const s = document.getElementById('campaignNameFilter').value;
+            const p = CAMPAIGN_LEVELS[s] || [];
+            const el = document.getElementById('chapterPartFilter');
+            el.innerHTML = '';
+            p.forEach(part => {
+                const o = document.createElement('option');
+                o.value = part.value; o.textContent = part.label;
+                el.appendChild(o);
+            });
+            applyFiltersAndRender();
+        }
+
+        function renderProblem(p) {
+            if(!p) return;
+            // VIKTIGT: Uppdatera den globala variabeln currentProblem
+            currentProblem = p;
+
+            document.getElementById('problemCard').style.display = 'flex';
+            document.getElementById('statusMessage').style.display = 'none';
+            
+            document.getElementById('problemText').innerHTML = formatMathText(p.question_sv||'');
+            document.getElementById('feedback').style.display = "none";
+            
+            const chk = document.getElementById('checkAnswerBtn'); chk.disabled = false; chk.style.display = "block";
+            // FIX: Always reset button text when rendering new problem
+            chk.textContent = "Rätta Svar"; 
+
+            document.getElementById('helpBtn').style.display = "none";
+            document.getElementById('nextProblemBtn').style.display = "none"; document.getElementById('showSolutionBtn').style.display = "none";
+            document.getElementById('solutionInline').style.display = "none";
+            document.getElementById('scaffoldingContainer').classList.add('hidden');
+            
+            // RESET ANSWER CONTAINER & VISIBILITY
+            const ac = document.getElementById('answerContainer');
+            ac.classList.remove('hidden'); 
+            
+            const img = document.getElementById('problemImage');
+            const cvs = document.getElementById('problemCanvas');
+            img.style.display = 'none'; cvs.style.display = 'none';
+
+            if(p.drawData) { cvs.style.display = 'block'; renderDrawData(cvs, p.drawData); } 
+            else if(p.imageUrl) { img.src = p.imageUrl; img.style.display = 'block'; }
+
+            // SCAFFOLDING CHECK: If problem has scaffolding, start it immediately
+            if (p.scaffolding && p.scaffolding.length > 0) {
+                startScaffolding(); 
+                // DO NOT hide input or check button anymore
+            } 
+            
+            // Always render the input field now
+            const type = p.answerType || 'text';
+            ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar:</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border rounded-lg text-lg dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">`;
+
+            if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('problemText')]);
+            attempts = 0; currentScaffoldStep = 0;
+        }
+
+        function checkAnswer() {
+            if (isCheckingAnswer) return;
+            isCheckingAnswer = true; 
+            const inp = document.getElementById('answerInput');
+            if (!inp) { isCheckingAnswer = false; return; }
+            const uAns = inp.value.trim();
+            const cAns = String(currentProblem.correctAnswer).trim();
+            let correct = false;
+            const clean = (s) => s.replace(/,/g, '.').replace(/[^0-9.\-]/g, '');
+            if(parseFloat(clean(uAns)) === parseFloat(clean(cAns)) || uAns.toLowerCase() === cAns.toLowerCase()) correct = true;
+
+            const fb = document.getElementById('feedback');
+            currentTotal++;
+
+            if(correct) {
+                fb.innerHTML = `<div class="text-lg font-bold text-green-800 mb-1">Rätt svar!</div>`;
+                fb.className = "mt-6 text-center p-4 rounded-xl bg-green-100 text-green-800 border border-green-200";
+                
+                // Hide Scaffolding if visible to clean up
+                document.getElementById('scaffoldingContainer').classList.add('hidden');
+
+                if(attempts === 0) {
+                    currentScore++; campaignStreak++; triggerConfetti(document.getElementById('checkAnswerBtn'));
+                    const today = new Date().toISOString().split('T')[0];
+                    if(lastStudyDate === today) dailyTasks++;
+                    else { dailyTasks = 1; if(lastStudyDate) dailyStreak = (new Date(lastStudyDate).getTime() === new Date().getTime() - 86400000) ? dailyStreak+1 : 1; else dailyStreak=1; }
+                    lastStudyDate = today;
+                    updateDailyUI();
+                    saveScore();
+                }
+                if(currentMode === 'campaign' && campaignStreak >= STREAK_TO_PASS) markChapterCleared();
+                document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block";
+            } else {
+                attempts++;
+                fb.style.display = "block";
+                if(attempts === 1) {
+                    // FIRST FAIL: Show Hint
+                    let hint = currentProblem.hint_sv ? formatMathText(currentProblem.hint_sv) : "Försök igen! Kontrollera dina beräkningar.";
+                    fb.innerHTML = `
+                        <div class="mb-2 text-lg font-bold text-yellow-800">Inte riktigt rätt än...</div>
+                        <div class="text-gray-700 mb-3">${hint}</div>
+                        <div class="text-sm font-semibold text-yellow-700">Prova en gång till!</div>
+                    `;
+                    fb.className = "mt-6 text-center p-6 rounded-xl bg-yellow-50 border-2 border-yellow-200 shadow-sm";
+                    if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
+
+                    // Re-enable button for retry
+                    const btn = document.getElementById('checkAnswerBtn');
+                    btn.disabled = false;
+                    btn.textContent = "Försök igen";
+                    
+                    document.getElementById('helpBtn').style.display = "none";
+                    isCheckingAnswer = false; // Allow new click immediately
+                    return; // Exit early so we don't disable button below
+
+                } else {
+                    // SECOND FAIL
+                    fb.innerHTML = `<div class="font-bold text-red-800 mb-2">Tyvärr, det blev fel igen.</div><div>Rätt svar var: ${formatMathText(cAns)}</div>`;
+                    fb.className = "mt-6 text-center font-medium p-6 rounded-xl bg-red-50 border-2 border-red-200";
+                    if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
+
+                    campaignStreak = 0;
+                    document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block"; 
+                    
+                    // Show full solution if available
+                    if (currentProblem.explanation_sv) {
+                        document.getElementById('solutionText').innerHTML = formatMathText(currentProblem.explanation_sv);
+                        document.getElementById('solutionInline').style.display = "block";
+                         if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('solutionText')]);
+                    }
+                }
+            }
+            updateScoreDisplay(); updateStreakDisplay();
+            isCheckingAnswer = false;
+        }
+
+        function startScaffolding() {
+            document.getElementById('helpBtn').style.display = "none";
+            document.getElementById('scaffoldingContainer').classList.remove('hidden');
+            currentScaffoldStep = 0; renderScaffoldStep();
+        }
+
+        function renderScaffoldStep() {
+            const steps = currentProblem.scaffolding;
+            const container = document.getElementById('scaffoldingContainer');
+            const content = document.getElementById('scaffoldingContent');
+            const actions = document.getElementById('scaffoldingActions');
+            
+            if (!currentProblem.scaffolding || currentScaffoldStep >= steps.length) { 
+                container.classList.add('hidden');
+                // SCAFFOLDING DONE -> Show Answer Input
+                const ac = document.getElementById('answerContainer');
+                ac.classList.remove('hidden');
+                const type = currentProblem.answerType || 'text';
+                ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar (endast siffror):</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400 dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">`;
+                
+                const fb = document.getElementById('feedback');
+                fb.innerHTML = `<div class="text-lg font-bold text-green-800 mb-1">Snyggt! Nu fixar du resten.</div>`;
+                fb.className = "mt-6 text-center p-4 rounded-xl bg-green-50 text-green-800 border border-green-100 mb-4";
+                fb.style.display = 'block';
+
+                const chk = document.getElementById('checkAnswerBtn');
+                chk.style.display = "block"; 
+                chk.disabled = false;
+                return;
+            }
+            const step = steps[currentScaffoldStep];
+            content.innerHTML = ''; actions.innerHTML = '';
+            
+            if(step.type === 'highlight') {
+                content.innerHTML = `<p class="mb-2 font-medium">Ledtråd ${currentScaffoldStep+1}</p><p>${step.text.replace(/\*\*(.*?)\*\*/g, '<span class="highlight-text">$1</span>')}</p>`;
+                const b = document.createElement('button'); b.className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"; b.textContent="Nästa";
+                b.onclick = () => { currentScaffoldStep++; renderScaffoldStep(); };
+                actions.appendChild(b);
+            } else if(step.type === 'info') {
+                content.innerHTML = `<p class="mb-2 font-medium">Ledtråd ${currentScaffoldStep+1}</p><p>${formatMathText(step.text)}</p>`;
+                if(window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([content]);
+                const b = document.createElement('button'); b.className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"; b.textContent="Okej!";
+                b.onclick = () => { container.classList.add('hidden'); }; // Hide hints
+                actions.appendChild(b);
+            } else if(step.type === 'choice') {
+                content.innerHTML = `<p class="mb-4 font-medium">Ledtråd ${currentScaffoldStep+1}: ${step.question}</p>`;
+                const grid = document.createElement('div'); grid.className = "grid grid-cols-1 gap-2";
+                
+                step.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "bg-white border-2 border-gray-200 p-3 rounded-lg hover:border-blue-500 text-left dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200";
+                    // FIX: Use innerHTML to allow math rendering in choices
+                    btn.innerHTML = formatMathText(opt); 
+                    btn.onclick = () => {
+                        if(idx === step.correctIndex) {
+                            btn.classList.add('bg-green-100', 'border-green-500', 'dark:bg-green-900');
+                            setTimeout(() => { currentScaffoldStep++; renderScaffoldStep(); }, 600);
+                        } else {
+                            btn.classList.add('bg-red-100', 'border-red-500', 'dark:bg-red-900');
+                        }
+                    };
+                    grid.appendChild(btn);
+                });
+                content.appendChild(grid);
+                // Trigger MathJax for new choices
+                if(window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([content]);
+            }
+        }
+
+        function showSolution() {
+            if (!currentProblem || !currentProblem.explanation_sv) { document.getElementById('solutionText').textContent = "Det finns tyvärr ingen förklaring till den här uppgiften."; }
+            else { document.getElementById('solutionText').innerHTML = formatMathText(currentProblem.explanation_sv); }
+            document.getElementById('solutionInline').style.display = "block"; 
+            document.getElementById('showSolutionBtn').style.display = "none"; 
+            if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('solutionText')]);
+        }
+
+        // Kalkylator Logic
+        const calcButtons = document.getElementById('calcButtons');
+        const calcDisplay = document.getElementById('calcDisplay'); 
+        let currentInput = '0', operator = null, firstOperand = null, awaitingSecondOperand = false;
         
-        // --- STARTA APPEN ---
-        initializeFirebase();
+        function clearOperatorHighlight() { document.querySelectorAll('.calc-op').forEach(btn => { btn.classList.remove('calc-op-active'); }); }
         
+        if (calcButtons) {
+            calcButtons.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('calc-button')) return;
+                const value = e.target.dataset.value;
+                if (e.target.classList.contains('calc-num') || value === '.') {
+                    clearOperatorHighlight(); 
+                    if (awaitingSecondOperand) { currentInput = value === '.' ? '0.' : value; awaitingSecondOperand = false; } 
+                    else if (currentInput === '0' && value !== '.') { currentInput = value; } 
+                    else if (value === '.' && currentInput.includes('.')) { } 
+                    else { currentInput += value; }
+                } else if (e.target.classList.contains('calc-op')) {
+                    if (value === '=') {
+                        if (operator && firstOperand !== null) { currentInput = calculate(firstOperand, operator, parseFloat(currentInput)); operator = null; firstOperand = null; awaitingSecondOperand = true; }
+                        clearOperatorHighlight();
+                    } else {
+                        clearOperatorHighlight(); e.target.classList.add('calc-op-active');
+                        if (firstOperand === null) { firstOperand = parseFloat(currentInput); } 
+                        else if (operator) { const result = calculate(firstOperand, operator, parseFloat(currentInput)); firstOperand = result; currentInput = result; }
+                        operator = value; awaitingSecondOperand = true;
+                    }
+                } else if (e.target.classList.contains('calc-func')) {
+                    clearOperatorHighlight();
+                    if (value === 'AC') { currentInput = '0'; operator = null; firstOperand = null; awaitingSecondOperand = false; } 
+                    else if (value === '±') { currentInput = String(parseFloat(currentInput) * -1); } 
+                    else if (value === '%') { currentInput = String(parseFloat(currentInput) / 100); }
+                }
+                if (calcDisplay) calcDisplay.textContent = currentInput.substring(0, 10);
+            }
+            );
+        }
+        function calculate(n1, op, n2) { switch (op) { case '+': return String(n1 + n2); case '-': return String(n1 - n2); case '×': return String(n1 * n2); case '÷': return String(n1 / n2); default: return n2; } }
+
+
+        // --- START AV APPEN ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // FIREBASE INITIALISERING (KORREKT SEKVENSERING)
+            const firebaseAppInstance = initializeApp(firebaseConfig);
+            db = getFirestore(firebaseAppInstance);
+            auth = getAuth(firebaseAppInstance);
+
+            // KOPPLA HÄNDELSELYSSNARE
+            trainingMode.addEventListener('change', switchMode);
+            campaignNameFilter.addEventListener('change', () => { resetScore(true); loadAllProblems(); });
+            campaignLevelFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
+            chapterPartFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
+            levelFilter.addEventListener('change', () => { resetScore(true); populateFilters(); applyFiltersAndRender(); });
+            topicFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
+            checkAnswerBtn.addEventListener('click', checkAnswer);
+            nextProblemBtn.addEventListener('click', applyFiltersAndRender);
+            document.getElementById('helpBtn').addEventListener('click', startScaffolding);
+            document.getElementById('showSolutionBtn').addEventListener('click', showSolution);
+            
+            // Kalkylator händelser
+            if (closeCalculator) {
+                 closeCalculator.addEventListener('click', () => { calculatorWrapper.style.display = 'none'; toggleCalculatorBtn.querySelector('span').textContent = 'Visa Kalkylator'; });
+            }
+            if (toggleCalculatorBtn) {
+                 toggleCalculatorBtn.addEventListener('click', () => {
+                     const isVisible = calculatorWrapper.style.display !== 'none';
+                     calculatorWrapper.style.display = isVisible ? 'none' : 'block';
+                     toggleCalculatorBtn.querySelector('span').textContent = isVisible ? 'Dölj Kalkylator' : 'Visa Kalkylator';
+                 });
+            }
+            
+            document.getElementById('inactivityOverlay').addEventListener('click', resetInactivityTimer);
+
+
+            // START INLOGGNING OCH DATAHÄMTNING
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    userId = user.uid;
+                    document.getElementById('userIdDisplay').textContent = userId;
+                    loadScore(); 
+                    loadAllProblems();
+                    resetInactivityTimer(); // Starta timern efter inloggning
+                } else {
+                    signInAnonymously(auth); 
+                }
+            });
+        }); // END DOMContentLoaded
     </script>
 </body>
 </html>
