@@ -36,10 +36,15 @@
     <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']]
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
       },
       svg: {
         fontCache: 'global'
+      },
+      startup: {
+        typeset: false
       }
     };
     </script>
@@ -51,11 +56,23 @@
             font-family: "PF DIN Stencil B Light", "Inter", sans-serif;
         }
 
-        /* FIX: Matematik flyter snyggt i texten med marginaler */
+        /* MathJax container styles */
+        mjx-container[jax="CHTML"][display="true"] {
+            display: block !important;
+            text-align: center;
+            margin: 1em 0 !important;
+            font-size: 1.3em; 
+            color: #1f2937; 
+        }
+        .dark mjx-container[jax="CHTML"][display="true"] {
+            color: #e5e7eb; 
+        }
         mjx-container { 
-            display: inline !important; 
-            margin: 0 4px !important; 
-            vertical-align: middle !important; 
+            display: inline-block !important; 
+            margin: 0 2px !important; 
+            vertical-align: middle !important;
+            position: relative;
+            top: -1px;
         }
         
         body { font-family: 'Inter', sans-serif; }
@@ -272,7 +289,7 @@
                                 </div>
                                 <div id="problemText" class="text-2xl md:text-3xl font-medium text-gray-800 dark:text-gray-100 text-center leading-relaxed mb-8 min-h-[100px]"></div>
                                 
-                                <!-- SCAFFOLDING CONTAINER (Flyttad hit för att ligga FÖRE svarsrutan) -->
+                                <!-- SCAFFOLDING -->
                                 <div id="scaffoldingContainer" class="hidden mb-6 bg-blue-50 dark:bg-gray-700 p-6 rounded-xl border border-blue-200 dark:border-gray-600">
                                     <h3 class="text-lg font-bold text-blue-800 dark:text-blue-300 mb-4">🧩 Ledtrådstrappan</h3>
                                     <div id="scaffoldingContent" class="text-gray-800 dark:text-gray-200 text-lg mb-4"></div>
@@ -333,7 +350,7 @@
 
         const appId = 'default-app-id'; 
         const COLLECTION_PATHS = { FREE_TRAINING: `artifacts/${appId}/public/data/math_tasks`, CAMPAIGN_ROOT: `artifacts/${appId}/public/data/campaigns`, USER_SCORE: `artifacts/${appId}/users/` };
-        const CAMPAIGN_LEVELS = { "Procent": [{value:1,label:"1. Grundläggande procent"},{value:2,label:"2. Förändring & förändringsfaktor"},{value:3,label:"3. Procentenheter & jämförelser"},{value:4,label:"4. Promille & ppm"},{value:5,label:"5. Ränta & ränta på ränta"},{value:6,label:"6. Flera procentuella förändringar i rad"},{value:7,label:"7. Blandad nivå – Nationella provet-stil"}], "Sannolikhet": [{value:1,label:"1. Grundläggande begrepp"},{value:2,label:"2. Enkla sannolikheter"},{value:3,label:"3. Flera utfall & kombinatorik"},{value:4,label:"4. Medelvärde, median & typvärde"},{value:5,label:"5. Frekvenstabeller & diagram"},{value:6,label:"6. Sammansatta sannolikheter"},{value:7,label:"7. Komplementhändelser"},{value:8,label:"8. Blandad nivå"}], "FunktionerSamband": [{value:1,label:"1. Proportionalitet"},{value:2,label:"2. Tolka grafer"},{value:3,label:"3. Rät linje"},{value:4,label:"4. Sätta in och räkna"},{value:5,label:"5. Skärningspunkter"},{value:6,label:"6. Förändring"},{value:7,label:"7. f(x)-uppgifter"},{value:8,label:"8. Tillämpningar"},{value:9,label:"9. GeoGebra & NP-nivå"}], "Geometri": [{value:1,label:"1. Area och omkrets"},{value:2,label:"2. Cirkelns area"},{value:3,label:"3. Volym & rymd"},{value:4,label:"4. Enhetsomvandlingar"},{value:5,label:"5. Skala & likformighet"},{value:6,label:"6. Vinklar & Pythagoras"},{value:7,label:"7. Blandad nivå"}], "Algebra": [{value:1,label:"1. Ekvationer med + och -"},{value:2,label:"2. Multiplikation & division"},{value:3,label:"3. x på båda sidor"},{value:4,label:"4. Parenteser"},{value:5,label:"5. Bråk och decimaler"},{value:6,label:"6. Lösa ut variabler"},{value:7,label:"7. Faktorisering"},{value:8,label:"8. Problemlösning ekvationer"},{value:9,label:"9. Blandad nivå"}], "Taluppfattning": [{value:1,label:"1. Grundläggande tal"},{value:2,label:"2. Negativa tal"},{value:3,label:"3. Bråk och decimaler"},{value:4,label:"4. Procent, promille"},{value:5,label:"5. Potenser & rötter"},{value:6,label:"6. Prefix & överslag"},{value:7,label:"7. Primtal & delbarhet"},{value:8,label:"8. Reella tal"},{value:9,label:"9. Blandad nivå"}], "Statistik": [{value:1,label:"1. Diagram"},{value:2,label:"2. Boxplot & spridning"}] };
+        const CAMPAIGN_LEVELS = { "Procent": [{value:1,label:"1. Grundläggande procent"},{value:2,label:"2. Förändring & förändringsfaktor"},{value:3,label:"3. Procentenheter & jämförelser"},{value:4,label:"4. Promille & ppm"},{value:5,label:"5. Ränta & ränta på ränta"},{value:6,label:"6. Flera procentuella förändringar i rad"},{value:7,label:"7. Blandad nivå – Nationella provet-stil"}], "Sannolikhet": [{value:1,label:"1. Grundläggande begrepp"},{value:2,label:"2. Enkla sannolikheter"},{value:3,label:"3. Flera utfall & kombinatorik"},{value:4,label:"4. Medelvärde, median & typvärde"},{value:5,label:"5. Frekvenstabeller & diagram"},{value:6,label:"6. Sammansatta sannolikheter"},{value:7,label:"7. Komplementhändelser"},{value:8,label:"8. Blandad nivå"}], "FunktionerSamband": [{value:1,label:"1. Proportionalitet"},{value:2,label:"2. Tolka grafer"},{value:3,label:"3. Rät linje"},{value:4,label:"4. Sätta in och räkna"},{value:5,label:"5. Skärningspunkter"},{value:6,label:"6. Förändring"},{value:7,label:"7. f(x)-uppgifter"},{value:8,label:"8. Tillämpningar"},{value:9,label:"9. GeoGebra & NP-nivå"}], "Geometri": [{value:1,label:"1. Area och omkrets"},{value:2,label:"2. Cirkelns area"},{value:3,label:"3. Volym & rymd"},{value:4,label:"4. Enhetsomvandlingar"},{value:5,label:"5. Skala & likformighet"},{value:6,label:"6. Vinklar & Pythagoras"},{value:7,label:"7. Blandad nivå"}], "Algebra": [{value:1,label:"1. Ekvationer med + och -"},{value:2,label:"2. Multiplikation & division"},{value:3,label:"3. x på båda sidor"},{value:4,label:"4. Parenteser"},{value:5,label:"5. Bråk och decimaler"},{value:6,label:"6. Lösa ut variabler"},{value:7,label:"7. Faktorisering"},{value:8,label:"8. Kombinerade ekvationer"},{value:9,label:"9. Blandad nivå"}], "Taluppfattning": [{value:1,label:"1. Grundläggande tal"},{value:2,label:"2. Negativa tal"},{value:3,label:"3. Bråk och decimaler"},{value:4,label:"4. Procent, promille"},{value:5,label:"5. Potenser & rötter"},{value:6,label:"6. Prefix & överslag"},{value:7,label:"7. Primtal & delbarhet"},{value:8,label:"8. Reella tal"},{value:9,label:"9. Blandad nivå"}], "Statistik": [{value:1,label:"1. Diagram"},{value:2,label:"2. Boxplot & spridning"}] };
 
         // GLOBALA VARIABLER
         let userId;
@@ -341,8 +358,37 @@
         let campaignStreak=0, chaptersCleared={}, STREAK_TO_PASS=7, dailyTasks=0, dailyStreak=0, lastStudyDate="";
         let isCheckingAnswer=false, inactivityTimer;
         let attempts=0, currentScaffoldStep=0;
+        
+        // Drag variables
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+        const calcHandle = document.getElementById('calcHandle');
 
         // --- FUNKTIONER ---
+
+        // FIX: Flyttat upp markChapterCleared så den finns när checkAnswer anropar den
+        function markChapterCleared() {
+            const campaign = document.getElementById('campaignNameFilter').value;
+            const chapter = parseInt(document.getElementById('chapterPartFilter').value);
+            if (!chaptersCleared[campaign]) { chaptersCleared[campaign] = {}; }
+            chaptersCleared[campaign][chapter] = true;
+            campaignStreak = 0; 
+            saveScore(); 
+            updateStreakDisplay();
+            
+            let label = "Okänt kapitel";
+            if (CAMPAIGN_LEVELS[campaign]) {
+                const found = CAMPAIGN_LEVELS[campaign].find(p => p.value === chapter);
+                if (found) label = found.label;
+            }
+            
+            alert(`GRATTIS! Du har klarat ${campaign} - Del ${label}!`);
+        }
 
         function getNiceStep(range){if(range===0)return 1;const t=8,r=range/t,m=Math.pow(10,Math.floor(Math.log10(r))),b=r/m;return b<1.5?1*m:b<3.5?2*m:5*m}
         function renderDrawData(canvas,d){
@@ -356,26 +402,14 @@
         function formatMathText(t){
             if(!t)return"";
             if(t.includes("\\frac"))return t;
-            
-            // 1. Ersätt vanliga gångertecken med \cdot
             let s = t.replace(/\s*\*\s*/g, " \\cdot ");
-            
-            // 2. Ersätt bråk (a/b) med \frac{a}{b}
             s = s.replace(/(\b[a-zA-Z0-9]+\b)\s*\/\s*(\b[a-zA-Z0-9]+\b)/g, "\\frac{$1}{$2}");
-
-            // 3. Ersätt exponenter (a^b) med ^{b}
-            // VIKTIGT: Fånga även siffran FRAMFÖR variabeln!
-            // Ex: 2x^2 -> 2x^{2}
-            // Regex: (siffra* + bokstav + ^ + exponent)
             s = s.replace(/([0-9]*[a-zA-Z])\^([0-9a-zA-Z\-]+)/g, "$1^{$2}");
             
-            // 4. Linda in matematiska uttryck i $...$ om de inte redan har det
-            // Vi letar efter mönster som ser ut som matte men saknar $
-            // Detta gör att 2x^{2} - 3x blir $2x^{2} - 3x$
-            // Enkel heuristik: Om strängen innehåller ^, \frac eller \cdot, men inga $, wrappa allt.
-            if ((s.includes("^{") || s.includes("\\frac") || s.includes("\\cdot")) && !s.includes("$")) {
-                s = `$${s}$`;
-            }
+            // Kapsla in matematiska uttryck i $$...$$ (Block Math) för "ny rad" och snygghet
+            // Men undvik att kapsla in vanliga ord!
+            const mathRegex = /([0-9a-zA-Z\(\)\.\,\-]*\s*(\^\{[^\}]+\}|\\frac\{[^\}]+\}\{[^\}]+\}|\\cdot)\s*[0-9a-zA-Z\(\)\.\,\+\-\=\s]*)/g;
+            s = s.replace(mathRegex, "$$$1$$");
 
             return s;
         }
@@ -384,7 +418,6 @@
             const dCD = document.getElementById('dailyCountDisplay');
             const dPB = document.getElementById('dailyProgressBar');
             const dSD = document.getElementById('dailyStreakDisplay');
-            
             dCD.textContent = `${dailyTasks}/10`;
             const pct = Math.min((dailyTasks / 10) * 100, 100);
             if (dPB) dPB.style.width = `${pct}%`;
@@ -420,8 +453,8 @@
             if (currentMode === 'campaign') {
                 streakSection.classList.remove('hidden');
                 streakDisplay.textContent = `${campaignStreak}/${STREAK_TO_PASS} 🔥`;
-                const campaign = campaignNameFilter.value;
-                const chapter = parseInt(chapterPartFilter.value);
+                const campaign = document.getElementById('campaignNameFilter').value;
+                const chapter = parseInt(document.getElementById('chapterPartFilter').value);
                 const isCleared = chaptersCleared[campaign] && chaptersCleared[campaign][chapter];
                 if (isCleared) { trophyDisplay.innerHTML = '🏆'; streakDisplay.classList.remove('text-praktiska-red'); streakDisplay.classList.add('text-green-600'); }
                 else { trophyDisplay.innerHTML = ''; streakDisplay.classList.add('text-praktiska-red'); streakDisplay.classList.remove('text-green-600'); }
@@ -566,16 +599,16 @@
         }
 
         function switchMode() {
-            currentMode = trainingMode.value;
+            currentMode = document.getElementById('trainingMode').value;
 
             if (currentMode === 'free') {
-                freeTrainingFilters.classList.remove('hidden');
-                campaignFilters.classList.add('hidden');
-                modeDescription.textContent = "Välj nivå och ämne för typuppgifter.";
+                document.getElementById('freeTrainingFilters').classList.remove('hidden');
+                document.getElementById('campaignFilters').classList.add('hidden');
+                document.getElementById('modeDescription').textContent = "Välj nivå och ämne för typuppgifter.";
             } else {
-                campaignFilters.classList.remove('hidden');
-                freeTrainingFilters.classList.add('hidden');
-                modeDescription.textContent = "Välj ett kapitel och träna strukturerat.";
+                document.getElementById('campaignFilters').classList.remove('hidden');
+                document.getElementById('freeTrainingFilters').classList.add('hidden');
+                document.getElementById('modeDescription').textContent = "Välj ett kapitel och träna strukturerat.";
             }
 
             resetScore(true);
@@ -606,12 +639,14 @@
             document.getElementById('problemText').innerHTML = formatMathText(p.question_sv||'');
             document.getElementById('feedback').style.display = "none";
             
-            const chk = document.getElementById('checkAnswerBtn'); chk.disabled = false; chk.style.display = "block";
-            // FIX: Always reset button text when rendering new problem
-            chk.textContent = "Rätta Svar"; 
+            const chk = document.getElementById('checkAnswerBtn'); 
+            chk.disabled = false; 
+            chk.style.display = "block";
+            chk.textContent = "Rätta Svar"; // FIX: Återställ texten!
 
             document.getElementById('helpBtn').style.display = "none";
-            document.getElementById('nextProblemBtn').style.display = "none"; document.getElementById('showSolutionBtn').style.display = "none";
+            document.getElementById('nextProblemBtn').style.display = "none"; 
+            document.getElementById('showSolutionBtn').style.display = "none";
             document.getElementById('solutionInline').style.display = "none";
             document.getElementById('scaffoldingContainer').classList.add('hidden');
             
@@ -641,79 +676,86 @@
         }
 
         function checkAnswer() {
-            if (isCheckingAnswer) return;
-            isCheckingAnswer = true; 
-            const inp = document.getElementById('answerInput');
-            if (!inp) { isCheckingAnswer = false; return; }
-            const uAns = inp.value.trim();
-            const cAns = String(currentProblem.correctAnswer).trim();
-            let correct = false;
-            const clean = (s) => s.replace(/,/g, '.').replace(/[^0-9.\-]/g, '');
-            if(parseFloat(clean(uAns)) === parseFloat(clean(cAns)) || uAns.toLowerCase() === cAns.toLowerCase()) correct = true;
-
-            const fb = document.getElementById('feedback');
-            currentTotal++;
-
-            if(correct) {
-                fb.innerHTML = `<div class="text-lg font-bold text-green-800 mb-1">Rätt svar!</div>`;
-                fb.className = "mt-6 text-center p-4 rounded-xl bg-green-100 text-green-800 border border-green-200";
+            try {
+                if (isCheckingAnswer) return;
+                isCheckingAnswer = true; 
                 
-                // Hide Scaffolding if visible to clean up
-                document.getElementById('scaffoldingContainer').classList.add('hidden');
+                const inp = document.getElementById('answerInput');
+                if (!inp) { return; } 
+                const uAns = inp.value.trim();
+                const cAns = String(currentProblem.correctAnswer).trim();
+                let correct = false;
+                const clean = (s) => s.replace(/,/g, '.').replace(/[^0-9.\-]/g, '');
+                if(parseFloat(clean(uAns)) === parseFloat(clean(cAns)) || uAns.toLowerCase() === cAns.toLowerCase()) correct = true;
 
-                if(attempts === 0) {
-                    currentScore++; campaignStreak++; triggerConfetti(document.getElementById('checkAnswerBtn'));
-                    const today = new Date().toISOString().split('T')[0];
-                    if(lastStudyDate === today) dailyTasks++;
-                    else { dailyTasks = 1; if(lastStudyDate) dailyStreak = (new Date(lastStudyDate).getTime() === new Date().getTime() - 86400000) ? dailyStreak+1 : 1; else dailyStreak=1; }
-                    lastStudyDate = today;
-                    updateDailyUI();
-                    saveScore();
-                }
-                if(currentMode === 'campaign' && campaignStreak >= STREAK_TO_PASS) markChapterCleared();
-                document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block";
-            } else {
-                attempts++;
-                fb.style.display = "block";
-                if(attempts === 1) {
-                    // FIRST FAIL: Show Hint
-                    let hint = currentProblem.hint_sv ? formatMathText(currentProblem.hint_sv) : "Försök igen! Kontrollera dina beräkningar.";
-                    fb.innerHTML = `
-                        <div class="mb-2 text-lg font-bold text-yellow-800">Inte riktigt rätt än...</div>
-                        <div class="text-gray-700 mb-3">${hint}</div>
-                        <div class="text-sm font-semibold text-yellow-700">Prova en gång till!</div>
-                    `;
-                    fb.className = "mt-6 text-center p-6 rounded-xl bg-yellow-50 border-2 border-yellow-200 shadow-sm";
-                    if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
+                const fb = document.getElementById('feedback');
+                currentTotal++;
 
-                    // Re-enable button for retry
-                    const btn = document.getElementById('checkAnswerBtn');
-                    btn.disabled = false;
-                    btn.textContent = "Försök igen";
+                if(correct) {
+                    fb.innerHTML = `<div class="text-lg font-bold text-green-800 mb-1">Rätt svar!</div>`;
+                    fb.className = "mt-6 text-center p-4 rounded-xl bg-green-100 text-green-800 border border-green-200";
                     
-                    document.getElementById('helpBtn').style.display = "none";
-                    isCheckingAnswer = false; // Allow new click immediately
-                    return; // Exit early so we don't disable button below
+                    // Hide Scaffolding if visible to clean up
+                    document.getElementById('scaffoldingContainer').classList.add('hidden');
 
+                    if(attempts === 0) {
+                        currentScore++; campaignStreak++; triggerConfetti(document.getElementById('checkAnswerBtn'));
+                        const today = new Date().toISOString().split('T')[0];
+                        if(lastStudyDate === today) dailyTasks++;
+                        else { dailyTasks = 1; if(lastStudyDate) dailyStreak = (new Date(lastStudyDate).getTime() === new Date().getTime() - 86400000) ? dailyStreak+1 : 1; else dailyStreak=1; }
+                        lastStudyDate = today;
+                        updateDailyUI();
+                        saveScore();
+                    }
+                    if(currentMode === 'campaign' && campaignStreak >= STREAK_TO_PASS) markChapterCleared();
+                    document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block";
                 } else {
-                    // SECOND FAIL
-                    fb.innerHTML = `<div class="font-bold text-red-800 mb-2">Tyvärr, det blev fel igen.</div><div>Rätt svar var: ${formatMathText(cAns)}</div>`;
-                    fb.className = "mt-6 text-center font-medium p-6 rounded-xl bg-red-50 border-2 border-red-200";
-                    if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
+                    attempts++;
+                    fb.style.display = "block";
+                    if(attempts === 1) {
+                        // FIRST FAIL: Show Hint
+                        let hint = currentProblem.hint_sv ? formatMathText(currentProblem.hint_sv) : "Försök igen! Kontrollera dina beräkningar.";
+                        fb.innerHTML = `
+                            <div class="mb-2 text-lg font-bold text-yellow-800">Inte riktigt rätt än...</div>
+                            <div class="text-gray-700 mb-3">${hint}</div>
+                            <div class="text-sm font-semibold text-yellow-700">Prova en gång till!</div>
+                        `;
+                        fb.className = "mt-6 text-center p-6 rounded-xl bg-yellow-50 border-2 border-yellow-200 shadow-sm";
+                        if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
 
-                    campaignStreak = 0;
-                    document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block"; 
-                    
-                    // Show full solution if available
-                    if (currentProblem.explanation_sv) {
-                        document.getElementById('solutionText').innerHTML = formatMathText(currentProblem.explanation_sv);
-                        document.getElementById('solutionInline').style.display = "block";
-                         if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('solutionText')]);
+                        // Re-enable button for retry
+                        const btn = document.getElementById('checkAnswerBtn');
+                        btn.disabled = false;
+                        btn.textContent = "Försök igen";
+                        
+                        document.getElementById('helpBtn').style.display = "none";
+                        isCheckingAnswer = false; // Allow new click immediately
+                        return; // Exit early so we don't disable button below
+
+                    } else {
+                        // SECOND FAIL
+                        fb.innerHTML = `<div class="font-bold text-red-800 mb-2">Tyvärr, det blev fel igen.</div><div>Rätt svar var: ${formatMathText(cAns)}</div>`;
+                        fb.className = "mt-6 text-center font-medium p-6 rounded-xl bg-red-50 border-2 border-red-200";
+                        if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
+
+                        campaignStreak = 0;
+                        document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block"; 
+                        
+                        // Show full solution if available
+                        if (currentProblem.explanation_sv) {
+                            document.getElementById('solutionText').innerHTML = formatMathText(currentProblem.explanation_sv);
+                            document.getElementById('solutionInline').style.display = "block";
+                             if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('solutionText')]);
+                        }
                     }
                 }
+                updateScoreDisplay(); updateStreakDisplay();
+                isCheckingAnswer = false;
+            } catch (e) {
+                console.error("Check Answer Error:", e);
+            } finally {
+                isCheckingAnswer = false;
             }
-            updateScoreDisplay(); updateStreakDisplay();
-            isCheckingAnswer = false;
         }
 
         function startScaffolding() {
@@ -758,7 +800,15 @@
                 content.innerHTML = `<p class="mb-2 font-medium">Ledtråd ${currentScaffoldStep+1}</p><p>${formatMathText(step.text)}</p>`;
                 if(window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([content]);
                 const b = document.createElement('button'); b.className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"; b.textContent="Okej!";
-                b.onclick = () => { container.classList.add('hidden'); }; // Hide hints
+                b.onclick = () => { 
+                     container.classList.add('hidden'); 
+                     const ac = document.getElementById('answerContainer');
+                     ac.classList.remove('hidden');
+                     const type = currentProblem.answerType || 'text';
+                     ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar:</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border rounded-lg text-lg dark:bg-gray-700 dark:text-white">`;
+                     document.getElementById('checkAnswerBtn').style.display = "block"; 
+                     document.getElementById('checkAnswerBtn').disabled = false; 
+                };
                 actions.appendChild(b);
             } else if(step.type === 'choice') {
                 content.innerHTML = `<p class="mb-4 font-medium">Ledtråd ${currentScaffoldStep+1}: ${step.question}</p>`;
@@ -780,9 +830,45 @@
                     grid.appendChild(btn);
                 });
                 content.appendChild(grid);
-                // Trigger MathJax for new choices
                 if(window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([content]);
             }
+        }
+
+        // Drag and Drop
+        function dragStart(e) {
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+            if (e.target === calcHandle || calcHandle.contains(e.target)) {
+                isDragging = true;
+            }
+        }
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                if (e.type === "touchmove") {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+                xOffset = currentX;
+                yOffset = currentY;
+                setTranslate(currentX, currentY, calculatorWrapper);
+            }
+        }
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
         }
 
         function showSolution() {
@@ -799,43 +885,39 @@
         let currentInput = '0', operator = null, firstOperand = null, awaitingSecondOperand = false;
         
         function clearOperatorHighlight() { document.querySelectorAll('.calc-op').forEach(btn => { btn.classList.remove('calc-op-active'); }); }
-        
-        if (calcButtons) {
-            calcButtons.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('calc-button')) return;
-                const value = e.target.dataset.value;
-                if (e.target.classList.contains('calc-num') || value === '.') {
-                    clearOperatorHighlight(); 
-                    if (awaitingSecondOperand) { currentInput = value === '.' ? '0.' : value; awaitingSecondOperand = false; } 
-                    else if (currentInput === '0' && value !== '.') { currentInput = value; } 
-                    else if (value === '.' && currentInput.includes('.')) { } 
-                    else { currentInput += value; }
-                } else if (e.target.classList.contains('calc-op')) {
-                    if (value === '=') {
-                        if (operator && firstOperand !== null) { currentInput = calculate(firstOperand, operator, parseFloat(currentInput)); operator = null; firstOperand = null; awaitingSecondOperand = true; }
-                        clearOperatorHighlight();
-                    } else {
-                        clearOperatorHighlight(); e.target.classList.add('calc-op-active');
-                        if (firstOperand === null) { firstOperand = parseFloat(currentInput); } 
-                        else if (operator) { const result = calculate(firstOperand, operator, parseFloat(currentInput)); firstOperand = result; currentInput = result; }
-                        operator = value; awaitingSecondOperand = true;
-                    }
-                } else if (e.target.classList.contains('calc-func')) {
+        calcButtons.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('calc-button')) return;
+            const value = e.target.dataset.value;
+            if (e.target.classList.contains('calc-num') || value === '.') {
+                clearOperatorHighlight(); 
+                if (awaitingSecondOperand) { currentInput = value === '.' ? '0.' : value; awaitingSecondOperand = false; } 
+                else if (currentInput === '0' && value !== '.') { currentInput = value; } 
+                else if (value === '.' && currentInput.includes('.')) { } 
+                else { currentInput += value; }
+            } else if (e.target.classList.contains('calc-op')) {
+                if (value === '=') {
+                    if (operator && firstOperand !== null) { currentInput = calculate(firstOperand, operator, parseFloat(currentInput)); operator = null; firstOperand = null; awaitingSecondOperand = true; }
                     clearOperatorHighlight();
-                    if (value === 'AC') { currentInput = '0'; operator = null; firstOperand = null; awaitingSecondOperand = false; } 
-                    else if (value === '±') { currentInput = String(parseFloat(currentInput) * -1); } 
-                    else if (value === '%') { currentInput = String(parseFloat(currentInput) / 100); }
+                } else {
+                    clearOperatorHighlight(); e.target.classList.add('calc-op-active');
+                    if (firstOperand === null) { firstOperand = parseFloat(currentInput); } 
+                    else if (operator) { const result = calculate(firstOperand, operator, parseFloat(currentInput)); firstOperand = result; currentInput = result; }
+                    operator = value; awaitingSecondOperand = true;
                 }
-                if (calcDisplay) calcDisplay.textContent = currentInput.substring(0, 10);
+            } else if (e.target.classList.contains('calc-func')) {
+                clearOperatorHighlight();
+                if (value === 'AC') { currentInput = '0'; operator = null; firstOperand = null; awaitingSecondOperand = false; } 
+                else if (value === '±') { currentInput = String(parseFloat(currentInput) * -1); } 
+                else if (value === '%') { currentInput = String(parseFloat(currentInput) / 100); }
             }
-            );
-        }
+            calcDisplay.textContent = currentInput.substring(0, 10);
+        });
         function calculate(n1, op, n2) { switch (op) { case '+': return String(n1 + n2); case '-': return String(n1 - n2); case '×': return String(n1 * n2); case '÷': return String(n1 / n2); default: return n2; } }
 
 
         // --- START AV APPEN ---
         document.addEventListener('DOMContentLoaded', () => {
-            // FIREBASE INITIALISERING (KORREKT SEKVENSERING)
+            // FIREBASE INITIALISERING
             const firebaseAppInstance = initializeApp(firebaseConfig);
             db = getFirestore(firebaseAppInstance);
             auth = getAuth(firebaseAppInstance);
@@ -852,6 +934,16 @@
             document.getElementById('helpBtn').addEventListener('click', startScaffolding);
             document.getElementById('showSolutionBtn').addEventListener('click', showSolution);
             
+            // Drag-händelser
+            if (calcHandle) {
+                calcHandle.addEventListener("mousedown", dragStart);
+                calcHandle.addEventListener("touchstart", dragStart, {passive: false});
+                document.addEventListener("mouseup", dragEnd);
+                document.addEventListener("touchend", dragEnd);
+                document.addEventListener("mousemove", drag);
+                document.addEventListener("touchmove", drag, {passive: false});
+            }
+
             // Kalkylator händelser
             if (closeCalculator) {
                  closeCalculator.addEventListener('click', () => { calculatorWrapper.style.display = 'none'; toggleCalculatorBtn.querySelector('span').textContent = 'Visa Kalkylator'; });
@@ -874,7 +966,7 @@
                     document.getElementById('userIdDisplay').textContent = userId;
                     loadScore(); 
                     loadAllProblems();
-                    resetInactivityTimer(); // Starta timern efter inloggning
+                    resetInactivityTimer(); 
                 } else {
                     signInAnonymously(auth); 
                 }
