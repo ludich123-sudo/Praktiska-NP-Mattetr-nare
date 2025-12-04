@@ -23,6 +23,7 @@
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
                     },
                     animation: {
                         'bounce-slow': 'bounce 3s infinite',
@@ -32,6 +33,9 @@
             }
         }
     </script>
+    
+    <!-- Importera typsnitt för bok-känslan -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <script>
     window.MathJax = {
@@ -56,42 +60,47 @@
             font-family: "PF DIN Stencil B Light", "Inter", sans-serif;
         }
 
-        /* MathJax container styles */
+        /* --- PROFFSIG DESIGN --- */
+        
+        /* Vanlig text - Ser ut som en bok */
+        .problem-text-block {
+            font-family: 'Merriweather', serif;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #1f2937; 
+            margin-bottom: 0.5rem; /* Tajt avstånd */
+            text-align: left;      /* Text vänsterjusterad som i en bok */
+        }
+        .dark .problem-text-block {
+            color: #e5e7eb;
+        }
+
+        /* Matte-block - Centrerad och stor */
+        .problem-math-block {
+            margin: 0.5rem 0;    /* Tajta marginaler */
+            text-align: center;  /* Centrerad */
+            font-size: 1.6rem;   /* Större än texten */
+            overflow-x: auto;    /* Scrolla om för lång */
+            font-family: 'Inter', sans-serif; /* Mattefont */
+        }
+
+        /* MathJax justeringar */
         mjx-container[jax="CHTML"][display="true"] {
             display: block !important;
             text-align: center;
-            margin: 1em 0 !important;
-            font-size: 1.3em; 
-            color: #1f2937; 
-        }
-        .dark mjx-container[jax="CHTML"][display="true"] {
-            color: #e5e7eb; 
+            margin: 0 !important;
+            padding: 0.2em 0;
         }
         mjx-container { 
-            display: inline-block !important; 
             margin: 0 2px !important; 
-            vertical-align: middle !important;
-            position: relative;
-            top: -1px;
         }
         
+        /* UI-element */
         body { font-family: 'Inter', sans-serif; }
         #progressBar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         #dailyProgressBar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* Eld-effekter */
-        @keyframes burn-low { 0% { box-shadow: 0 0 5px #f66909; } 50% { box-shadow: 0 0 15px #f66909; } 100% { box-shadow: 0 0 5px #f66909; } }
-        @keyframes burn-med { 0% { box-shadow: 0 0 10px #f66909; transform: scale(1); } 50% { box-shadow: 0 0 25px #f66909; transform: scale(1.02); } 100% { transform: scale(1); } }
-        @keyframes burn-high { 0% { box-shadow: 0 0 20px #fcd34d; transform: rotate(0deg); } 50% { box-shadow: 0 0 40px #fcd34d; transform: rotate(1deg); } 100% { transform: rotate(0deg); } }
-        .fire-low { animation: burn-low 2s infinite; background-color: #fff7ed !important; }
-        .fire-med { animation: burn-med 1s infinite; background-color: #fff7ed !important; }
-        .fire-high { animation: burn-high 0.5s infinite; background-color: #fff1f2 !important; border: 2px solid #E3004F !important; }
-
-        .dark .fire-low { background-color: #371b1b !important; }
-        .dark .fire-med { background-color: #371b1b !important; }
-        .dark .fire-high { background-color: #371b1b !important; }
-
-        /* Kalkylator */
+        /* Kalkylator & Effekter */
         .calculator-wrapper { position: fixed; top: 120px; right: 20px; z-index: 40; width: 300px; touch-action: none; }
         .calculator { width: 100%; background-color: #1f2937; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); overflow: hidden; }
         .calc-handle { background-color: #111827; color: #9CA3AF; padding: 8px 15px; cursor: grab; display: flex; justify-content: space-between; align-items: center; user-select: none; font-size: 0.8rem; letter-spacing: 1px; }
@@ -107,37 +116,23 @@
         .calc-num { background-color: #374151; }
         .calc-zero { width: 130px; border-radius: 35px; justify-content: start; padding-left: 25px; }
 
-        /* Layout */
-        #mainContainer { display: flex; justify-content: center; width: 100%; max-width: 1400px; }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #b9b9b9; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #999999; }
-        .dark ::-webkit-scrollbar-track { background: #1f2937; }
-        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
-
-        /* Partiklar */
         .particle { position: absolute; pointer-events: none; z-index: 100; animation: fly 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
         @keyframes fly {
             0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
             100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(var(--rot)); opacity: 0; }
         }
-        
-        .highlight-text { background-color: #fef08a; padding: 0 4px; border-radius: 4px; font-weight: bold; color: #000; }
-        .dark .highlight-text { background-color: #854d0e; color: #fff; }
+        .fire-low { animation: burn-low 2s infinite; background-color: #fff7ed !important; }
+        .fire-med { animation: burn-med 1s infinite; background-color: #fff7ed !important; }
+        .fire-high { animation: burn-high 0.5s infinite; background-color: #fff1f2 !important; border: 2px solid #E3004F !important; }
+        .dark .fire-low { background-color: #371b1b !important; }
+        .dark .fire-med { background-color: #371b1b !important; }
+        .dark .fire-high { background-color: #371b1b !important; }
+        @keyframes burn-low { 0% { box-shadow: 0 0 5px #f66909; } 50% { box-shadow: 0 0 15px #f66909; } 100% { box-shadow: 0 0 5px #f66909; } }
+        @keyframes burn-med { 0% { box-shadow: 0 0 10px #f66909; transform: scale(1); } 50% { box-shadow: 0 0 25px #f66909; transform: scale(1.02); } 100% { transform: scale(1); } }
+        @keyframes burn-high { 0% { box-shadow: 0 0 20px #fcd34d; transform: rotate(0deg); } 50% { box-shadow: 0 0 40px #fcd34d; transform: rotate(1deg); } 100% { transform: rotate(0deg); } }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col transition-colors duration-300">
-
-    <!-- STOR Inaktivitets-indikator (Startar Dold) -->
-    <div id="inactivityOverlay" style="display: none;" class="hidden fixed inset-0 bg-black bg-opacity-90 z-[100] flex flex-col items-center justify-center text-center cursor-pointer backdrop-blur-sm transition-opacity duration-500">
-        <div class="text-9xl mb-6 animate-bounce-slow">😴</div>
-        <h2 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg">Hallå där!</h2>
-        <p class="text-2xl md:text-3xl text-praktiska-orange font-bold animate-pulse">Klicka var som helst för att fortsätta räkna!</p>
-        <p class="text-gray-400 mt-12 text-sm">Pausar du? Ingen fara, vi väntar.</p>
-    </div>
 
     <!-- Header -->
     <nav class="bg-white dark:bg-gray-800 shadow-md w-full z-10 transition-colors duration-300">
@@ -148,13 +143,11 @@
                     <img src="https://praktiska.se/wp-content/uploads/2025/11/praktiskalogorgb.svg" alt="Praktiska Gymnasiet" class="h-12 w-auto">
                 </div>
                 <div class="flex items-center gap-4">
-                     <!-- Dark Mode Toggle -->
                      <button id="toggleDarkModeBtn" class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 font-medium p-3 rounded-full transition" title="Byt färgtema">
                         <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
                         <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                     </button>
 
-                     <!-- Kalkylatorknapp -->
                      <button id="toggleCalculatorBtn" class="bg-gray-100 dark:bg-gray-700 text-[#f66909] hover:bg-gray-200 dark:hover:bg-gray-600 font-medium py-2 px-4 rounded-full transition flex items-center gap-2 border border-transparent hover:border-[#f66909]">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                         <span class="hidden sm:inline">Kalkylator</span>
@@ -164,13 +157,9 @@
         </div>
     </nav>
     
-    <!-- Kalkylatorn -->
     <div id="calculatorWrapper" class="calculator-wrapper" style="display: none;">
         <div class="calculator">
-            <div id="calcHandle" class="calc-handle">
-                <span>::: DRA HÄR</span>
-                <span id="closeCalculator" class="calc-close">&times;</span>
-            </div>
+            <div id="calcHandle" class="calc-handle"><span>::: DRA HÄR</span><span id="closeCalculator" class="calc-close">&times;</span></div>
             <div id="calcDisplay" class="calc-display">0</div>
             <div id="calcButtons" class="grid grid-cols-4 p-3 gap-1">
                 <div class="calc-button calc-func" data-value="AC">AC</div><div class="calc-button calc-func" data-value="±">±</div><div class="calc-button calc-func" data-value="%">%</div><div class="calc-button calc-op" data-value="÷">÷</div>
@@ -182,10 +171,7 @@
         </div>
     </div>
 
-    <!-- Huvudinnehåll -->
     <div class="flex-grow flex justify-center p-4 pt-8">
-        
-        <!-- Applikationskort (Minskad Padding i Toppen) -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 w-full max-w-6xl overflow-hidden h-fit transition-colors duration-300">
             
             <div class="bg-white dark:bg-gray-800 p-4 pb-2 border-b border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 transition-colors duration-300">
@@ -203,8 +189,6 @@
 
             <div class="p-6 md:p-10">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    
-                    <!-- VÄNSTERKOLLUMN -->
                     <div class="lg:col-span-4 space-y-6">
                         <div id="modeSelector" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition-colors duration-300">
                             <label class="block text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2">Välj Läge</label>
@@ -217,7 +201,6 @@
                             <p id="modeDescription" class="text-sm text-gray-500 dark:text-gray-400 mt-3 italic">Välj ett kapitel och träna strukturerat.</p>
                         </div>
 
-                        <!-- Filter -->
                         <div id="filtersContainer">
                             <div id="freeTrainingFilters" class="space-y-4 hidden">
                                 <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Nivå</label>
@@ -273,7 +256,6 @@
                         </div>
                     </div>
 
-                    <!-- HÖGERKOLLUMN -->
                     <div class="lg:col-span-8">
                         <div id="statusMessage" class="text-center py-12 hidden">
                             <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-praktiska-orange mb-4"></div>
@@ -281,18 +263,19 @@
                         </div>
 
                         <div id="problemCard" class="hidden animate-fade-in h-full flex flex-col justify-between">
-                            
                             <div>
                                 <div class="mb-8 flex justify-center">
                                     <img id="problemImage" src="" alt="Uppgift" class="max-w-full max-h-96 rounded-lg shadow-sm" style="display: none;" onerror="this.style.display='none'; this.src='';">
                                     <canvas id="problemCanvas" class="max-w-full h-auto mx-auto rounded-lg shadow-sm" width="800" height="500" style="display: none;"></canvas>
                                 </div>
-                                <div id="problemText" class="text-2xl md:text-3xl font-medium text-gray-800 dark:text-gray-100 text-center leading-relaxed mb-8 min-h-[100px]"></div>
                                 
-                                <!-- SCAFFOLDING -->
+                                <!-- PROBLEM TEXT CONTAINER - New Renderer -->
+                                <div id="problemText" class="mb-8 min-h-[50px] flex flex-col items-center justify-center problem-content-centered"></div>
+                                
+                                <!-- SCAFFOLDING CONTAINER -->
                                 <div id="scaffoldingContainer" class="hidden mb-6 bg-blue-50 dark:bg-gray-700 p-6 rounded-xl border border-blue-200 dark:border-gray-600">
-                                    <h3 class="text-lg font-bold text-blue-800 dark:text-blue-300 mb-4">🧩 Ledtrådstrappan</h3>
-                                    <div id="scaffoldingContent" class="text-gray-800 dark:text-gray-200 text-lg mb-4"></div>
+                                    <h3 class="text-lg font-bold text-blue-800 dark:text-blue-300 mb-4 font-sans">🧩 Ledtrådstrappan</h3>
+                                    <div id="scaffoldingContent" class="text-gray-800 dark:text-gray-200 text-lg mb-4 problem-content-flow"></div>
                                     <div id="scaffoldingActions" class="flex gap-2 justify-center"></div>
                                 </div>
 
@@ -306,19 +289,18 @@
                                     <button id="nextProblemBtn" class="w-full sm:w-2/3 bg-gray-800 dark:bg-gray-600 text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:bg-gray-900 dark:hover:bg-gray-500 transform hover:-translate-y-1 transition duration-200" style="display: none;">Nästa Uppgift</button>
                                 </div>
 
-                                <div id="feedback" class="mt-8 text-center font-medium p-6 rounded-xl text-lg hidden border-2"></div>
+                                <div id="feedback" class="mt-8 text-center font-medium p-6 rounded-xl text-lg hidden border-2 problem-content-flow"></div>
                             
                                 <div class="text-center mt-8">
                                     <button id="showSolutionBtn" class="text-gray-500 dark:text-gray-400 hover:text-[#f66909] dark:hover:text-[#f66909] font-semibold border-b-2 border-transparent hover:border-[#f66909] transition pb-1" style="display: none;">Visa hur man gör</button>
                                 </div>
 
                                 <div id="solutionInline" class="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-8 border border-blue-100 dark:border-blue-800 hidden">
-                                    <h3 class="text-xl font-bold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-2">💡 Lösning & Förklaring</h3>
-                                    <div id="solutionText" class="text-blue-800 dark:text-blue-200 prose prose-lg max-w-none"></div>
+                                    <h3 class="text-xl font-bold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-2 font-sans">💡 Lösning & Förklaring</h3>
+                                    <div id="solutionText" class="text-blue-800 dark:text-blue-200 prose prose-lg max-w-none problem-content-flow"></div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="text-center text-xs text-gray-300 dark:text-gray-600 mt-12 pt-6 border-t border-gray-100 dark:border-gray-700">ID: <span id="userIdDisplay" class="font-mono">...</span></div>
@@ -327,8 +309,6 @@
     </div>
 
     <script type="module">
-        console.log("Laddar math_trainer.html (Final Stabilization + Math Fix)...");
-        
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
@@ -342,36 +322,120 @@
             appId: "1:239785866823:web:55ffb3a3485d32984ca362"
         };
         
-        // FIX: Korrekt init av Firebase (samma app instans för db + auth)
         const firebaseAppInstance = initializeApp(firebaseConfig);
         let db = getFirestore(firebaseAppInstance);
         let auth = getAuth(firebaseAppInstance);
-        // ---------------------------------------------------------------
-
+        
         const appId = 'default-app-id'; 
         const COLLECTION_PATHS = { FREE_TRAINING: `artifacts/${appId}/public/data/math_tasks`, CAMPAIGN_ROOT: `artifacts/${appId}/public/data/campaigns`, USER_SCORE: `artifacts/${appId}/users/` };
         const CAMPAIGN_LEVELS = { "Procent": [{value:1,label:"1. Grundläggande procent"},{value:2,label:"2. Förändring & förändringsfaktor"},{value:3,label:"3. Procentenheter & jämförelser"},{value:4,label:"4. Promille & ppm"},{value:5,label:"5. Ränta & ränta på ränta"},{value:6,label:"6. Flera procentuella förändringar i rad"},{value:7,label:"7. Blandad nivå – Nationella provet-stil"}], "Sannolikhet": [{value:1,label:"1. Grundläggande begrepp"},{value:2,label:"2. Enkla sannolikheter"},{value:3,label:"3. Flera utfall & kombinatorik"},{value:4,label:"4. Medelvärde, median & typvärde"},{value:5,label:"5. Frekvenstabeller & diagram"},{value:6,label:"6. Sammansatta sannolikheter"},{value:7,label:"7. Komplementhändelser"},{value:8,label:"8. Blandad nivå"}], "FunktionerSamband": [{value:1,label:"1. Proportionalitet"},{value:2,label:"2. Tolka grafer"},{value:3,label:"3. Rät linje"},{value:4,label:"4. Sätta in och räkna"},{value:5,label:"5. Skärningspunkter"},{value:6,label:"6. Förändring"},{value:7,label:"7. f(x)-uppgifter"},{value:8,label:"8. Tillämpningar"},{value:9,label:"9. GeoGebra & NP-nivå"}], "Geometri": [{value:1,label:"1. Area och omkrets"},{value:2,label:"2. Cirkelns area"},{value:3,label:"3. Volym & rymd"},{value:4,label:"4. Enhetsomvandlingar"},{value:5,label:"5. Skala & likformighet"},{value:6,label:"6. Vinklar & Pythagoras"},{value:7,label:"7. Blandad nivå"}], "Algebra": [{value:1,label:"1. Ekvationer med + och -"},{value:2,label:"2. Multiplikation & division"},{value:3,label:"3. x på båda sidor"},{value:4,label:"4. Parenteser"},{value:5,label:"5. Bråk och decimaler"},{value:6,label:"6. Lösa ut variabler"},{value:7,label:"7. Faktorisering"},{value:8,label:"8. Kombinerade ekvationer"},{value:9,label:"9. Blandad nivå"}], "Taluppfattning": [{value:1,label:"1. Grundläggande tal"},{value:2,label:"2. Negativa tal"},{value:3,label:"3. Bråk och decimaler"},{value:4,label:"4. Procent, promille"},{value:5,label:"5. Potenser & rötter"},{value:6,label:"6. Prefix & överslag"},{value:7,label:"7. Primtal & delbarhet"},{value:8,label:"8. Reella tal"},{value:9,label:"9. Blandad nivå"}], "Statistik": [{value:1,label:"1. Diagram"},{value:2,label:"2. Boxplot & spridning"}] };
 
-        // GLOBALA VARIABLER
         let userId;
         let allProblems=[], currentProblem=null, filteredProblems=[], currentScore=0, currentTotal=0, seenProblemIndices=[], currentMode='campaign';
         let campaignStreak=0, chaptersCleared={}, STREAK_TO_PASS=7, dailyTasks=0, dailyStreak=0, lastStudyDate="";
         let isCheckingAnswer=false, inactivityTimer;
         let attempts=0, currentScaffoldStep=0;
         
-        // Drag variables
         let isDragging = false;
-        let currentX;
-        let currentY;
-        let initialX;
-        let initialY;
-        let xOffset = 0;
-        let yOffset = 0;
+        let currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
         const calcHandle = document.getElementById('calcHandle');
 
-        // --- FUNKTIONER ---
+        // --- CENTRAL RENDERING FUNCTION ---
+        // Renders content as a flow of inline text and math (like a book), or as blocks if specified.
+        function renderComplexContent(container, content) {
+            container.innerHTML = ''; 
 
-        // FIX: Flyttat upp markChapterCleared så den finns när checkAnswer anropar den
+            // Wrapper for flowing content
+            const flowWrapper = document.createElement('div');
+            // Apply flow style or centered style based on parent container preference
+            if(container.classList.contains('problem-content-centered')) {
+                 flowWrapper.className = "inline-block text-left"; // Center the block, but align text left
+            } else {
+                 flowWrapper.className = "problem-content-flow";
+            }
+            
+            if (Array.isArray(content)) {
+                content.forEach((block, index) => {
+                    if (block.type === 'text') {
+                        const span = document.createElement('span');
+                        span.className = "flow-text";
+                        // Add spacing if not first element and not starting with punctuation
+                        if (index > 0 && !/^[\.,:;\?!]/.test(block.value)) {
+                            span.innerHTML = "&nbsp;" + formatInlineMath(block.value);
+                        } else {
+                            span.innerHTML = formatInlineMath(block.value);
+                        }
+                        flowWrapper.appendChild(span);
+                    } else if (block.type === 'math') {
+                        // Check if it should be block or inline
+                        // For this "Book Flow", we treat math as inline-block unless it's huge
+                        const span = document.createElement('span');
+                        span.className = "flow-math";
+                        span.innerHTML = `\\(${block.value}\\)`;
+                        
+                        // Add spacing around math
+                        const spacer = document.createTextNode(" ");
+                        flowWrapper.appendChild(spacer);
+                        flowWrapper.appendChild(span);
+                        flowWrapper.appendChild(spacer.cloneNode());
+                    }
+                });
+            } else if (typeof content === 'object' && content !== null) {
+                 // Transitional object fallback
+                 const blocks = [];
+                 if (content.text) blocks.push({type: 'text', value: content.text});
+                 if (content.math) blocks.push({type: 'math', value: content.math});
+                 if (content.textPost) blocks.push({type: 'text', value: content.textPost});
+                 if (content.question) blocks.push({type: 'text', value: content.question}); 
+                 renderComplexContent(container, blocks);
+                 return;
+            } else {
+                // String fallback
+                const span = document.createElement('span');
+                span.className = "problem-content-flow";
+                span.innerHTML = formatStringFallback(content);
+                flowWrapper.appendChild(span);
+            }
+            
+            container.appendChild(flowWrapper);
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([container]);
+            }
+        }
+
+        function formatInlineMath(text) {
+            return text.replace(/\$([^$]+)\$/g, "\\($1\\)");
+        }
+
+        function formatStringFallback(text) {
+            if (!text) return "";
+            let s = text;
+            s = s.replace(/\*/g, " \\cdot ").replace(/\^/g, "^");
+            s = s.replace(/([0-9a-zA-Z,\.]+)\s*\/\s*([0-9a-zA-Z,\.]+)/g, "\\frac{$1}{$2}");
+            // Only convert specific obvious math to inline math
+            s = s.replace(/([0-9a-z]+\^\{?[0-9a-z]+\}?|\\frac\{[^\}]+\}\{[^\}]+\}|[0-9a-z]+\s*=\s*[0-9a-z]+)/gi, "\\($1\\)");
+            return s;
+        }
+        
+        // ----------------------------------------------------------------------
+        // SHOW SOLUTION (Now using new renderer)
+        // ----------------------------------------------------------------------
+        function showSolution() {
+            if (!currentProblem || !currentProblem.explanation_sv) { 
+                document.getElementById('solutionText').textContent = "Det finns tyvärr ingen förklaring till den här uppgiften."; 
+            } else { 
+                // Use new renderer for explanation too
+                const container = document.getElementById('solutionText');
+                renderComplexContent(container, currentProblem.explanation_sv);
+            }
+            
+            document.getElementById('solutionInline').style.display = "block"; 
+            document.getElementById('showSolutionBtn').style.display = "none"; 
+        }
+
+        // --- STANDARD FUNCTIONS ---
+
         function markChapterCleared() {
             const campaign = document.getElementById('campaignNameFilter').value;
             const chapter = parseInt(document.getElementById('chapterPartFilter').value);
@@ -404,13 +468,9 @@
             if(t.includes("\\frac"))return t;
             let s = t.replace(/\s*\*\s*/g, " \\cdot ");
             s = s.replace(/(\b[a-zA-Z0-9]+\b)\s*\/\s*(\b[a-zA-Z0-9]+\b)/g, "\\frac{$1}{$2}");
-            s = s.replace(/([0-9]*[a-zA-Z])\^([0-9a-zA-Z\-]+)/g, "$1^{$2}");
-            
-            // Kapsla in matematiska uttryck i $$...$$ (Block Math) för "ny rad" och snygghet
-            // Men undvik att kapsla in vanliga ord!
+            s = s.replace(/\^([0-9a-zA-Z\-]+)/g, "^{$1}");
             const mathRegex = /([0-9a-zA-Z\(\)\.\,\-]*\s*(\^\{[^\}]+\}|\\frac\{[^\}]+\}\{[^\}]+\}|\\cdot)\s*[0-9a-zA-Z\(\)\.\,\+\-\=\s]*)/g;
             s = s.replace(mathRegex, "$$$1$$");
-
             return s;
         }
         
@@ -418,6 +478,7 @@
             const dCD = document.getElementById('dailyCountDisplay');
             const dPB = document.getElementById('dailyProgressBar');
             const dSD = document.getElementById('dailyStreakDisplay');
+            
             dCD.textContent = `${dailyTasks}/10`;
             const pct = Math.min((dailyTasks / 10) * 100, 100);
             if (dPB) dPB.style.width = `${pct}%`;
@@ -497,13 +558,6 @@
             seenProblemIndices = []; campaignStreak = 0; updateStreakDisplay();
         }
 
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            const ol = document.getElementById('inactivityOverlay');
-            if (ol) ol.style.display = 'none';
-            inactivityTimer = setTimeout(() => { if (ol) ol.style.display = 'flex'; }, 120000); 
-        }
-
         function triggerConfetti(element) {
             const colors = ['#E3004F', '#f66909', '#FCD34D', '#10B981', '#3B82F6'];
             const rect = element.getBoundingClientRect();
@@ -523,7 +577,7 @@
             }
         }
 
-        function loadAllProblems() {
+        async function loadAllProblems() {
             if(!db) return;
             const status = document.getElementById('statusMessage');
             status.style.display = "block";
@@ -630,19 +684,27 @@
 
         function renderProblem(p) {
             if(!p) return;
-            // VIKTIGT: Uppdatera den globala variabeln currentProblem
             currentProblem = p;
 
             document.getElementById('problemCard').style.display = 'flex';
             document.getElementById('statusMessage').style.display = 'none';
             
-            document.getElementById('problemText').innerHTML = formatMathText(p.question_sv||'');
+            // Use the NEW renderComplexContent function
+            const pTextContainer = document.getElementById('problemText');
+            // Check if we have the new JSON structure (object) or old string
+            if (p.question_sv && typeof p.question_sv === 'object') {
+                 renderComplexContent(pTextContainer, p.question_sv);
+            } else {
+                 // Fallback for old strings (still uses the smart formatter just in case)
+                 renderComplexContent(pTextContainer, p.question_sv);
+            }
+            
             document.getElementById('feedback').style.display = "none";
             
             const chk = document.getElementById('checkAnswerBtn'); 
             chk.disabled = false; 
             chk.style.display = "block";
-            chk.textContent = "Rätta Svar"; // FIX: Återställ texten!
+            chk.textContent = "Rätta Svar"; 
 
             document.getElementById('helpBtn').style.display = "none";
             document.getElementById('nextProblemBtn').style.display = "none"; 
@@ -650,7 +712,6 @@
             document.getElementById('solutionInline').style.display = "none";
             document.getElementById('scaffoldingContainer').classList.add('hidden');
             
-            // RESET ANSWER CONTAINER & VISIBILITY
             const ac = document.getElementById('answerContainer');
             ac.classList.remove('hidden'); 
             
@@ -661,17 +722,13 @@
             if(p.drawData) { cvs.style.display = 'block'; renderDrawData(cvs, p.drawData); } 
             else if(p.imageUrl) { img.src = p.imageUrl; img.style.display = 'block'; }
 
-            // SCAFFOLDING CHECK: If problem has scaffolding, start it immediately
             if (p.scaffolding && p.scaffolding.length > 0) {
                 startScaffolding(); 
-                // DO NOT hide input or check button anymore
             } 
             
-            // Always render the input field now
             const type = p.answerType || 'text';
             ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar:</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border rounded-lg text-lg dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">`;
-
-            if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('problemText')]);
+            
             attempts = 0; currentScaffoldStep = 0;
         }
 
@@ -695,7 +752,6 @@
                     fb.innerHTML = `<div class="text-lg font-bold text-green-800 mb-1">Rätt svar!</div>`;
                     fb.className = "mt-6 text-center p-4 rounded-xl bg-green-100 text-green-800 border border-green-200";
                     
-                    // Hide Scaffolding if visible to clean up
                     document.getElementById('scaffoldingContainer').classList.add('hidden');
 
                     if(attempts === 0) {
@@ -713,39 +769,50 @@
                     attempts++;
                     fb.style.display = "block";
                     if(attempts === 1) {
-                        // FIRST FAIL: Show Hint
-                        let hint = currentProblem.hint_sv ? formatMathText(currentProblem.hint_sv) : "Försök igen! Kontrollera dina beräkningar.";
-                        fb.innerHTML = `
-                            <div class="mb-2 text-lg font-bold text-yellow-800">Inte riktigt rätt än...</div>
-                            <div class="text-gray-700 mb-3">${hint}</div>
-                            <div class="text-sm font-semibold text-yellow-700">Prova en gång till!</div>
-                        `;
+                        // USE NEW RENDERER FOR HINT
                         fb.className = "mt-6 text-center p-6 rounded-xl bg-yellow-50 border-2 border-yellow-200 shadow-sm";
-                        if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
+                        fb.innerHTML = `<div class="mb-2 text-lg font-bold text-yellow-800">Inte riktigt rätt än...</div>`;
+                        
+                        const hintContentDiv = document.createElement('div');
+                        hintContentDiv.className = "text-gray-700 mb-3";
+                        
+                        // Check if hint_sv is object or string
+                        if(currentProblem.hint_sv) {
+                             renderComplexContent(hintContentDiv, currentProblem.hint_sv);
+                        } else {
+                             hintContentDiv.textContent = "Försök igen! Kontrollera dina beräkningar.";
+                        }
+                        fb.appendChild(hintContentDiv);
+                        fb.innerHTML += `<div class="text-sm font-semibold text-yellow-700">Prova en gång till!</div>`;
 
-                        // Re-enable button for retry
                         const btn = document.getElementById('checkAnswerBtn');
                         btn.disabled = false;
                         btn.textContent = "Försök igen";
                         
                         document.getElementById('helpBtn').style.display = "none";
-                        isCheckingAnswer = false; // Allow new click immediately
-                        return; // Exit early so we don't disable button below
+                        isCheckingAnswer = false; 
+                        return; 
 
                     } else {
                         // SECOND FAIL
-                        fb.innerHTML = `<div class="font-bold text-red-800 mb-2">Tyvärr, det blev fel igen.</div><div>Rätt svar var: ${formatMathText(cAns)}</div>`;
+                        fb.innerHTML = `<div class="font-bold text-red-800 mb-2">Tyvärr, det blev fel igen.</div><div>Rätt svar var: ${formatStringFallback(cAns)}</div>`;
                         fb.className = "mt-6 text-center font-medium p-6 rounded-xl bg-red-50 border-2 border-red-200";
                         if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
 
                         campaignStreak = 0;
                         document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block"; 
                         
-                        // Show full solution if available
                         if (currentProblem.explanation_sv) {
-                            document.getElementById('solutionText').innerHTML = formatMathText(currentProblem.explanation_sv);
-                            document.getElementById('solutionInline').style.display = "block";
-                             if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('solutionText')]);
+                            // Append solution using new renderer
+                            const solDiv = document.createElement('div');
+                            solDiv.className = "mt-4 p-4 bg-blue-50 text-blue-800 rounded-lg border border-blue-200 text-left";
+                            solDiv.innerHTML = `<div class="font-bold mb-1">Lösning:</div>`;
+                            
+                            const contentDiv = document.createElement('div');
+                            renderComplexContent(contentDiv, currentProblem.explanation_sv);
+                            solDiv.appendChild(contentDiv);
+                            
+                            fb.appendChild(solDiv);
                         }
                     }
                 }
@@ -791,34 +858,65 @@
             const step = steps[currentScaffoldStep];
             content.innerHTML = ''; actions.innerHTML = '';
             
-            if(step.type === 'highlight') {
-                content.innerHTML = `<p class="mb-2 font-medium">Ledtråd ${currentScaffoldStep+1}</p><p>${step.text.replace(/\*\*(.*?)\*\*/g, '<span class="highlight-text">$1</span>')}</p>`;
-                const b = document.createElement('button'); b.className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"; b.textContent="Nästa";
-                b.onclick = () => { currentScaffoldStep++; renderScaffoldStep(); };
-                actions.appendChild(b);
-            } else if(step.type === 'info') {
-                content.innerHTML = `<p class="mb-2 font-medium">Ledtråd ${currentScaffoldStep+1}</p><p>${formatMathText(step.text)}</p>`;
-                if(window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([content]);
-                const b = document.createElement('button'); b.className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"; b.textContent="Okej!";
+            // USE NEW RENDERER FOR STEPS
+            // Create a wrapper div for the step content
+            const stepWrapper = document.createElement('div');
+            
+            if(step.type === 'highlight' || step.type === 'info') {
+                // USE NEW RENDERER TO HANDLE ARRAY/OBJECT CONTENT IN STEPS
+                if (step.content) {
+                     renderComplexContent(stepWrapper, step.content);
+                } else {
+                     // Backwards compat: construct object
+                     const data = {
+                        text: step.text,
+                        math: step.math, 
+                        textPost: step.textPost
+                     };
+                     renderComplexContent(stepWrapper, data);
+                }
+                
+                const b = document.createElement('button'); 
+                b.className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mt-4"; 
+                b.textContent= (step.type === 'highlight') ? "Nästa" : "Okej!";
                 b.onclick = () => { 
-                     container.classList.add('hidden'); 
-                     const ac = document.getElementById('answerContainer');
-                     ac.classList.remove('hidden');
-                     const type = currentProblem.answerType || 'text';
-                     ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar:</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border rounded-lg text-lg dark:bg-gray-700 dark:text-white">`;
-                     document.getElementById('checkAnswerBtn').style.display = "block"; 
-                     document.getElementById('checkAnswerBtn').disabled = false; 
+                     if (step.type === 'highlight') {
+                         currentScaffoldStep++; renderScaffoldStep();
+                     } else {
+                         container.classList.add('hidden'); 
+                         const ac = document.getElementById('answerContainer');
+                         ac.classList.remove('hidden');
+                         const type = currentProblem.answerType || 'text';
+                         ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar:</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border rounded-lg text-lg dark:bg-gray-700 dark:text-white">`;
+                         document.getElementById('checkAnswerBtn').style.display = "block"; 
+                         document.getElementById('checkAnswerBtn').disabled = false; 
+                     }
                 };
                 actions.appendChild(b);
             } else if(step.type === 'choice') {
-                content.innerHTML = `<p class="mb-4 font-medium">Ledtråd ${currentScaffoldStep+1}: ${step.question}</p>`;
-                const grid = document.createElement('div'); grid.className = "grid grid-cols-1 gap-2";
+                const questionDiv = document.createElement('div');
+                // Support new content array or old properties
+                if (step.content) {
+                    renderComplexContent(questionDiv, step.content);
+                } else {
+                    const qData = { text: step.question, math: step.math };
+                    renderComplexContent(questionDiv, qData);
+                }
+                stepWrapper.appendChild(questionDiv);
+
+                const grid = document.createElement('div'); 
+                grid.className = "grid grid-cols-1 gap-2 mt-4";
                 
                 step.options.forEach((opt, idx) => {
                     const btn = document.createElement('button');
                     btn.className = "bg-white border-2 border-gray-200 p-3 rounded-lg hover:border-blue-500 text-left dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200";
-                    // FIX: Use innerHTML to allow math rendering in choices
-                    btn.innerHTML = formatMathText(opt); 
+                    
+                    if (typeof opt === 'object') {
+                         renderComplexContent(btn, opt);
+                    } else {
+                         btn.innerHTML = formatStringFallback(opt); 
+                    }
+
                     btn.onclick = () => {
                         if(idx === step.correctIndex) {
                             btn.classList.add('bg-green-100', 'border-green-500', 'dark:bg-green-900');
@@ -829,9 +927,9 @@
                     };
                     grid.appendChild(btn);
                 });
-                content.appendChild(grid);
-                if(window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([content]);
+                stepWrapper.appendChild(grid);
             }
+            content.appendChild(stepWrapper);
         }
 
         // Drag and Drop
@@ -869,14 +967,6 @@
         }
         function setTranslate(xPos, yPos, el) {
             el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
-        }
-
-        function showSolution() {
-            if (!currentProblem || !currentProblem.explanation_sv) { document.getElementById('solutionText').textContent = "Det finns tyvärr ingen förklaring till den här uppgiften."; }
-            else { document.getElementById('solutionText').innerHTML = formatMathText(currentProblem.explanation_sv); }
-            document.getElementById('solutionInline').style.display = "block"; 
-            document.getElementById('showSolutionBtn').style.display = "none"; 
-            if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('solutionText')]);
         }
 
         // Kalkylator Logic
@@ -956,8 +1046,7 @@
                  });
             }
             
-            document.getElementById('inactivityOverlay').addEventListener('click', resetInactivityTimer);
-
+            // Inactivity Timer removed as requested
 
             // START INLOGGNING OCH DATAHÄMTNING
             onAuthStateChanged(auth, (user) => {
@@ -966,7 +1055,6 @@
                     document.getElementById('userIdDisplay').textContent = userId;
                     loadScore(); 
                     loadAllProblems();
-                    resetInactivityTimer(); 
                 } else {
                     signInAnonymously(auth); 
                 }
