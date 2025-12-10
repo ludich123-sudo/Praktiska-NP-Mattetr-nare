@@ -1,41 +1,12 @@
 <!DOCTYPE html>
-<html lang="sv" class="light">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matematiktränare - Praktiska Gymnasiet</title>
+    <title>Praktiska Gymnasiets Matematiktränare</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?v=3" async></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class', 
-            theme: {
-                extend: {
-                    colors: {
-                        praktiska: {
-                            red: '#E3004F',
-                            dark: '#1F2937',
-                            light: '#F9FAFB',
-                            hover: '#C10042',
-                            gray: '#b9b9b9',
-                            orange: '#f66909'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Merriweather', 'serif'],
-                    },
-                    animation: {
-                        'bounce-slow': 'bounce 3s infinite',
-                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- Importera typsnitt -->
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     
     <script>
     window.MathJax = {
@@ -44,286 +15,1176 @@
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
         processEscapes: true
       },
-      svg: {
-        fontCache: 'global'
-      },
-      startup: {
-        typeset: false
-      }
+      svg: { fontCache: 'global' },
+      startup: { typeset: false }
     };
     </script>
 
     <style>
-        /* --- TYPOGRAFI OCH LAYOUT --- */
+        :root {
+            --primary-orange: #f06f00;
+            --primary-orange-light: #ff8c33;
+            --primary-orange-dark: #d45f00;
+            --dark-bg: #1a1a1a;
+            --dark-surface: #2d2d2d;
+            --dark-card: #363636;
+            --light-bg: #f8f9fa;
+            --light-surface: #ffffff;
+        }
         
-        /* Vanlig text */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%); 
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        body.light-mode {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+        }
+        
+        body.light-mode .problem-container {
+            background: white;
+            color: #1f2937;
+        }
+        
+        body.light-mode .problem-text-block {
+            color: #1f2937;
+        }
+        
+        /* Styles identical to admin preview */
+        .problem-container {
+            font-family: 'Merriweather', serif;
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            min-height: 200px;
+        }
+        
         .problem-text-block {
             font-family: 'Merriweather', serif;
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #1f2937; 
-            margin-bottom: 0.5rem;
-            text-align: left;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #1f2937;
             display: block;
+            margin-bottom: 0.75rem;
         }
-        .dark .problem-text-block {
-            color: #e5e7eb;
-        }
-
-        /* Matte-block (Centrerad, stor) */
+        
         .problem-math-block {
-            margin: 0.5rem 0 1rem 0;
-            text-align: center;
-            font-size: 1.5rem;
-            overflow-x: auto;
             font-family: 'Inter', sans-serif;
-            width: 100%;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.4rem;
             display: block;
         }
+        
+        .step-block {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+            color: #1f2937;
+        }
+        
+        .step-number {
+            font-weight: bold;
+            color: #16a34a;
+            margin-right: 0.5rem;
+        }
 
-        /* Svarsalternativ i Scaffolding - Flex för att hantera matte snyggt */
-        .choice-btn-content {
+        .scaffold-block {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+            color: #1f2937;
+        }
+
+        .scaffold-number {
+            font-weight: bold;
+            color: #d97706;
+            margin-right: 0.5rem;
+        }
+
+        /* MathJax */
+        mjx-container[jax="CHTML"][display="true"] { display: block !important; text-align: center; margin: 0.5rem 0 !important; }
+        mjx-container { margin: 0 3px !important; }
+
+        /* Animations */
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: slideIn 0.3s ease-out; }
+        
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-pulse { animation: pulse 2s infinite; }
+
+        /* EPIC Streak glow effect */
+        @keyframes streakGlow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.4), 0 0 60px rgba(251, 191, 36, 0.2);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(251, 191, 36, 0.9), 0 0 60px rgba(251, 191, 36, 0.6), 0 0 90px rgba(251, 191, 36, 0.4);
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes fireGlow {
+            0%, 100% { text-shadow: 0 0 10px #ff6b00, 0 0 20px #ff4500, 0 0 30px #ff0000; transform: scale(1); }
+            50% { text-shadow: 0 0 20px #ff6b00, 0 0 40px #ff4500, 0 0 60px #ff0000; transform: scale(1.1); }
+        }
+        
+        @keyframes successPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        .streak-glow {
+            animation: streakGlow 1.5s ease-in-out infinite;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+        }
+        
+        .streak-fire {
+            animation: fireGlow 0.5s ease-in-out infinite;
+        }
+
+        .streak-legendary {
+            animation: legendaryGlow 1s ease-in-out infinite !important;
+            background: linear-gradient(135deg, #9333ea, #ec4899, #f59e0b) !important;
+            background-size: 200% 200% !important;
+        }
+
+        @keyframes legendaryGlow {
+            0%, 100% { 
+                box-shadow: 0 0 30px rgba(147, 51, 234, 0.8), 0 0 60px rgba(236, 72, 153, 0.6), 0 0 90px rgba(245, 158, 11, 0.4);
+                transform: scale(1);
+                background-position: 0% 50%;
+            }
+            50% { 
+                box-shadow: 0 0 50px rgba(147, 51, 234, 1), 0 0 100px rgba(236, 72, 153, 0.8), 0 0 150px rgba(245, 158, 11, 0.6);
+                transform: scale(1.08);
+                background-position: 100% 50%;
+            }
+        }
+        
+        .success-pop { animation: successPop 0.4s ease-out; }
+
+        /* ============ CALCULATOR STYLES ============ */
+        .calculator {
+            position: fixed;
+            z-index: 10000;
+            background: #1c1c1e;
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+            padding: 16px;
+            width: 280px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            touch-action: none;
+            user-select: none;
+        }
+        
+        .calc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            cursor: move;
+            padding: 8px;
+            background: #2c2c2e;
+            border-radius: 12px;
+        }
+        
+        .calc-close {
+            background: #ff3b30;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .calc-display {
+            background: #1c1c1e;
+            color: white;
+            font-size: 48px;
+            text-align: right;
+            padding: 20px 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            min-height: 80px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            overflow: hidden;
+            word-break: break-all;
+        }
+        
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .calc-btn {
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calc-btn:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+        
+        .calc-btn-num {
+            background: #333;
+            color: white;
+        }
+        
+        .calc-btn-num:hover {
+            background: #505050;
+        }
+        
+        .calc-btn-op {
+            background: #ff9500;
+            color: white;
+        }
+        
+        .calc-btn-op:hover {
+            background: #ffb143;
+        }
+        
+        .calc-btn-op.active {
+            background: white;
+            color: #ff9500;
+        }
+        
+        .calc-btn-func {
+            background: #a5a5a5;
+            color: black;
+        }
+        
+        .calc-btn-func:hover {
+            background: #d4d4d4;
+        }
+        
+        .calc-btn-zero {
+            grid-column: span 2;
             width: 100%;
-            font-family: 'Merriweather', serif;
-        }
-        /* Justera MathJax-marginaler inuti knappar */
-        .choice-btn-content mjx-container {
-            margin: 0 0.3rem !important;
+            border-radius: 28px;
+            justify-content: flex-start;
+            padding-left: 22px;
         }
 
-        /* MathJax justeringar */
-        mjx-container[jax="CHTML"][display="true"] {
-            display: block !important;
+        .calc-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #1c1c1e, #333);
+            color: white;
+            border: none;
+            min-width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            padding: 0 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .calc-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(0,0,0,0.5);
+        }
+        
+        .calc-toggle-btn span {
+            display: none;
+        }
+        
+        @media (min-width: 640px) {
+            .calc-toggle-btn span {
+                display: inline;
+            }
+        }
+
+        /* Confetti canvas */
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 8px;
+            background: #404040;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        body.light-mode .progress-bar {
+            background: #e2e8f0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-orange), var(--primary-orange-light));
+            transition: width 0.3s ease;
+        }
+
+        /* Answer input */
+        .answer-input {
+            font-size: 1.25rem;
+            padding: 1rem 1.5rem;
+            border: 3px solid #e2e8f0;
+            border-radius: 1rem;
+            transition: all 0.2s;
+        }
+        .answer-input:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.2);
+            outline: none;
+        }
+        .answer-input.correct {
+            border-color: #16a34a;
+            background: #f0fdf4;
+        }
+        .answer-input.incorrect {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        /* Math Input Toolbar */
+        .math-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .math-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .math-btn:hover {
+            border-color: #818cf8;
+            background: #f5f3ff;
+            transform: translateY(-1px);
+        }
+        
+        .math-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .math-btn-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-left: 4px;
+        }
+
+        /* Answer Preview */
+        .answer-preview {
+            background: #fefce8;
+            border: 2px dashed #fbbf24;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
             text-align: center;
-            margin: 0 !important;
-            padding: 0.1em 0;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        mjx-container { 
-            margin: 0 2px !important; 
+        
+        .answer-preview-label {
+            font-size: 12px;
+            color: #92400e;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .answer-preview-empty {
+            color: #a3a3a3;
+            font-style: italic;
         }
 
-        /* Kalkylator */
-        .calculator-wrapper { position: fixed; top: 120px; right: 20px; z-index: 40; width: 300px; touch-action: none; }
-        .calculator { width: 100%; background-color: #1f2937; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); overflow: hidden; }
-        .calc-handle { background-color: #111827; color: #9CA3AF; padding: 8px 15px; cursor: grab; display: flex; justify-content: space-between; align-items: center; user-select: none; font-size: 0.8rem; letter-spacing: 1px; }
-        .calc-handle:active { cursor: grabbing; }
-        .calc-close { cursor: pointer; font-size: 1.2rem; line-height: 1; }
-        .calc-close:hover { color: white; }
-        .calc-display { color: white; font-size: 3.5rem; font-weight: 300; text-align: right; padding: 10px 20px 10px; overflow: hidden; white-space: nowrap; }
-        .calc-button { display: flex; align-items: center; justify-content: center; height: 60px; width: 60px; border-radius: 50%; font-size: 1.5rem; font-weight: 500; cursor: pointer; user-select: none; transition: all 0.1s; margin: 5px; color: white; }
-        .calc-button:active { transform: scale(0.95); }
-        .calc-func { background-color: #9CA3AF; color: black; }
-        .calc-op { background-color: #E3004F; }
-        .calc-op-active { background-color: #ffffff !important; color: #E3004F !important; }
-        .calc-num { background-color: #374151; }
-        .calc-zero { width: 130px; border-radius: 35px; justify-content: start; padding-left: 25px; }
-
-        /* Partiklar */
-        .particle { position: absolute; pointer-events: none; z-index: 100; animation: fly 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        @keyframes fly {
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(var(--rot)); opacity: 0; }
+        .answer-hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 6px;
         }
-        .fire-low { animation: burn-low 2s infinite; background-color: #fff7ed !important; }
-        .fire-med { animation: burn-med 1s infinite; background-color: #fff7ed !important; }
-        .fire-high { animation: burn-high 0.5s infinite; background-color: #fff1f2 !important; border: 2px solid #E3004F !important; }
-        .dark .fire-low { background-color: #371b1b !important; }
-        .dark .fire-med { background-color: #371b1b !important; }
-        .dark .fire-high { background-color: #371b1b !important; }
-        @keyframes burn-low { 0% { box-shadow: 0 0 5px #f66909; } 50% { box-shadow: 0 0 15px #f66909; } 100% { box-shadow: 0 0 5px #f66909; } }
-        @keyframes burn-med { 0% { box-shadow: 0 0 10px #f66909; transform: scale(1); } 50% { box-shadow: 0 0 25px #f66909; transform: scale(1.02); } 100% { transform: scale(1); } }
-        @keyframes burn-high { 0% { box-shadow: 0 0 20px #fcd34d; transform: rotate(0deg); } 50% { box-shadow: 0 0 40px #fcd34d; transform: rotate(1deg); } 100% { transform: rotate(0deg); } }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-light));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(240, 111, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 111, 0, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--dark-surface);
+            color: var(--primary-orange);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            border: 2px solid var(--primary-orange);
+            transition: all 0.2s;
+        }
+        body.light-mode .btn-secondary {
+            background: white;
+        }
+        .btn-secondary:hover {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: var(--dark-surface);
+            border: 2px solid var(--primary-orange);
+            color: var(--primary-orange);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        body.light-mode .theme-toggle {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: var(--primary-orange);
+            color: white;
+        }
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Topic/Chapter selector */
+        .selector-card {
+            background: var(--dark-surface);
+            border: 2px solid #404040;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+        body.light-mode .selector-card {
+            background: white;
+            border-color: #e2e8f0;
+            color: #1f2937;
+        }
+        .selector-card:hover {
+            border-color: var(--primary-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(240, 111, 0, 0.2);
+        }
+        .selector-card.active {
+            border-color: var(--primary-orange);
+            background: rgba(240, 111, 0, 0.1);
+        }
+        .selector-card h3 {
+            color: inherit;
+        }
+        .selector-card p {
+            color: #9ca3af;
+        }
+        body.light-mode .selector-card p {
+            color: #6b7280;
+        }
+
+        /* Header styles */
+        .app-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .app-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        body.light-mode .app-title {
+            color: #1a1a1a;
+        }
+        @media (min-width: 640px) {
+            .app-title {
+                font-size: 2rem;
+            }
+        }
+        .math-icon {
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-light));
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(240, 111, 0, 0.4);
+        }
+        .app-subtitle {
+            color: #9ca3af;
+            font-size: 1rem;
+        }
+        body.light-mode .app-subtitle {
+            color: #6b7280;
+        }
+
+        /* Panel backgrounds */
+        .mode-panel {
+            background: rgba(45, 45, 45, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        body.light-mode .mode-panel {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Settings panel */
+        .settings-panel {
+            background: var(--dark-surface);
+            color: white;
+        }
+        body.light-mode .settings-panel {
+            background: white;
+            color: #1f2937;
+        }
+        .settings-panel label {
+            color: #9ca3af;
+        }
+        body.light-mode .settings-panel label {
+            color: #4b5563;
+        }
+        .settings-panel select {
+            background: var(--dark-card);
+            border-color: #404040;
+            color: white;
+        }
+        body.light-mode .settings-panel select {
+            background: white;
+            border-color: #e2e8f0;
+            color: #1f2937;
+        }
+
+        /* Genomgang button */
+        .genomgang-btn {
+            background: rgba(240, 111, 0, 0.15);
+            color: var(--primary-orange);
+            border: 1px solid rgba(240, 111, 0, 0.3);
+        }
+        .genomgang-btn:hover {
+            background: rgba(240, 111, 0, 0.25);
+        }
+
+        /* Task area panel */
+        .task-progress-panel {
+            background: rgba(45, 45, 45, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        body.light-mode .task-progress-panel {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Answer section */
+        .answer-section {
+            background: var(--dark-surface);
+            color: white;
+        }
+        body.light-mode .answer-section {
+            background: white;
+            color: #1f2937;
+        }
+        
+        body.light-mode .math-toolbar {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+        }
+        .math-toolbar {
+            background: var(--dark-card);
+            border-color: #404040;
+        }
+        
+        body.light-mode .math-btn {
+            background: white;
+            border-color: #e2e8f0;
+            color: #1f2937;
+        }
+        .math-btn {
+            background: var(--dark-surface);
+            border-color: #404040;
+            color: white;
+        }
+        .math-btn:hover {
+            border-color: var(--primary-orange);
+            background: rgba(240, 111, 0, 0.1);
+        }
+
+        body.light-mode .answer-preview {
+            background: #fefce8;
+            border-color: #fbbf24;
+        }
+        .answer-preview {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: #fbbf24;
+        }
+
+        body.light-mode .answer-input {
+            background: white;
+            border-color: #e2e8f0;
+            color: #1f2937;
+        }
+        .answer-input {
+            background: var(--dark-card);
+            border-color: #404040;
+            color: white;
+        }
+        .answer-input:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 4px rgba(240, 111, 0, 0.2);
+        }
+        .answer-input::placeholder {
+            color: #6b7280;
+        }
+
+        /* Mode title */
+        .mode-title {
+            color: white;
+        }
+        body.light-mode .mode-title {
+            color: #1f2937;
+        }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col transition-colors duration-300">
+<body class="p-4 md:p-8">
 
-    <!-- Header -->
-    <nav class="bg-white dark:bg-gray-800 shadow-md w-full z-10 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-24">
-                <div class="flex-shrink-0 flex items-center gap-4">
-                    <img src="https://praktiska.se/wp-content/uploads/2025/11/praktiskalogorgb.svg" alt="Praktiska Gymnasiet" class="h-12 w-auto">
-                </div>
-                <div class="flex items-center gap-4">
-                     <!-- Dark Mode Toggle -->
-                     <button id="toggleDarkModeBtn" class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 font-medium p-3 rounded-full transition" title="Byt färgtema">
-                        <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                        <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                    </button>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Byt tema">
+        <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg id="themeIconMoon" class="hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
 
-                     <!-- Kalkylatorknapp -->
-                     <button id="toggleCalculatorBtn" class="bg-gray-100 dark:bg-gray-700 text-[#f66909] hover:bg-gray-200 dark:hover:bg-gray-600 font-medium py-2 px-4 rounded-full transition flex items-center gap-2 border border-transparent hover:border-[#f66909]">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                        <span class="hidden sm:inline">Kalkylator</span>
-                    </button>
-                </div>
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="app-header text-center mb-8">
+            <h1 class="app-title">
+                <span class="math-icon">📐</span>
+                Matematiktränare
+            </h1>
+            <p class="app-subtitle">Träna på typiska uppgifter för Nationella proven</p>
+        </div>
+
+        <!-- Mode Selection -->
+        <div id="modeSelection" class="mode-panel rounded-2xl p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 mode-title">Välj läge</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="setMode('campaigns')" class="selector-card">
+                    <div class="text-3xl mb-2">🚀</div>
+                    <h3 class="font-bold">Kapitelträning</h3>
+                    <p class="text-sm">Välj ett kapitel och träna strukturerat</p>
+                </button>
+                <button onclick="setMode('math_tasks')" class="selector-card">
+                    <div class="text-3xl mb-2">🎯</div>
+                    <h3 class="font-bold">Typuppgifter NP</h3>
+                    <p class="text-sm">Öva på specifika NP-uppgiftstyper</p>
+                </button>
             </div>
         </div>
-    </nav>
-    
-    <div id="calculatorWrapper" class="calculator-wrapper" style="display: none;">
-        <div class="calculator">
-            <div id="calcHandle" class="calc-handle"><span>::: DRA HÄR</span><span id="closeCalculator" class="calc-close">&times;</span></div>
-            <div id="calcDisplay" class="calc-display">0</div>
-            <div id="calcButtons" class="grid grid-cols-4 p-3 gap-1">
-                <div class="calc-button calc-func" data-value="AC">AC</div><div class="calc-button calc-func" data-value="±">±</div><div class="calc-button calc-func" data-value="%">%</div><div class="calc-button calc-op" data-value="÷">÷</div>
-                <div class="calc-button calc-num" data-value="7">7</div><div class="calc-button calc-num" data-value="8">8</div><div class="calc-button calc-num" data-value="9">9</div><div class="calc-button calc-op" data-value="×">×</div>
-                <div class="calc-button calc-num" data-value="4">4</div><div class="calc-button calc-num" data-value="5">5</div><div class="calc-button calc-num" data-value="6">6</div><div class="calc-button calc-op" data-value="-">-</div>
-                <div class="calc-button calc-num" data-value="1">1</div><div class="calc-button calc-num" data-value="2">2</div><div class="calc-button calc-num" data-value="3">3</div><div class="calc-button calc-op" data-value="+">+</div>
-                <div class="calc-button calc-num calc-zero col-span-2" data-value="0">0</div><div class="calc-button calc-num" data-value=".">.</div><div class="calc-button calc-op" data-value="=">=</div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Huvudinnehåll -->
-    <div class="flex-grow flex justify-center p-4 pt-8">
-        
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 w-full max-w-6xl overflow-hidden h-fit transition-colors duration-300 relative">
+        <!-- Topic & Settings Panel -->
+        <div id="settingsPanel" class="hidden settings-panel rounded-2xl shadow-2xl p-6 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold" id="modeTitle">Kapitelträning</h2>
+                <button onclick="showModeSelection()" class="text-orange-500 hover:text-orange-400 font-medium">← Byt läge</button>
+            </div>
             
-            <!-- ID DISPLAY -->
-            <div id="problemIdDisplay" class="absolute top-2 right-2 text-xs text-gray-300 dark:text-gray-600 select-all cursor-pointer" title="Kopiera ID"></div>
-
-            <div class="bg-white dark:bg-gray-800 p-4 pb-2 border-b border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 transition-colors duration-300">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
-                    <div class="flex items-center gap-4">
-                        <h1 class="text-3xl md:text-5xl font-bold text-[#f66909] mb-1 font-praktiska-stencil">Matematiktränare</h1>
-                        <img src="https://praktiska.se/wp-content/uploads/2025/11/praktiskalogorgb.svg" alt="Praktiska Gymnasiet">
-                    </div>
-                    <p class="text-gray-500 dark:text-gray-400 text-left text-lg">Träna på typiska uppgifter för Nationella proven</p>
+                    <label class="block text-sm font-bold text-gray-600 mb-2">Ämne</label>
+                    <select id="topicSelect" class="w-full p-3 border-2 border-gray-200 rounded-xl font-medium" onchange="updateChapters(); loadTasks()">
+                        <option value="Taluppfattning">Taluppfattning</option>
+                        <option value="Algebra">Algebra</option>
+                        <option value="Procent">Procent</option>
+                        <option value="Sannolikhet">Sannolikhet</option>
+                        <option value="FunktionerSamband">Funktioner & Samband</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-600 mb-2">Del</label>
+                    <select id="chapterSelect" class="w-full p-3 border-2 border-gray-200 rounded-xl font-medium" onchange="loadTasks()">
+                        <!-- Populated dynamically -->
+                    </select>
                 </div>
             </div>
 
-            <div class="p-6 md:p-10">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    
-                    <!-- VÄNSTERKOLLUMN -->
-                    <div class="lg:col-span-4 space-y-6">
-                        <div id="modeSelector" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition-colors duration-300">
-                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2">Välj Läge</label>
-                            <div class="relative">
-                                <select id="trainingMode" class="block w-full pl-4 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange sm:text-sm rounded-lg bg-white dark:bg-gray-800 dark:text-white transition-colors">
-                                    <option value="campaign">🚀 Kapitelträning</option>
-                                    <option value="free">🎯 Typuppgifter NP</option>
-                                </select>
-                            </div>
-                            <p id="modeDescription" class="text-sm text-gray-500 dark:text-gray-400 mt-3 italic">Välj ett kapitel och träna strukturerat.</p>
-                        </div>
+            <!-- Genomgång Button -->
+            <div class="mb-6">
+                <button onclick="showGenomgang()" id="genomgangBtn" class="genomgang-btn w-full font-semibold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/>
+                        <rect x="2" y="6" width="14" height="12" rx="2"/>
+                    </svg>
+                    📖 Visa genomgång
+                </button>
+            </div>
 
-                        <!-- Filter -->
-                        <div id="filtersContainer">
-                            <div id="freeTrainingFilters" class="space-y-4 hidden">
-                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Nivå</label>
-                                    <select id="levelFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"><option value="Alla">Alla Nivåer</option><option value="Åk 9">Åk 9</option><option value="Ma 1">Ma 1</option><option value="Ma 2">Ma 2</option></select>
-                                </div>
-                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Ämne</label>
-                                    <select id="topicFilter" disabled class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-600 dark:text-gray-400"><option value="Alla">Alla Ämnen</option></select>
-                                </div>
-                            </div>
-                            <div id="campaignFilters" class="space-y-4">
-                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Kampanj</label>
-                                    <select id="campaignNameFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white">
-                                        <option value="Procent">Procent</option><option value="Sannolikhet">Sannolikhet</option><option value="FunktionerSamband">Funktioner</option><option value="Geometri">Geometri</option><option value="Algebra">Algebra</option><option value="Taluppfattning">Taluppfattning</option><option value="Statistik">Statistik</option>
-                                    </select>
-                                </div>
-                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Årskurs</label>
-                                    <select id="campaignLevelFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"><option value="Åk 9">Åk 9</option><option value="Ma 1">Ma 1</option><option value="Ma 2">Ma 2</option></select>
-                                </div>
-                                <div><label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Kapitel Del</label>
-                                    <select id="chapterPartFilter" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"></select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm transition-colors">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="text-sm font-medium text-gray-500 dark:text-gray-300">Dina framsteg</div>
-                                <div class="flex gap-4 text-sm font-bold">
-                                    <span class="text-green-600 dark:text-green-400">Rätt: <span id="scoreDisplay">0</span></span>
-                                    <span class="text-gray-400 dark:text-gray-300">Totalt: <span id="totalDisplay">0</span></span>
-                                </div>
-                            </div>
-                            <div class="w-full bg-gray-100 dark:bg-gray-600 rounded-full h-3 overflow-hidden"><div id="progressBar" class="bg-green-600 h-3 rounded-full" style="width: 0%"></div></div>
-                        </div>
-
-                        <div class="bg-white dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm mt-6">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="text-sm font-medium text-gray-500 dark:text-gray-300 flex items-center gap-2"><span>Dagens Mål</span><span class="text-xs text-gray-400">(10 st)</span></div>
-                                <div class="flex gap-2 text-sm font-bold"><span id="dailyCountDisplay" class="text-praktiska-orange">0/10</span></div>
-                            </div>
-                            <div class="w-full bg-gray-100 dark:bg-gray-600 rounded-full h-3 overflow-hidden"><div id="dailyProgressBar" class="bg-praktiska-orange h-3 rounded-full" style="width: 0%"></div></div>
-                        </div>
-
-                        <div id="streakSection" class="hidden animate-fade-in transition-all duration-500 mt-6">
-                            <div id="streakContainer" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 flex flex-col items-center justify-center gap-1 transition-all duration-300">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-yellow-600 dark:text-yellow-500 font-semibold">Kapitel Streak:</span>
-                                    <span id="streakDisplay" class="2xl font-black text-praktiska-orange">0/7 🔥</span>
-                                    <span id="trophyDisplay" class="2xl"></span>
-                                </div>
-                                <div id="dailyStreakDisplay" class="text-xs text-gray-500 dark:text-gray-400 font-medium mt-1">Dagar i rad: 0 📅</div>
-                            </div>
-                        </div>
+            <!-- Genomgång Modal -->
+            <div id="genomgangModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                    <div class="sticky top-0 text-white px-6 py-4 rounded-t-2xl flex items-center justify-between" style="background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-light));">
+                        <h3 class="text-xl font-bold">📖 Genomgång</h3>
+                        <button onclick="closeGenomgang()" class="text-white hover:bg-white/20 rounded-lg p-2 transition">✕</button>
                     </div>
-
-                    <div class="lg:col-span-8">
-                        <div id="statusMessage" class="text-center py-12 hidden">
-                            <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-praktiska-orange mb-4"></div>
-                            <p class="text-gray-500 dark:text-gray-400 text-lg">Laddar uppgifter...</p>
-                        </div>
-
-                        <div id="problemCard" class="hidden animate-fade-in h-full flex flex-col justify-between">
-                            <div>
-                                <div class="mb-8 flex justify-center">
-                                    <img id="problemImage" src="" alt="Uppgift" class="max-w-full max-h-96 rounded-lg shadow-sm" style="display: none;" onerror="this.style.display='none'; this.src='';">
-                                    <canvas id="problemCanvas" class="max-w-full h-auto mx-auto rounded-lg shadow-sm" width="800" height="500" style="display: none;"></canvas>
-                                </div>
-                                
-                                <!-- PROBLEM TEXT CONTAINER - New Renderer -->
-                                <div id="problemText" class="mb-8 min-h-[50px] flex flex-col items-center justify-center problem-content-centered"></div>
-                                
-                                <!-- SCAFFOLDING CONTAINER -->
-                                <div id="scaffoldingContainer" class="hidden mb-6 bg-blue-50 dark:bg-gray-700 p-6 rounded-xl border border-blue-200 dark:border-gray-600">
-                                    <h3 class="text-lg font-bold text-blue-800 dark:text-blue-300 mb-4 font-sans">🧩 Ledtrådstrappan</h3>
-                                    <div id="scaffoldingContent" class="text-gray-800 dark:text-gray-200 text-lg mb-4 problem-content-flow"></div>
-                                    <div id="scaffoldingActions" class="flex gap-2 justify-center"></div>
-                                </div>
-
-                                <div id="answerContainer" class="mb-10 max-w-md mx-auto"></div>
-                            </div>
-
-                            <div class="mt-auto">
-                                <div class="flex flex-col sm:flex-row gap-4 justify-center relative">
-                                    <button id="helpBtn" class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 font-semibold py-3 px-6 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition" style="display: none;">🧩 Få hjälp</button>
-                                    <button id="checkAnswerBtn" class="bg-praktiska-orange text-white font-bold py-3 px-8 rounded-lg hover:bg-orange-600 transition shadow-md">Rätta Svar</button>
-                                    <button id="nextProblemBtn" class="bg-gray-800 dark:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-500 transition" style="display: none;">Nästa Uppgift →</button>
-                                </div>
-
-                                <div id="feedback" class="mt-6 text-center font-medium p-4 rounded-xl" style="display: none;"></div>
-
-                                <div class="mt-6">
-                                    <button id="showSolutionBtn" class="text-sm text-gray-500 dark:text-gray-400 underline hover:text-gray-700 dark:hover:text-gray-200" style="display: none;">Visa lösning</button>
-                                    <div id="solutionInline" class="mt-4 p-6 bg-green-50 dark:bg-green-900/30 rounded-xl text-left text-gray-800 dark:text-gray-200 border border-green-200 dark:border-green-700" style="display:none;">
-                                        <h4 class="font-bold text-lg mb-3 text-green-800 dark:text-green-300">💡 Lösning</h4>
-                                        <div id="solutionText" class="problem-content-flow"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div id="genomgangContent" class="p-6">
+                        <p class="text-gray-400 text-center py-8">Laddar...</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="bg-green-50 rounded-xl p-4">
+                    <div class="text-2xl font-bold text-green-600" id="correctCount">0</div>
+                    <div class="text-sm text-green-700">Rätt</div>
+                </div>
+                <div class="bg-red-50 rounded-xl p-4">
+                    <div class="text-2xl font-bold text-red-600" id="wrongCount">0</div>
+                    <div class="text-sm text-red-700">Fel</div>
+                </div>
+                <div id="streakContainer" class="bg-amber-50 rounded-xl p-4 transition-all duration-300">
+                    <div class="text-2xl font-bold text-amber-600" id="streakCount">0 🔥</div>
+                    <div class="text-sm text-amber-700">Streak</div>
                 </div>
             </div>
         </div>
+
+        <!-- Task Area -->
+        <div id="taskArea" class="hidden">
+            <!-- Progress -->
+            <div class="task-progress-panel rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-white font-medium">Uppgift <span id="currentTaskNum">1</span> av <span id="totalTasks">0</span></span>
+                    <span class="text-orange-300" id="taskLevel">Åk 9 - Del 1</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Problem Display -->
+            <div class="problem-container shadow-2xl mb-6" id="problemContainer">
+                <div id="problemContent">
+                    <p class="text-gray-400 text-center py-8 animate-pulse">Laddar uppgifter...</p>
+                </div>
+            </div>
+
+            <!-- Scaffolding Section (hidden by default) -->
+            <div id="scaffoldingSection" class="hidden mb-6 animate-in">
+                <div class="bg-amber-50 rounded-xl border border-amber-200 overflow-hidden">
+                    <div class="bg-amber-100 px-4 py-3 flex items-center justify-between">
+                        <span class="font-bold text-amber-800">🪜 Steg-för-steg hjälp</span>
+                        <span class="text-sm text-amber-600" id="scaffoldProgress">Steg 0/0</span>
+                    </div>
+                    <div class="p-4" id="scaffoldContent">
+                        <!-- Scaffold steps shown here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Answer Section -->
+            <div class="answer-section rounded-2xl shadow-2xl p-6" id="answerSection">
+                <div id="answerInputArea">
+                    <label class="block text-sm font-bold text-gray-600 mb-2">Ditt svar:</label>
+                    
+                    <!-- Math Input Toolbar -->
+                    <div class="math-toolbar">
+                        <button type="button" class="math-btn" onclick="insertMath('fraction')" title="Bråk (skriv a/b)">
+                            <span style="font-size: 14px;">⅟</span><span class="math-btn-label">Bråk</span>
+                        </button>
+                        <button type="button" class="math-btn" onclick="insertMath('power')" title="Exponent (skriv x^2)">
+                            x<sup style="font-size: 10px;">n</sup><span class="math-btn-label">Exponent</span>
+                        </button>
+                        <button type="button" class="math-btn" onclick="insertMath('sqrt')" title="Kvadratrot">
+                            √<span class="math-btn-label">Rot</span>
+                        </button>
+                        <button type="button" class="math-btn" onclick="insertMath('pi')" title="Pi">
+                            π
+                        </button>
+                        <button type="button" class="math-btn" onclick="insertMath('plusminus')" title="Plus/minus">
+                            ±
+                        </button>
+                        <button type="button" class="math-btn" onclick="insertMath('multiply')" title="Gånger">
+                            ×
+                        </button>
+                        <button type="button" class="math-btn" onclick="clearAnswer()" title="Rensa">
+                            ⌫
+                        </button>
+                    </div>
+
+                    <!-- Live Preview -->
+                    <div class="answer-preview">
+                        <div id="answerPreview" class="answer-preview-empty">Ditt svar visas här...</div>
+                    </div>
+
+                    <input type="text" id="answerInput" class="answer-input w-full mb-2" placeholder="T.ex: 1/2, x^3, sqrt(16), 3.14..." 
+                           onkeypress="if(event.key==='Enter')checkAnswer()" 
+                           oninput="updateAnswerPreview()">
+                    <p class="answer-hint">💡 Tips: Skriv bråk som <code>1/100</code>, exponenter som <code>y^6</code>, rötter som <code>sqrt(9)</code></p>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="checkAnswer()" class="btn-primary flex-1">
+                            ✓ Kontrollera
+                        </button>
+                        <button onclick="showNextScaffold()" class="btn-secondary" id="scaffoldBtn">
+                            🪜 Hjälp
+                        </button>
+                        <button onclick="showHint()" class="btn-secondary" id="hintBtn">
+                            💡 Ledtråd
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hint display -->
+                <div id="hintDisplay" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                    <div class="flex items-center gap-2 text-yellow-700 font-bold mb-2">💡 Ledtråd</div>
+                    <p id="hintText" class="text-yellow-800"></p>
+                </div>
+
+                <!-- Result display -->
+                <div id="resultDisplay" class="hidden mt-4">
+                    <div id="resultMessage" class="text-center py-4 rounded-xl mb-4"></div>
+                    
+                    <!-- Solution -->
+                    <div id="solutionContainer" class="hidden bg-green-50 rounded-xl p-4 border border-green-200">
+                        <div class="flex items-center gap-2 text-green-700 font-bold mb-3">💡 Lösning</div>
+                        <div id="solutionContent"></div>
+                    </div>
+
+                    <button onclick="nextTask()" class="btn-primary w-full mt-4">
+                        Nästa uppgift →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- No tasks message -->
+        <div id="noTasksMessage" class="hidden bg-white rounded-2xl shadow-2xl p-8 text-center">
+            <div class="text-6xl mb-4">📭</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Inga uppgifter hittades</h3>
+            <p class="text-gray-500 mb-4">Det finns inga uppgifter för dina valda filter ännu.</p>
+            <button onclick="showModeSelection()" class="btn-secondary">← Ändra filter</button>
+        </div>
     </div>
 
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Calculator Toggle Button -->
+    <button class="calc-toggle-btn" onclick="toggleCalculator()" title="Öppna miniräknare">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="16" height="20" x="4" y="2" rx="2"/>
+            <line x1="8" x2="16" y1="6" y2="6"/>
+            <line x1="16" x2="16" y1="14" y2="18"/>
+            <path d="M16 10h.01"/>
+            <path d="M12 10h.01"/>
+            <path d="M8 10h.01"/>
+            <path d="M12 14h.01"/>
+            <path d="M8 14h.01"/>
+            <path d="M12 18h.01"/>
+            <path d="M8 18h.01"/>
+        </svg>
+        <span>Miniräknare</span>
+    </button>
+
+    <!-- Calculator (hidden by default) -->
+    <div id="calculator" class="calculator" style="display: none; top: 100px; left: 50px;">
+        <div class="calc-header" id="calcHeader">
+            <span style="color: #888; font-size: 14px;">📱 Miniräknare</span>
+            <button class="calc-close" onclick="toggleCalculator()">×</button>
+        </div>
+        <div class="calc-display" id="calcDisplay">0</div>
+        <div class="calc-buttons">
+            <button class="calc-btn calc-btn-func" onclick="calcClear()">AC</button>
+            <button class="calc-btn calc-btn-func" onclick="calcToggleSign()">±</button>
+            <button class="calc-btn calc-btn-func" onclick="calcPercent()">%</button>
+            <button class="calc-btn calc-btn-op" onclick="calcOp('/')">÷</button>
+            
+            <button class="calc-btn calc-btn-num" onclick="calcNum('7')">7</button>
+            <button class="calc-btn calc-btn-num" onclick="calcNum('8')">8</button>
+            <button class="calc-btn calc-btn-num" onclick="calcNum('9')">9</button>
+            <button class="calc-btn calc-btn-op" onclick="calcOp('*')">×</button>
+            
+            <button class="calc-btn calc-btn-num" onclick="calcNum('4')">4</button>
+            <button class="calc-btn calc-btn-num" onclick="calcNum('5')">5</button>
+            <button class="calc-btn calc-btn-num" onclick="calcNum('6')">6</button>
+            <button class="calc-btn calc-btn-op" onclick="calcOp('-')">−</button>
+            
+            <button class="calc-btn calc-btn-num" onclick="calcNum('1')">1</button>
+            <button class="calc-btn calc-btn-num" onclick="calcNum('2')">2</button>
+            <button class="calc-btn calc-btn-num" onclick="calcNum('3')">3</button>
+            <button class="calc-btn calc-btn-op" onclick="calcOp('+')">+</button>
+            
+            <button class="calc-btn calc-btn-num calc-btn-zero" onclick="calcNum('0')">0</button>
+            <button class="calc-btn calc-btn-num" onclick="calcDecimal()">,</button>
+            <button class="calc-btn calc-btn-op" onclick="calcEquals()">=</button>
+        </div>
+    </div>
+
+    <!-- Calculator Script (non-module) -->
+    <script>
+        // Calculator state
+        let calcDisplayValue = '0';
+        let calcFirstOperand = null;
+        let calcOperator = null;
+        let calcWaitingForSecond = false;
+
+        function updateCalcDisplay() {
+            const display = document.getElementById('calcDisplay');
+            let formatted = calcDisplayValue.replace('.', ',');
+            // Shrink font if number is long
+            if (formatted.length > 9) {
+                display.style.fontSize = '32px';
+            } else if (formatted.length > 6) {
+                display.style.fontSize = '40px';
+            } else {
+                display.style.fontSize = '48px';
+            }
+            display.textContent = formatted;
+        }
+
+        window.toggleCalculator = function() {
+            const calc = document.getElementById('calculator');
+            calc.style.display = calc.style.display === 'none' ? 'block' : 'none';
+        };
+
+        window.calcClear = function() {
+            calcDisplayValue = '0';
+            calcFirstOperand = null;
+            calcOperator = null;
+            calcWaitingForSecond = false;
+            updateCalcDisplay();
+            // Remove active state from operators
+            document.querySelectorAll('.calc-btn-op').forEach(b => b.classList.remove('active'));
+        };
+
+        window.calcNum = function(num) {
+            if (calcWaitingForSecond) {
+                calcDisplayValue = num;
+                calcWaitingForSecond = false;
+            } else {
+                calcDisplayValue = calcDisplayValue === '0' ? num : calcDisplayValue + num;
+            }
+            updateCalcDisplay();
+        };
+
+        window.calcDecimal = function() {
+            if (calcWaitingForSecond) {
+                calcDisplayValue = '0.';
+                calcWaitingForSecond = false;
+            } else if (!calcDisplayValue.includes('.')) {
+                calcDisplayValue += '.';
+            }
+            updateCalcDisplay();
+        };
+
+        window.calcToggleSign = function() {
+            calcDisplayValue = String(-parseFloat(calcDisplayValue));
+            updateCalcDisplay();
+        };
+
+        window.calcPercent = function() {
+            calcDisplayValue = String(parseFloat(calcDisplayValue) / 100);
+            updateCalcDisplay();
+        };
+
+        window.calcOp = function(op) {
+            const inputValue = parseFloat(calcDisplayValue);
+            
+            // Highlight active operator
+            document.querySelectorAll('.calc-btn-op').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (calcFirstOperand === null) {
+                calcFirstOperand = inputValue;
+            } else if (calcOperator) {
+                const result = calculate(calcFirstOperand, inputValue, calcOperator);
+                calcDisplayValue = String(result);
+                calcFirstOperand = result;
+                updateCalcDisplay();
+            }
+
+            calcWaitingForSecond = true;
+            calcOperator = op;
+        };
+
+        window.calcEquals = function() {
+            if (calcOperator === null || calcFirstOperand === null) return;
+            
+            const inputValue = parseFloat(calcDisplayValue);
+            const result = calculate(calcFirstOperand, inputValue, calcOperator);
+            
+            calcDisplayValue = String(result);
+            calcFirstOperand = null;
+            calcOperator = null;
+            calcWaitingForSecond = false;
+            
+            updateCalcDisplay();
+            document.querySelectorAll('.calc-btn-op').forEach(b => b.classList.remove('active'));
+        };
+
+        function calculate(first, second, op) {
+            let result;
+            switch (op) {
+                case '+': result = first + second; break;
+                case '-': result = first - second; break;
+                case '*': result = first * second; break;
+                case '/': result = second !== 0 ? first / second : 'Error'; break;
+                default: result = second;
+            }
+            // Fix floating point precision (e.g., 0.7200000000000001 -> 0.72)
+            if (typeof result === 'number' && !isNaN(result)) {
+                result = Math.round(result * 1000000000000) / 1000000000000;
+            }
+            return result;
+        }
+
+        // Drag functionality
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        document.getElementById('calcHeader').addEventListener('mousedown', startDrag);
+        document.getElementById('calcHeader').addEventListener('touchstart', startDrag, { passive: false });
+
+        function startDrag(e) {
+            isDragging = true;
+            const calc = document.getElementById('calculator');
+            const rect = calc.getBoundingClientRect();
+            
+            if (e.type === 'touchstart') {
+                dragOffsetX = e.touches[0].clientX - rect.left;
+                dragOffsetY = e.touches[0].clientY - rect.top;
+            } else {
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+            }
+            e.preventDefault();
+        }
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const calc = document.getElementById('calculator');
+            let x, y;
+            
+            if (e.type === 'touchmove') {
+                x = e.touches[0].clientX - dragOffsetX;
+                y = e.touches[0].clientY - dragOffsetY;
+            } else {
+                x = e.clientX - dragOffsetX;
+                y = e.clientY - dragOffsetY;
+            }
+            
+            // Keep within viewport
+            x = Math.max(0, Math.min(x, window.innerWidth - calc.offsetWidth));
+            y = Math.max(0, Math.min(y, window.innerHeight - calc.offsetHeight));
+            
+            calc.style.left = x + 'px';
+            calc.style.top = y + 'px';
+        }
+
+        document.addEventListener('mouseup', () => isDragging = false);
+        document.addEventListener('touchend', () => isDragging = false);
+    </script>
+
+    <!-- JavaScript -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-        
+        import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyD9wbtUB4MUFq1BF00upHxIS6DQK9aS0vQ",
             authDomain: "praktiska-np.firebaseapp.com",
@@ -333,723 +1194,925 @@
             appId: "1:239785866823:web:55ffb3a3485d32984ca362"
         };
         
-        const firebaseAppInstance = initializeApp(firebaseConfig);
-        let db = getFirestore(firebaseAppInstance);
-        let auth = getAuth(firebaseAppInstance);
-        
-        const appId = 'default-app-id'; 
-        const COLLECTION_PATHS = { FREE_TRAINING: `artifacts/${appId}/public/data/math_tasks`, CAMPAIGN_ROOT: `artifacts/${appId}/public/data/campaigns`, USER_SCORE: `artifacts/${appId}/users/` };
-        const CAMPAIGN_LEVELS = { "Procent": [{value:1,label:"1. Decimal/Bråk/Procentform"},{value:2,label:"2. Beräkna andelen"},{value:3,label:"3. Beräkna delen"},{value:4,label:"4. Förändringsfaktorn"},{value:5,label:"5. Flera förändringar i rad"},{value:6,label:"6. Baklängesräkning"},{value:7,label:"7. Blandad uppgifter"}], "Sannolikhet": [{value:1,label:"1. Grundläggande begrepp"},{value:2,label:"2. Enkla sannolikheter"},{value:3,label:"3. Flera utfall & kombinatorik"},{value:4,label:"4. Medelvärde, median & typvärde"},{value:5,label:"5. Frekvenstabeller & diagram"},{value:6,label:"6. Sammansatta sannolikheter"},{value:7,label:"7. Komplementhändelser"},{value:8,label:"8. Blandad nivå"}], "FunktionerSamband": [{value:1,label:"1. Proportionalitet"},{value:2,label:"2. Tolka grafer"},{value:3,label:"3. Rät linje"},{value:4,label:"4. Sätta in och räkna"},{value:5,label:"5. Skärningspunkter"},{value:6,label:"6. Förändring"},{value:7,label:"7. f(x)-uppgifter"},{value:8,label:"8. Tillämpningar"},{value:9,label:"9. GeoGebra & NP-nivå"}], "Geometri": [{value:1,label:"1. Area och omkrets"},{value:2,label:"2. Cirkelns area"},{value:3,label:"3. Volym & rymd"},{value:4,label:"4. Enhetsomvandlingar"},{value:5,label:"5. Skala & likformighet"},{value:6,label:"6. Vinklar & Pythagoras"},{value:7,label:"7. Blandad nivå"}], "Algebra": [{value:1,label:"1. Ekvationer med + och -"},{value:2,label:"2. Multiplikation & division"},{value:3,label:"3. x på båda sidor"},{value:4,label:"4. Parenteser"},{value:5,label:"5. Bråk och decimaler"},{value:6,label:"6. Lösa ut variabler"},{value:7,label:"7. Faktorisering"},{value:8,label:"8. Kombinerade ekvationer"},{value:9,label:"9. Blandad nivå"}], "Taluppfattning": [{value:1,label:"1. Prioriteringsregeln"},{value:2,label:"2. Negativa tal"},{value:3,label:"3. Potenser"},{value:4,label:"4. Bråktal"},{value:5,label:"5. Förlängning/Förkortning"},{value:6,label:"6. överslag"},{value:7,label:"7. Primtal & delbarhet"},{value:8,label:"8. Reella tal"},{value:9,label:"9. Blandad nivå"}], "Statistik": [{value:1,label:"1. Diagram"},{value:2,label:"2. Boxplot & spridning"}] };
+        const appId = 'default-app-id';
 
-        let userId;
-        let allProblems=[], currentProblem=null, filteredProblems=[], currentScore=0, currentTotal=0, seenProblemIndices=[], currentMode='campaign';
-        let campaignStreak=0, chaptersCleared={}, STREAK_TO_PASS=7, dailyTasks=0, dailyStreak=0, lastStudyDate="";
-        let isCheckingAnswer=false, inactivityTimer;
-        let attempts=0, currentScaffoldStep=0;
-        
-        let isDragging = false;
-        let currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
-        const calcHandle = document.getElementById('calcHandle');
-        const calculatorWrapper = document.getElementById('calculatorWrapper');
+        // ============ COURSE STRUCTURE - SYNCED WITH ADMIN ============
+        const COURSE_STRUCTURE = {
+            Taluppfattning: {
+                name: 'Taluppfattning',
+                parts: [
+                    { id: 'prio', name: 'Prioriteringsregeln' },
+                    { id: 'neg', name: 'Negativa tal' },
+                    { id: 'potenser', name: 'Potenser' },
+                    { id: 'brak', name: 'Bråktal' },
+                    { id: 'forlangforkort', name: 'Förläng och förkorta' },
+                    { id: 'overslags', name: 'Överslagsräkning' },
+                    { id: 'blandadetal', name: 'Blandade uppgifter' }
+                ]
+            },
+            Algebra: {
+                name: 'Algebra',
+                parts: [
+                    { id: 'uttryck', name: 'Uttryck' },
+                    { id: 'forenklauttryck', name: 'Förenkla uttryck' },
+                    { id: 'parenteser', name: 'Parenteser' },
+                    { id: 'vardeavuttryck', name: 'Beräkna värde av uttryck' },
+                    { id: 'faktorisera', name: 'Faktorisera' },
+                    { id: 'formel', name: 'Lös ut ur formeln' },
+                    { id: 'ekvplusminus', name: 'Ekvationer plus och minus' },
+                    { id: 'ekvmultidiv', name: 'Ekvationer multiplikation/division' },
+                    { id: 'ekvparentes', name: 'Ekvationer med parentes' },
+                    { id: 'ekvbadasida', name: 'Ekvation med x på båda sidor' },
+                    { id: 'algebrablandat', name: 'Blandade uppgifter' }
+                ]
+            },
+            Procent: {
+                name: 'Procent',
+                parts: [
+                    { id: 'brakdeciproform', name: 'Bråk/Decimal/Procentform' },
+                    { id: 'delandelhela', name: 'Delen, andelen, det hela' },
+                    { id: 'procentenheter', name: 'Procentenheter' },
+                    { id: 'forandringsfaktorn', name: 'Förändringsfaktorn' },
+                    { id: 'upprepadforandring', name: 'Upprepad förändring' },
+                    { id: 'baklänges', name: 'Baklänges räkning' },
+                    { id: 'procentblandat', name: 'Blandade uppgifter' }
+                ]
+            },
+            Sannolikhet: {
+                name: 'Sannolikhet',
+                parts: [
+                    { id: 'grundsannolikhet', name: 'Grundläggande sannolikhet' },
+                    { id: 'enklasannolikheter', name: 'Enkla sannolikheter' },
+                    { id: 'flerautfall', name: 'Flera utfall' },
+                    { id: 'oberoendeberoende', name: 'Oberoende o beroende' },
+                    { id: 'komplement', name: 'Komplementhändelse' },
+                    { id: 'sannolikhetblandade', name: 'Blandade uppgifter' }
+                ]
+            },
+            FunktionerSamband: {
+                name: 'Funktioner och Samband',
+                parts: [
+                    { id: 'anvandaformler', name: 'Använda formler f(x)' },
+                    { id: 'ratalinjen', name: 'Den räta linjen' },
+                    { id: 'procentuell', name: 'Procentuell förändring' },
+                    { id: 'jamfortolka', name: 'Jämföra och tolka' },
+                    { id: 'funktionerblandade', name: 'Blandade uppgifter' }
+                ]
+            }
+        };
 
-        // --- CENTRAL RENDERING FUNCTION (BLOCK MODEL) ---
-        function renderComplexContent(container, content) {
-            container.innerHTML = ''; 
+        // Firebase paths - synced with admin panel (no /tasks/ sublevel)
+        function getFirebasePath(topic, partId) {
+            return `artifacts/${appId}/public/data/campaigns/${topic}/${partId}`;
+        }
 
-            if (Array.isArray(content)) {
-                content.forEach(block => {
-                    const div = document.createElement('div');
-                    
-                    if (block.type === 'text') {
-                        div.className = "problem-text-block"; // Serif font
-                        div.innerHTML = formatInlineMath(block.value);
-                    } else if (block.type === 'math') {
-                        div.className = "problem-math-block"; // Centered, large math
-                        div.innerHTML = `$$${block.value}$$`;
-                    }
-                    
-                    container.appendChild(div);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // State
+        let currentMode = 'campaigns';
+        let tasks = [];
+        let currentTaskIndex = 0;
+        let currentScaffoldIndex = 0;
+        let stats = { correct: 0, wrong: 0, streak: 0 };
+
+        // ============ CONFETTI SYSTEM ============
+        const confettiCanvas = document.getElementById('confettiCanvas');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let confettiParticles = [];
+        let confettiAnimating = false;
+
+        function resizeConfettiCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        resizeConfettiCanvas();
+        window.addEventListener('resize', resizeConfettiCanvas);
+
+        function createConfetti(count = 150) {
+            const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
+            for (let i = 0; i < count; i++) {
+                confettiParticles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    w: Math.random() * 10 + 5,
+                    h: Math.random() * 6 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speed: Math.random() * 3 + 2,
+                    angle: Math.random() * 360,
+                    spin: Math.random() * 10 - 5,
+                    drift: Math.random() * 2 - 1
                 });
-            } else if (typeof content === 'object' && content !== null) {
-                 // Fallback
-                 const blocks = [];
-                 if (content.text) blocks.push({type: 'text', value: content.text});
-                 if (content.math) blocks.push({type: 'math', value: content.math});
-                 if (content.textPost) blocks.push({type: 'text', value: content.textPost});
-                 if (content.question) blocks.push({type: 'text', value: content.question}); 
-                 
-                 renderComplexContent(container, blocks);
-                 return;
+            }
+        }
+
+        function animateConfetti() {
+            if (!confettiAnimating) return;
+            
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            confettiParticles.forEach((p, i) => {
+                p.y += p.speed;
+                p.x += p.drift;
+                p.angle += p.spin;
+                
+                confettiCtx.save();
+                confettiCtx.translate(p.x, p.y);
+                confettiCtx.rotate(p.angle * Math.PI / 180);
+                confettiCtx.fillStyle = p.color;
+                confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                confettiCtx.restore();
+                
+                if (p.y > confettiCanvas.height + 50) {
+                    confettiParticles.splice(i, 1);
+                }
+            });
+            
+            if (confettiParticles.length > 0) {
+                requestAnimationFrame(animateConfetti);
             } else {
-                // Fallback for old strings - Treat as text block with enhanced formatting
-                const div = document.createElement('div');
-                div.className = "problem-text-block";
-                div.innerHTML = formatStringFallback(content);
-                container.appendChild(div);
+                confettiAnimating = false;
+                confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }
+        }
+
+        function launchConfetti(amount = 150) {
+            confettiParticles = [];
+            createConfetti(amount);
+            confettiAnimating = true;
+            animateConfetti();
+        }
+
+        // Update chapters dropdown based on topic
+        window.updateChapters = function() {
+            const topic = document.getElementById('topicSelect').value;
+            const chapterSelect = document.getElementById('chapterSelect');
+            const structure = COURSE_STRUCTURE[topic];
+            
+            chapterSelect.innerHTML = '';
+            
+            // Add "All" option
+            const allOption = document.createElement('option');
+            allOption.value = '';
+            allOption.textContent = 'Alla delar';
+            chapterSelect.appendChild(allOption);
+            
+            if (structure && structure.parts) {
+                structure.parts.forEach((part, index) => {
+                    const option = document.createElement('option');
+                    option.value = part.id;
+                    option.textContent = `Del ${index + 1}: ${part.name}`;
+                    chapterSelect.appendChild(option);
+                });
+            }
+        };
+
+        // Initialize
+        signInAnonymously(auth).then(() => {
+            console.log('Connected to Firebase');
+            updateChapters(); // Initialize chapters
+        }).catch(e => {
+            console.error('Firebase error:', e);
+        });
+
+        // Mode selection
+        window.setMode = function(mode) {
+            currentMode = mode;
+            document.getElementById('modeSelection').classList.add('hidden');
+            document.getElementById('settingsPanel').classList.remove('hidden');
+            document.getElementById('modeTitle').textContent = mode === 'campaigns' ? '🚀 Kapitelträning' : '🎯 Typuppgifter NP';
+            loadTasks();
+        };
+
+        window.showModeSelection = function() {
+            document.getElementById('modeSelection').classList.remove('hidden');
+            document.getElementById('settingsPanel').classList.add('hidden');
+            document.getElementById('taskArea').classList.add('hidden');
+            document.getElementById('noTasksMessage').classList.add('hidden');
+        };
+
+        // ============ GENOMGÅNG (Walkthrough) SYSTEM ============
+        window.showGenomgang = async function() {
+            const topic = document.getElementById('topicSelect').value;
+            const partId = document.getElementById('chapterSelect').value;
+            
+            if (!partId) {
+                alert('Välj en specifik del för att se genomgången.');
+                return;
+            }
+            
+            const modal = document.getElementById('genomgangModal');
+            const content = document.getElementById('genomgangContent');
+            
+            modal.classList.remove('hidden');
+            content.innerHTML = '<p class="text-gray-400 text-center py-8 animate-pulse">Laddar genomgång...</p>';
+            
+            try {
+                // Path: artifacts/{appId}/public/data/campaigns/{topic}/{partId}/genomgang
+                const genomgangPath = `artifacts/${appId}/public/data/campaigns/${topic}/${partId}`;
+                const genomgangRef = doc(db, genomgangPath, 'genomgang');
+                const genomgangSnap = await getDoc(genomgangRef);
+                
+                if (genomgangSnap.exists()) {
+                    const data = genomgangSnap.data();
+                    content.innerHTML = renderGenomgang(data);
+                    // Re-render MathJax
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        await MathJax.typesetPromise([content]);
+                    }
+                } else {
+                    content.innerHTML = `
+                        <div class="text-center py-12">
+                            <div class="text-6xl mb-4">📚</div>
+                            <h3 class="text-xl font-bold text-gray-700 mb-2">Finns ingen genomgång här än</h3>
+                            <p class="text-gray-500">Genomgången för denna del kommer snart!</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading genomgång:', error);
+                content.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">📚</div>
+                        <h3 class="text-xl font-bold text-gray-700 mb-2">Finns ingen genomgång här än</h3>
+                        <p class="text-gray-500">Genomgången för denna del kommer snart!</p>
+                    </div>
+                `;
+            }
+        };
+
+        window.closeGenomgang = function() {
+            document.getElementById('genomgangModal').classList.add('hidden');
+        };
+
+        function renderGenomgang(data) {
+            // Support flexible content structure
+            if (data.content) {
+                // If there's a content field with blocks
+                if (Array.isArray(data.content)) {
+                    return data.content.map(block => {
+                        if (block.type === 'text') {
+                            return `<p class="problem-text-block">${block.value}</p>`;
+                        } else if (block.type === 'math') {
+                            return `<div class="problem-math-block">$$${block.value}$$</div>`;
+                        } else if (block.type === 'step') {
+                            return `<div class="step-block"><span class="step-number">${block.step || '•'}</span>${block.value}</div>`;
+                        }
+                        return `<p>${block.value || ''}</p>`;
+                    }).join('');
+                }
+                // If content is just a string
+                return `<div class="prose max-w-none">${data.content}</div>`;
+            }
+            
+            // If there's a text field
+            if (data.text) {
+                return `<div class="prose max-w-none whitespace-pre-wrap">${data.text}</div>`;
+            }
+            
+            // Fallback - show all data
+            return `<pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>`;
+        }
+
+        // Load tasks - now using correct Firebase path synced with admin
+        window.loadTasks = async function() {
+            const topic = document.getElementById('topicSelect').value;
+            const partId = document.getElementById('chapterSelect').value;
+
+            try {
+                tasks = [];
+                
+                if (partId) {
+                    // Load specific part
+                    const path = getFirebasePath(topic, partId);
+                    console.log('Loading tasks from:', path);
+                    const snap = await getDocs(collection(db, path));
+                    snap.forEach(docSnap => {
+                        tasks.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                } else {
+                    // Load all parts for this topic
+                    const structure = COURSE_STRUCTURE[topic];
+                    if (structure && structure.parts) {
+                        for (const part of structure.parts) {
+                            const path = getFirebasePath(topic, part.id);
+                            try {
+                                const snap = await getDocs(collection(db, path));
+                                snap.forEach(docSnap => {
+                                    tasks.push({ id: docSnap.id, ...docSnap.data() });
+                                });
+                            } catch (e) {
+                                // Part might not have tasks yet, skip
+                            }
+                        }
+                    }
+                }
+
+                // Shuffle tasks
+                tasks = tasks.sort(() => Math.random() - 0.5);
+
+                if (tasks.length === 0) {
+                    document.getElementById('taskArea').classList.add('hidden');
+                    document.getElementById('noTasksMessage').classList.remove('hidden');
+                } else {
+                    document.getElementById('taskArea').classList.remove('hidden');
+                    document.getElementById('noTasksMessage').classList.add('hidden');
+                    document.getElementById('totalTasks').textContent = tasks.length;
+                    currentTaskIndex = 0;
+                    showTask();
+                }
+            } catch (e) {
+                console.error('Error loading tasks:', e);
+                document.getElementById('taskArea').classList.add('hidden');
+                document.getElementById('noTasksMessage').classList.remove('hidden');
+            }
+        };
+
+        // Show current task
+        function showTask() {
+            if (currentTaskIndex >= tasks.length) {
+                // Show completion
+                document.getElementById('problemContent').innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Bra jobbat!</h3>
+                        <p class="text-gray-500">Du har slutfört alla ${tasks.length} uppgifter.</p>
+                        <p class="text-lg mt-4">
+                            <span class="text-green-600 font-bold">${stats.correct}</span> rätt, 
+                            <span class="text-red-600 font-bold">${stats.wrong}</span> fel
+                        </p>
+                    </div>
+                `;
+                document.getElementById('answerSection').classList.add('hidden');
+                return;
             }
 
+            const task = tasks[currentTaskIndex];
+            currentScaffoldIndex = 0;
+
+            // Update progress
+            document.getElementById('currentTaskNum').textContent = currentTaskIndex + 1;
+            document.getElementById('progressBar').style.width = `${((currentTaskIndex + 1) / tasks.length) * 100}%`;
+            document.getElementById('taskLevel').textContent = `${task.level || 'Åk 9'} - Del ${task.campaignLevel || '?'}`;
+
+            // Render question
+            const contentEl = document.getElementById('problemContent');
+            contentEl.innerHTML = '';
+            renderBlocks(contentEl, task.question_sv);
+
+            // Reset UI
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').className = 'answer-input w-full mb-2';
+            document.getElementById('answerPreview').className = 'answer-preview-empty';
+            document.getElementById('answerPreview').textContent = 'Ditt svar visas här...';
+            document.getElementById('answerInputArea').classList.remove('hidden');
+            document.getElementById('resultDisplay').classList.add('hidden');
+            document.getElementById('hintDisplay').classList.add('hidden');
+            document.getElementById('scaffoldingSection').classList.add('hidden');
+            document.getElementById('scaffoldContent').innerHTML = '';
+
+            // Show/hide scaffold button
+            const hasScaffolding = task.scaffolding_sv && task.scaffolding_sv.length > 0;
+            document.getElementById('scaffoldBtn').classList.toggle('hidden', !hasScaffolding);
+
+            // Show/hide hint button
+            const hasHint = task.hint_sv && task.hint_sv.trim();
+            document.getElementById('hintBtn').classList.toggle('hidden', !hasHint);
+
+            // Typeset MathJax
             if (window.MathJax && window.MathJax.typesetPromise) {
-                MathJax.typesetPromise([container]);
+                MathJax.typesetPromise([contentEl]);
             }
+        }
+
+        function renderBlocks(container, blocks) {
+            if (!blocks) return;
+            if (typeof blocks === 'string') {
+                const div = document.createElement('div');
+                div.className = 'problem-text-block';
+                div.innerHTML = formatInlineMath(blocks);
+                container.appendChild(div);
+                return;
+            }
+
+            let stepCount = 0;
+            blocks.forEach(block => {
+                if (!block.value) return;
+                
+                const div = document.createElement('div');
+                
+                if (block.type === 'text') {
+                    div.className = 'problem-text-block';
+                    div.innerHTML = formatInlineMath(block.value);
+                } else if (block.type === 'math') {
+                    div.className = 'problem-math-block';
+                    div.innerHTML = `$$${block.value}$$`;
+                } else if (block.type === 'step') {
+                    stepCount++;
+                    div.className = 'step-block';
+                    div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
+                } else if (block.type === 'image') {
+                    // Handle graph images
+                    div.className = 'flex justify-center mb-4';
+                    const img = document.createElement('img');
+                    img.src = block.value;
+                    img.className = 'max-w-full rounded-lg border border-gray-200';
+                    img.style.maxHeight = '250px';
+                    img.alt = 'Graf';
+                    div.appendChild(img);
+                }
+                
+                container.appendChild(div);
+            });
         }
 
         function formatInlineMath(text) {
-            // Allow inline math using single $
-            let s = text.replace(/\$([^$]+)\$/g, "\\($1\\)");
+            if (!text) return '';
+            // Clean stray $ signs first, then convert proper $...$ to MathJax inline format
+            let cleaned = text;
             
-            // Hantera MathJax-koder som inte var omslutna av $ (typiska strängar från gamla options)
-            if (s.includes("\\cdot") || s.includes("\\frac") || s.includes("=")) {
-                return formatStringFallback(s); 
-            }
-            
-            return s;
-        }
-
-        // Enhanced fallback for strings: detects commands like \cdot and wraps them if missing delimiters
-        function formatStringFallback(text) {
-            if (!text) return "";
-            let s = text;
-            
-            // 1. Ersätt fula tecken
-            s = s.replace(/\*/g, " \\cdot ").replace(/\^/g, "^");
-            
-            // 2. Hantera decimaltal i bråk (x/0,1) -> \frac{x}{0,1}
-            s = s.replace(/([0-9a-zA-Z,]+)\s*\/\s*([0-9a-zA-Z,]+)/g, (match, p1, p2) => {
-                 return `\\frac{${p1.replace(/,/g, '{,}')}}{${p2.replace(/,/g, '{,}')}}`;
+            // Protect proper inline math $...$
+            const mathSegments = [];
+            cleaned = cleaned.replace(/\$([^$]+)\$/g, (match, inner) => {
+                const idx = mathSegments.length;
+                mathSegments.push(inner);
+                return `__MATH_${idx}__`;
             });
             
-            // 3. Hitta MathJax-koder och wrappa dem om de inte redan är det
-            const mathPatterns = /(\\cdot|\\frac\{[^\}]+\}\{[^\}]+\}|[a-z]+\^\{?[0-9a-z]+\}?|[0-9a-z]+\s*=\s*[0-9a-z]+|\([0-9a-z]+\s*[\+\-\*\/]\s*[0-9a-z]+\))/gi; 
+            // Remove any stray $ signs
+            cleaned = cleaned.replace(/\$/g, '');
             
-            if (s.match(mathPatterns)) {
-                 return `\\(${s}\\)`;
-            }
+            // Restore math with MathJax inline format \(...\)
+            cleaned = cleaned.replace(/__MATH_(\d+)__/g, (match, idx) => `\\(${mathSegments[parseInt(idx)]}\\)`);
             
-            // 4. Hantera kommatecken i övrig text/tal (eftersom vi använder Merriweather som standard)
-            s = s.replace(/([0-9])\s*,/g, '$1{,}'); 
-
-            return s;
+            return cleaned;
         }
 
-        function showSolution() {
-            if (!currentProblem || !currentProblem.explanation_sv) { 
-                document.getElementById('solutionText').textContent = "Det finns tyvärr ingen förklaring till den här uppgiften."; 
-            } else { 
-                const container = document.getElementById('solutionText');
-                renderComplexContent(container, currentProblem.explanation_sv);
-            }
+        // Show scaffolding step
+        window.showNextScaffold = function() {
+            const task = tasks[currentTaskIndex];
+            if (!task.scaffolding_sv || currentScaffoldIndex >= task.scaffolding_sv.length) return;
+
+            const scaffoldSection = document.getElementById('scaffoldingSection');
+            const scaffoldContent = document.getElementById('scaffoldContent');
             
-            document.getElementById('solutionInline').style.display = "block"; 
-            const btn = document.getElementById('showSolutionBtn');
-            if(btn) btn.style.display = "none"; 
-        }
+            scaffoldSection.classList.remove('hidden');
 
-        // --- STANDARD FUNCTIONS ---
+            const scaffold = task.scaffolding_sv[currentScaffoldIndex];
+            const div = document.createElement('div');
+            div.className = 'scaffold-block animate-in';
+            div.innerHTML = `<span class="scaffold-number">${currentScaffoldIndex + 1}.</span><span>${formatInlineMath(scaffold.value)}</span>`;
+            scaffoldContent.appendChild(div);
 
-        function switchMode() {
-            currentMode = document.getElementById('trainingMode').value;
+            currentScaffoldIndex++;
+            document.getElementById('scaffoldProgress').textContent = `Steg ${currentScaffoldIndex}/${task.scaffolding_sv.length}`;
 
-            if (currentMode === 'free') {
-                document.getElementById('freeTrainingFilters').classList.remove('hidden');
-                document.getElementById('campaignFilters').classList.add('hidden');
-                document.getElementById('modeDescription').textContent = "Välj nivå och ämne för typuppgifter.";
-            } else {
-                document.getElementById('campaignFilters').classList.remove('hidden');
-                document.getElementById('freeTrainingFilters').classList.add('hidden');
-                document.getElementById('modeDescription').textContent = "Välj ett kapitel och träna strukturerat.";
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([div]);
             }
 
-            resetScore(true);
-            loadAllProblems();
-        }
-
-        function markChapterCleared() {
-            const campaign = document.getElementById('campaignNameFilter').value;
-            const chapter = parseInt(document.getElementById('chapterPartFilter').value);
-            if (!chaptersCleared[campaign]) { chaptersCleared[campaign] = {}; }
-            chaptersCleared[campaign][chapter] = true;
-            campaignStreak = 0; 
-            saveScore(); 
-            updateStreakDisplay();
-            
-            let label = "Okänt kapitel";
-            if (CAMPAIGN_LEVELS[campaign]) {
-                const found = CAMPAIGN_LEVELS[campaign].find(p => p.value === chapter);
-                if (found) label = found.label;
+            // Hide button if no more scaffolds
+            if (currentScaffoldIndex >= task.scaffolding_sv.length) {
+                document.getElementById('scaffoldBtn').classList.add('hidden');
             }
+        };
+
+        // Show hint
+        window.showHint = function() {
+            const task = tasks[currentTaskIndex];
+            if (!task.hint_sv) return;
+
+            document.getElementById('hintDisplay').classList.remove('hidden');
+            document.getElementById('hintText').textContent = task.hint_sv;
+            document.getElementById('hintBtn').classList.add('hidden');
+        };
+
+        // ============ MATH INPUT TOOLBAR FUNCTIONS ============
+        window.insertMath = function(type) {
+            const input = document.getElementById('answerInput');
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const val = input.value;
+            let insert = '';
+            let cursorOffset = 0;
             
-            alert(`GRATTIS! Du har klarat ${campaign} - Del ${label}!`);
-        }
-
-        function getNiceStep(range){if(range===0)return 1;const t=8,r=range/t,m=Math.pow(10,Math.floor(Math.log10(r))),b=r/m;return b<1.5?1*m:b<3.5?2*m:5*m}
-        function renderDrawData(canvas,d){
-             const ctx = canvas.getContext('2d'); const w=canvas.width,h=canvas.height;
-             ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
-             if(d.type==='table'){const cellW=120,cellH=50,startX=(w-cellW*2)/2,startY=(h-cellH*(d.rows.length+1))/2;ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.font='bold 20px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f3f4f6';ctx.fillRect(startX,startY,cellW,cellH);ctx.fillRect(startX+cellW,startY,cellW,cellH);ctx.strokeRect(startX,startY,cellW,cellH);ctx.strokeRect(startX+cellW,startY,cellW,cellH);ctx.fillStyle='#000';ctx.fillText(d.headers[0],startX+cellW/2,startY+cellH/2);ctx.fillText(d.headers[1],startX+cellW+cellW/2,startY+cellH/2);ctx.font='20px Arial';d.rows.forEach((r,i)=>{const y=startY+(i+1)*cellH;ctx.strokeRect(startX,y,cellW,cellH);ctx.strokeRect(startX+cellW,y,cellW,cellH);ctx.fillStyle='#000';ctx.fillText(r[0],startX+cellW/2,y+cellH/2);if(r[1]==='?') {ctx.fillStyle='#e11d48';ctx.font='bold 24px Arial';} else {ctx.fillStyle='#000';ctx.font='20px Arial';}ctx.fillText(r[1],startX+cellW+cellW/2,y+cellH/2);});
-             } else if(d.type==='graph'){const pad=60,gW=w-2*pad,gH=h-2*pad,xMin=d.xRange[0],xMax=d.xRange[1],yMin=d.yRange[0],yMax=d.yRange[1];ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();const toCanvasX=x=>pad+(x-xMin)/(xMax-xMin)*gW,toCanvasY=y=>h-pad-(y-yMin)/(yMax-yMin)*gH;const xStep=getNiceStep(xMax-xMin),yStep=getNiceStep(yMax-yMin);ctx.font='14px Arial';ctx.textAlign='center';ctx.textBaseline='top';for(let i=Math.ceil(xMin/xStep)*xStep;i<=xMax;i+=xStep){const cx=toCanvasX(i);ctx.fillText(i,cx,h-pad+5);ctx.beginPath();ctx.moveTo(cx,h-pad);ctx.lineTo(cx,h-pad+5);ctx.stroke();}ctx.textAlign='right';ctx.textBaseline='middle';for(let i=Math.ceil(yMin/yStep)*yStep;i<=yMax;i+=yStep){const cy=toCanvasY(i);ctx.fillText(i,pad-10,cy);ctx.beginPath();ctx.moveTo(pad-5,cy);ctx.lineTo(pad,cy);ctx.stroke();}if(d.lines)d.lines.forEach((l,idx)=>{ctx.strokeStyle=['#E3004F','#2563eb','#16a34a'][idx%3];ctx.lineWidth=3;ctx.beginPath();let first=true;for(let x=xMin;x<=xMax;x+=0.1){const y=l.k*x+l.m;if(y>=yMin&&y<=yMax){const cx=toCanvasX(x),cy=toCanvasY(y);if(first){ctx.moveTo(cx,cy);first=false;}else{ctx.lineTo(cx,cy);}}}ctx.stroke();if(l.label){ctx.font='bold 16px Arial';ctx.fillStyle=ctx.strokeStyle;const lx=toCanvasX(xMax*0.8),ly=toCanvasY(l.k*xMax*0.8+l.m);ctx.fillText(l.label,lx+5,ly);}});if(d.points)d.points.forEach(p=>{ctx.fillStyle='#E3004F';ctx.beginPath();ctx.arc(toCanvasX(p.x),toCanvasY(p.y),8,0,2*Math.PI);ctx.fill();if(p.label){ctx.font='bold 14px Arial';ctx.fillStyle='#000';ctx.fillText(p.label,toCanvasX(p.x)+12,toCanvasY(p.y)-5);}});if(d.axisLabels){ctx.font='bold 16px Arial';ctx.fillStyle='#000';ctx.textAlign='center';ctx.fillText(d.axisLabels.x,w/2,h-15);ctx.save();ctx.translate(15,h/2);ctx.rotate(-Math.PI/2);ctx.fillText(d.axisLabels.y,0,0);ctx.restore();}
-             } else if(d.type==='barChart'){const pad=70,gW=w-2*pad,gH=h-2*pad-20,numBars=d.data.length,barW=gW/numBars*0.6,gap=gW/numBars*0.4,maxVal=Math.max(...d.data.map(item=>item.value))*1.1;ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();d.data.forEach((item,i)=>{const barH=(item.value/maxVal)*gH,x=pad+i*(barW+gap)+gap/2,y=h-pad-barH;ctx.fillStyle='#f66909';ctx.fillRect(x,y,barW,barH);ctx.font='bold 16px Arial';ctx.fillStyle='#000';ctx.textAlign='center';ctx.fillText(item.value,x+barW/2,y-10);ctx.font='14px Arial';ctx.fillText(item.label,x+barW/2,h-pad+15);});if(d.yLabel){ctx.save();ctx.font='bold 16px Arial';ctx.translate(20,h/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText(d.yLabel,0,0);ctx.restore();}}
-        }
-        
-        function displayProblem(problem) {
-            currentProblem = problem; attempts = 0; currentScaffoldStep = 0;
-            document.getElementById('problemIdDisplay').textContent = problem.id || '';
-            document.getElementById('problemCard').classList.remove('hidden');
-            document.getElementById('statusMessage').classList.add('hidden');
-            document.getElementById('solutionInline').style.display = 'none';
-            document.getElementById('showSolutionBtn').style.display = 'none';
-            document.getElementById('checkAnswerBtn').style.display = 'block';
-            document.getElementById('checkAnswerBtn').disabled = false;
-            document.getElementById('checkAnswerBtn').textContent = 'Rätta Svar';
-            document.getElementById('nextProblemBtn').style.display = 'none';
-            document.getElementById('feedback').style.display = 'none';
-            document.getElementById('scaffoldingContainer').classList.add('hidden');
-
-            // FIX: Use question_sv instead of problem_sv (matching Firebase data structure)
-            const problemTextContainer = document.getElementById('problemText');
-            const questionData = problem.question_sv || problem.problem_sv;
-            renderComplexContent(problemTextContainer, questionData);
-
-            const hasScaffolding = problem.scaffolding && problem.scaffolding.length > 0;
-            const helpBtn = document.getElementById('helpBtn');
-            if(hasScaffolding) helpBtn.style.display = 'block'; else helpBtn.style.display = 'none';
-
-            const imgEl = document.getElementById('problemImage');
-            const canvasEl = document.getElementById('problemCanvas');
-            imgEl.style.display = 'none'; canvasEl.style.display = 'none';
-            if (problem.imageUrl) { imgEl.src = problem.imageUrl; imgEl.style.display = 'block'; }
-            if (problem.drawData) { canvasEl.style.display = 'block'; renderDrawData(canvasEl, problem.drawData); }
-
-            const ac = document.getElementById('answerContainer');
-            const type = problem.answerType || 'text';
-            if (type === 'choice' && problem.options) {
-                let optionsHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">';
-                problem.options.forEach((opt, i) => {
-                    const optDisplay = (typeof opt === 'string') ? formatStringFallback(opt) : opt;
-                    optionsHtml += `<button class="option-btn bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 p-4 rounded-lg text-lg font-medium text-gray-800 dark:text-gray-200 hover:border-praktiska-orange hover:bg-orange-50 dark:hover:bg-gray-600 transition" data-value="${i}">${optDisplay}</button>`;
-                });
-                optionsHtml += '</div><input type="hidden" id="answerInput" value="">';
-                ac.innerHTML = optionsHtml;
-                ac.querySelectorAll('.option-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        ac.querySelectorAll('.option-btn').forEach(b => b.classList.remove('border-praktiska-orange', 'bg-orange-100', 'dark:bg-orange-900'));
-                        e.target.classList.add('border-praktiska-orange', 'bg-orange-100', 'dark:bg-orange-900');
-                        document.getElementById('answerInput').value = e.target.dataset.value;
-                    });
-                });
-                if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([ac]);
-            } else {
-                ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Ditt Svar:</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400 dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">`;
+            switch(type) {
+                case 'fraction':
+                    insert = '/';
+                    cursorOffset = 1;
+                    break;
+                case 'power':
+                    insert = '^';
+                    cursorOffset = 1;
+                    break;
+                case 'sqrt':
+                    insert = 'sqrt()';
+                    cursorOffset = 5; // Place cursor inside ()
+                    break;
+                case 'pi':
+                    insert = 'π';
+                    cursorOffset = 1;
+                    break;
+                case 'plusminus':
+                    insert = '±';
+                    cursorOffset = 1;
+                    break;
+                case 'multiply':
+                    insert = '*';
+                    cursorOffset = 1;
+                    break;
             }
             
-            updateStreakDisplay();
-        }
+            input.value = val.slice(0, start) + insert + val.slice(end);
+            input.focus();
+            input.setSelectionRange(start + cursorOffset, start + cursorOffset);
+            updateAnswerPreview();
+        };
 
-        function resetScore(clearTotal = false) {
-            if (clearTotal) { currentScore = 0; currentTotal = 0; campaignStreak = 0; }
-            seenProblemIndices = [];
-            updateScoreDisplay();
-            updateStreakDisplay();
-        }
-        function updateScoreDisplay() {
-            document.getElementById('scoreDisplay').textContent = currentScore;
-            document.getElementById('totalDisplay').textContent = currentTotal;
-            document.getElementById('progressBar').style.width = currentTotal > 0 ? `${(currentScore / currentTotal) * 100}%` : '0%';
-        }
-        function updateStreakDisplay() {
-            const container = document.getElementById('streakContainer');
-            const section = document.getElementById('streakSection');
-            if (currentMode !== 'campaign') { section.classList.add('hidden'); return; }
-            section.classList.remove('hidden');
-            document.getElementById('streakDisplay').textContent = `${campaignStreak}/${STREAK_TO_PASS} 🔥`;
-            const campaign = document.getElementById('campaignNameFilter').value;
-            const chapter = parseInt(document.getElementById('chapterPartFilter').value);
-            const cleared = chaptersCleared[campaign] && chaptersCleared[campaign][chapter];
-            document.getElementById('trophyDisplay').textContent = cleared ? '🏆' : '';
-            container.classList.remove('fire-low', 'fire-med', 'fire-high');
-            if (campaignStreak >= 5) container.classList.add('fire-high');
-            else if (campaignStreak >= 3) container.classList.add('fire-med');
-            else if (campaignStreak >= 1) container.classList.add('fire-low');
-        }
-        function updateDailyUI() {
-            document.getElementById('dailyCountDisplay').textContent = `${dailyTasks}/10`;
-            document.getElementById('dailyProgressBar').style.width = `${Math.min(dailyTasks, 10) * 10}%`;
-            document.getElementById('dailyStreakDisplay').textContent = `Dagar i rad: ${dailyStreak} 📅`;
-        }
-        function triggerConfetti(origin) {
-            const colors = ['#f66909', '#fcd34d', '#10b981', '#3b82f6'];
-            for (let i = 0; i < 20; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                p.innerHTML = ['🎉', '⭐', '✨', '🔥'][Math.floor(Math.random()*4)];
-                p.style.left = `${origin.offsetLeft + origin.offsetWidth / 2}px`;
-                p.style.top = `${origin.offsetTop}px`;
-                p.style.setProperty('--tx', `${(Math.random() - 0.5) * 200}px`);
-                p.style.setProperty('--ty', `${-Math.random() * 150 - 50}px`);
-                p.style.setProperty('--rot', `${Math.random() * 360}deg`);
-                document.body.appendChild(p);
-                setTimeout(() => p.remove(), 1500);
-            }
-        }
+        window.clearAnswer = function() {
+            document.getElementById('answerInput').value = '';
+            updateAnswerPreview();
+            document.getElementById('answerInput').focus();
+        };
 
-        async function loadScore() {
-            if (!userId) return;
-            try {
-                const docRef = doc(db, COLLECTION_PATHS.USER_SCORE + userId, 'progress');
-                const snap = await getDoc(docRef);
-                if (snap.exists()) {
-                    const d = snap.data();
-                    currentScore = d.score || 0; currentTotal = d.total || 0;
-                    chaptersCleared = d.chaptersCleared || {};
-                    dailyTasks = d.dailyTasks || 0; dailyStreak = d.dailyStreak || 0; lastStudyDate = d.lastStudyDate || "";
-                    updateScoreDisplay(); updateDailyUI();
-                }
-            } catch(e) { console.error("Load Score Error", e); }
-        }
-        async function saveScore() {
-            if (!userId) return;
-            try {
-                const docRef = doc(db, COLLECTION_PATHS.USER_SCORE + userId, 'progress');
-                await setDoc(docRef, { score: currentScore, total: currentTotal, chaptersCleared: chaptersCleared, dailyTasks: dailyTasks, dailyStreak: dailyStreak, lastStudyDate: lastStudyDate }, { merge: true });
-            } catch(e) { console.error("Save Score Error", e); }
-        }
-
-        function populateChapterFilter() {
-            const campaignName = document.getElementById('campaignNameFilter').value;
-            const select = document.getElementById('chapterPartFilter');
-            select.innerHTML = '';
-            if (CAMPAIGN_LEVELS[campaignName]) {
-                CAMPAIGN_LEVELS[campaignName].forEach(part => {
-                    const opt = document.createElement('option');
-                    opt.value = part.value;
-                    opt.textContent = part.label;
-                    select.appendChild(opt);
-                });
-            }
-        }
-
-        async function loadAllProblems() {
-            document.getElementById('statusMessage').classList.remove('hidden');
-            document.getElementById('problemCard').classList.add('hidden');
-            allProblems = [];
-            try {
-                if (currentMode === 'free') {
-                    const q = collection(db, COLLECTION_PATHS.FREE_TRAINING);
-                    const snap = await getDocs(q);
-                    snap.forEach(d => allProblems.push({ id: d.id, ...d.data() }));
-                } else {
-                    populateChapterFilter();
-                    const campaignName = document.getElementById('campaignNameFilter').value;
-                    const tasksPath = `${COLLECTION_PATHS.CAMPAIGN_ROOT}/${campaignName}/tasks`;
-                    const q = collection(db, tasksPath);
-                    const snap = await getDocs(q);
-                    snap.forEach(d => allProblems.push({ id: d.id, ...d.data() }));
-                    
-                    // Debug: Log loaded problems
-                    console.log("Loaded problems:", allProblems.length);
-                    if (allProblems.length > 0) {
-                        console.log("Sample problem fields:", Object.keys(allProblems[0]));
-                    }
-                }
-                populateFilters();
-                applyFiltersAndRender();
-            } catch (e) {
-                console.error("Error loading problems:", e);
-                document.getElementById('statusMessage').innerHTML = `<p class="text-red-500">Kunde inte ladda uppgifter. Försök igen.</p>`;
-            }
-        }
-
-        function populateFilters() {
-            if (currentMode === 'free') {
-                const level = document.getElementById('levelFilter').value;
-                const topicSelect = document.getElementById('topicFilter');
-                topicSelect.innerHTML = '<option value="Alla">Alla Ämnen</option>';
-                const topics = [...new Set(allProblems.filter(p => level === 'Alla' || p.level === level).map(p => p.topic))].filter(Boolean);
-                topics.forEach(t => { const opt = document.createElement('option'); opt.value = t; opt.textContent = t; topicSelect.appendChild(opt); });
-                topicSelect.disabled = topics.length === 0;
-            }
-        }
-        
-        function applyFiltersAndRender() {
-            if (currentMode === 'free') {
-                const level = document.getElementById('levelFilter').value;
-                const topic = document.getElementById('topicFilter').value;
-                filteredProblems = allProblems.filter(p => (level === 'Alla' || p.level === level) && (topic === 'Alla' || p.topic === topic));
-            } else {
-                const campaignLevel = document.getElementById('campaignLevelFilter').value;
-                const chapterPart = parseInt(document.getElementById('chapterPartFilter').value);
-                
-                // FIX: Use campaignLevel and chapterLevel instead of level and chapterPart
-                filteredProblems = allProblems.filter(p => {
-                    const matchLevel = p.campaignLevel === campaignLevel || p.level === campaignLevel;
-                    const matchChapter = p.chapterLevel === chapterPart || p.chapterPart === chapterPart;
-                    return matchLevel && matchChapter;
-                });
-                
-                // Debug logging
-                console.log("Filter values - campaignLevel:", campaignLevel, "chapterPart:", chapterPart);
-                console.log("Filtered problems count:", filteredProblems.length);
-            }
+        // Convert user input to LaTeX for preview
+        function userInputToLatex(input) {
+            if (!input || input.trim() === '') return '';
+            let latex = input.trim();
             
-            if (filteredProblems.length === 0) {
-                document.getElementById('statusMessage').classList.remove('hidden');
-                document.getElementById('statusMessage').innerHTML = `<p class="text-gray-500">Inga uppgifter hittades för dina filter.</p>`;
-                document.getElementById('problemCard').classList.add('hidden');
-            } else {
-                if (seenProblemIndices.length >= filteredProblems.length) seenProblemIndices = [];
-                let randomIndex;
-                do { randomIndex = Math.floor(Math.random() * filteredProblems.length); } while (seenProblemIndices.includes(randomIndex) && seenProblemIndices.length < filteredProblems.length);
-                seenProblemIndices.push(randomIndex);
-                displayProblem(filteredProblems[randomIndex]);
-            }
-        }
-
-        function checkAnswer() {
-            try {
-                if (isCheckingAnswer) return;
-                isCheckingAnswer = true; 
-                
-                const inp = document.getElementById('answerInput');
-                if (!inp) { return; } 
-                const uAns = inp.value.trim();
-                const cAns = String(currentProblem.correctAnswer).trim();
-                let correct = false;
-                const clean = (s) => s.replace(/,/g, '.').replace(/[^0-9.\-]/g, '');
-                if(parseFloat(clean(uAns)) === parseFloat(clean(cAns)) || uAns.toLowerCase() === cAns.toLowerCase()) correct = true;
-
-                const fb = document.getElementById('feedback');
-                currentTotal++;
-
-                if(correct) {
-                    fb.innerHTML = `<div class="text-lg font-bold text-green-800 mb-1">Rätt svar!</div>`;
-                    fb.className = "mt-6 text-center p-4 rounded-xl bg-green-100 text-green-800 border border-green-200";
-                    
-                    document.getElementById('scaffoldingContainer').classList.add('hidden');
-
-                    if(attempts === 0) {
-                        currentScore++; campaignStreak++; triggerConfetti(document.getElementById('checkAnswerBtn'));
-                        const today = new Date().toISOString().split('T')[0];
-                        if(lastStudyDate === today) dailyTasks++;
-                        else { dailyTasks = 1; if(lastStudyDate) dailyStreak = (new Date(lastStudyDate).getTime() === new Date().getTime() - 86400000) ? dailyStreak+1 : 1; else dailyStreak=1; }
-                        lastStudyDate = today;
-                        updateDailyUI();
-                        saveScore();
-                    }
-                    if(currentMode === 'campaign' && campaignStreak >= STREAK_TO_PASS) markChapterCleared();
-                    document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block";
-                } else {
-                    attempts++;
-                    fb.style.display = "block";
-                    if(attempts === 1) {
-                        // USE NEW RENDERER FOR HINT
-                        fb.className = "mt-6 text-center p-6 rounded-xl bg-yellow-50 border-2 border-yellow-200 shadow-sm";
-                        fb.innerHTML = `<div class="mb-2 text-lg font-bold text-yellow-800">Inte riktigt rätt än...</div>`;
-                        
-                        const hintContentDiv = document.createElement('div');
-                        hintContentDiv.className = "text-gray-700 mb-3";
-                        
-                        // Check if hint_sv is object or string
-                        if(currentProblem.hint_sv) {
-                             renderComplexContent(hintContentDiv, currentProblem.hint_sv);
-                        } else {
-                             hintContentDiv.textContent = "Försök igen! Kontrollera dina beräkningar.";
-                        }
-                        fb.appendChild(hintContentDiv);
-                        fb.innerHTML += `<div class="text-sm font-semibold text-yellow-700">Prova en gång till!</div>`;
-
-                        const btn = document.getElementById('checkAnswerBtn');
-                        btn.disabled = false;
-                        btn.textContent = "Försök igen";
-                        
-                        document.getElementById('helpBtn').style.display = "none";
-                        isCheckingAnswer = false; 
-                        return; 
-
-                    } else {
-                        // SECOND FAIL
-                        fb.innerHTML = `<div class="font-bold text-red-800 mb-2">Tyvärr, det blev fel igen.</div><div>Rätt svar var: ${formatStringFallback(cAns)}</div>`;
-                        fb.className = "mt-6 text-center font-medium p-6 rounded-xl bg-red-50 border-2 border-red-200";
-                        if (window.MathJax && window.MathJax.typesetPromise) MathJax.typesetPromise([fb]);
-
-                        campaignStreak = 0;
-                        document.getElementById('checkAnswerBtn').style.display = "none"; document.getElementById('helpBtn').style.display = "none"; document.getElementById('nextProblemBtn').style.display = "block"; 
-                        
-                        if (currentProblem.explanation_sv) {
-                             // Show button if solution exists
-                             const solBtn = document.getElementById('showSolutionBtn');
-                             if(solBtn) solBtn.style.display = "inline-block";
-                        }
-                    }
-                }
-                updateScoreDisplay(); updateStreakDisplay();
-                isCheckingAnswer = false;
-            } catch (e) {
-                console.error("Check Answer Error:", e);
-            } finally {
-                isCheckingAnswer = false;
-            }
-        }
-
-        function startScaffolding() {
-            document.getElementById('helpBtn').style.display = "none";
-            document.getElementById('scaffoldingContainer').classList.remove('hidden');
-            currentScaffoldStep = 0; renderScaffoldStep();
-        }
-
-        function renderScaffoldStep() {
-            const steps = currentProblem.scaffolding;
-            const container = document.getElementById('scaffoldingContainer');
-            const content = document.getElementById('scaffoldingContent');
-            const actions = document.getElementById('scaffoldingActions');
+            // Handle sqrt(x) -> \sqrt{x}
+            latex = latex.replace(/sqrt\(([^)]+)\)/gi, '\\sqrt{$1}');
             
-            if (!currentProblem.scaffolding || currentScaffoldStep >= steps.length) { 
-                container.classList.add('hidden');
-                // SCAFFOLDING DONE -> Show Answer Input
-                const ac = document.getElementById('answerContainer');
-                ac.classList.remove('hidden');
-                const type = currentProblem.answerType || 'text';
-                ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar (endast siffror):</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-praktiska-orange focus:border-praktiska-orange focus:outline-none text-lg placeholder-gray-400 dark:bg-gray-700 dark:text-white" placeholder="Skriv ditt svar...">`;
-                
-                const fb = document.getElementById('feedback');
-                fb.innerHTML = `<div class="text-lg font-bold text-green-800 mb-1">Snyggt! Nu fixar du resten.</div>`;
-                fb.className = "mt-6 text-center p-4 rounded-xl bg-green-50 text-green-800 border border-green-100 mb-4";
-                fb.style.display = 'block';
+            // Handle x^y -> x^{y}
+            latex = latex.replace(/\^(\d+)/g, '^{$1}');
+            latex = latex.replace(/\^([a-zA-Z])/g, '^{$1}');
+            latex = latex.replace(/\^(\([^)]+\))/g, '^{$1}');
+            
+            // Handle a/b -> \frac{a}{b}
+            // More sophisticated: handle things like 1/100, x^2/y^3
+            latex = latex.replace(/([0-9a-zA-Z\^{}\d]+)\/([0-9a-zA-Z\^{}\d]+)/g, '\\frac{$1}{$2}');
+            
+            // Handle pi symbol
+            latex = latex.replace(/π/g, '\\pi');
+            latex = latex.replace(/pi(?![a-z])/gi, '\\pi');
+            
+            // Handle multiplication
+            latex = latex.replace(/\*/g, '\\cdot ');
+            latex = latex.replace(/×/g, '\\cdot ');
+            
+            return latex;
+        }
 
-                const chk = document.getElementById('checkAnswerBtn');
-                chk.style.display = "block"; 
-                chk.disabled = false;
+        window.updateAnswerPreview = function() {
+            const input = document.getElementById('answerInput').value;
+            const preview = document.getElementById('answerPreview');
+            
+            if (!input || input.trim() === '') {
+                preview.className = 'answer-preview-empty';
+                preview.textContent = 'Ditt svar visas här...';
                 return;
             }
-            const step = steps[currentScaffoldStep];
-            content.innerHTML = ''; actions.innerHTML = '';
             
-            // USE NEW RENDERER FOR STEPS
-            const stepWrapper = document.createElement('div');
+            const latex = userInputToLatex(input);
+            preview.className = '';
+            preview.innerHTML = `$$${latex}$$`;
             
-            if(step.type === 'highlight' || step.type === 'info') {
-                if (step.content) {
-                     renderComplexContent(stepWrapper, step.content);
-                } else {
-                     const data = {
-                        text: step.text,
-                        math: step.math, 
-                        textPost: step.textPost
-                     };
-                     renderComplexContent(stepWrapper, data);
-                }
-                
-                const b = document.createElement('button'); 
-                b.className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mt-4"; 
-                b.textContent= (step.type === 'highlight') ? "Nästa" : "Okej!";
-                b.onclick = () => { 
-                     if (step.type === 'highlight') {
-                         currentScaffoldStep++; renderScaffoldStep();
-                     } else {
-                         container.classList.add('hidden'); 
-                         const ac = document.getElementById('answerContainer');
-                         ac.classList.remove('hidden');
-                         const type = currentProblem.answerType || 'text';
-                         ac.innerHTML = `<label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Svar:</label><input type="${type==='number'?'number':'text'}" id="answerInput" class="w-full p-3.5 border rounded-lg text-lg dark:bg-gray-700 dark:text-white">`;
-                         document.getElementById('checkAnswerBtn').style.display = "block"; 
-                         document.getElementById('checkAnswerBtn').disabled = false; 
-                     }
-                };
-                actions.appendChild(b);
-            } else if(step.type === 'choice') {
-                const questionDiv = document.createElement('div');
-                // Support new content array or old properties
-                if (step.content) {
-                    renderComplexContent(questionDiv, step.content);
-                } else {
-                    const qData = { text: step.question, math: step.math };
-                    renderComplexContent(questionDiv, qData);
-                }
-                stepWrapper.appendChild(questionDiv);
-
-                const grid = document.createElement('div'); 
-                grid.className = "grid grid-cols-1 gap-2 mt-4";
-                
-                step.options.forEach((opt, idx) => {
-                    const btn = document.createElement('button');
-                    btn.className = "bg-white border-2 border-gray-200 p-3 rounded-lg hover:border-blue-500 text-left dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 w-full"; // w-full for better look
-                    
-                    if (typeof opt === 'object' && Array.isArray(opt)) {
-                         // Fall 1: Listan av block (det nya formatet)
-                         const btnContent = document.createElement('span');
-                         btnContent.className = 'choice-btn-content'; 
-                         renderComplexContent(btnContent, opt); // Skicka in listan av block
-                         btn.appendChild(btnContent);
-                    } else if (typeof opt === 'string') {
-                         // Fall 2: Gammal sträng (använd fallback formatter)
-                         const btnContent = document.createElement('span');
-                         btnContent.className = 'choice-btn-content';
-                         btnContent.innerHTML = formatStringFallback(opt); 
-                         btn.appendChild(btnContent);
-                    } else if (typeof opt === 'object' && opt.type) {
-                         // Fall 3: Option är ett enda block (t.ex. {type: "math", value: "..."})
-                         const btnContent = document.createElement('span');
-                         btnContent.className = 'choice-btn-content';
-                         renderComplexContent(btnContent, [opt]);
-                         btn.appendChild(btnContent);
-                    }
-
-                    btn.onclick = () => {
-                        if(idx === step.correctIndex) {
-                            btn.classList.add('bg-green-100', 'border-green-500', 'dark:bg-green-900');
-                            setTimeout(() => { currentScaffoldStep++; renderScaffoldStep(); }, 600);
-                        } else {
-                            btn.classList.add('bg-red-100', 'border-red-500', 'dark:bg-red-900');
-                        }
-                    };
-                    grid.appendChild(btn);
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([preview]).catch(err => {
+                    preview.textContent = input; // Fallback to plain text
                 });
-                stepWrapper.appendChild(grid);
             }
-            content.appendChild(stepWrapper);
-        }
+        };
 
-        // Drag and Drop
-        function dragStart(e) {
-            if (e.type === "touchstart") {
-                initialX = e.touches[0].clientX - xOffset;
-                initialY = e.touches[0].clientY - yOffset;
-            } else {
-                initialX = e.clientX - xOffset;
-                initialY = e.clientY - yOffset;
-            }
-            if (e.target === calcHandle || calcHandle.contains(e.target)) {
-                isDragging = true;
-            }
+        // Normalize answer for comparison - SMART normalization
+        function normalizeAnswer(answer) {
+            if (!answer) return '';
+            let normalized = answer.toString().trim().toLowerCase();
+            
+            // Remove all whitespace
+            normalized = normalized.replace(/\s+/g, '');
+            
+            // IMPORTANT: Convert decimal point to comma for consistent comparison
+            // Swedish uses comma, but we normalize to point for comparison
+            normalized = normalized.replace(/,/g, '.');
+            
+            // Remove trailing % sign
+            normalized = normalized.replace(/%$/, '');
+            
+            // Remove trailing . (like "8." -> "8")
+            normalized = normalized.replace(/\.$/, '');
+            
+            // Remove LaTeX wrappers if present
+            normalized = normalized.replace(/^\$/, '').replace(/\$$/, '');
+            normalized = normalized.replace(/^\\?\(/, '').replace(/\\?\)$/, '');
+            
+            // ====== SMART LaTeX to keyboard-friendly conversion ======
+            
+            // \frac{a}{b} -> a/b
+            normalized = normalized.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '$1/$2');
+            
+            // x^{n} -> x^n
+            normalized = normalized.replace(/\^{([^}]+)}/g, '^$1');
+            
+            // \sqrt{x} -> sqrt(x)
+            normalized = normalized.replace(/\\sqrt\{([^}]+)\}/g, 'sqrt($1)');
+            
+            // \pi -> pi
+            normalized = normalized.replace(/\\pi/g, 'pi');
+            normalized = normalized.replace(/π/g, 'pi');
+            
+            // \cdot -> *
+            normalized = normalized.replace(/\\cdot/g, '*');
+            normalized = normalized.replace(/×/g, '*');
+            normalized = normalized.replace(/÷/g, '/');
+            
+            // Remove any remaining backslashes
+            normalized = normalized.replace(/\\/g, '');
+            
+            // Handle "x = 2" vs "x=2" vs just "2"
+            // Also remove spaces around = and comparisons
+            normalized = normalized.replace(/\s*=\s*/g, '=');
+            
+            return normalized;
         }
-        function dragEnd(e) {
-            initialX = currentX;
-            initialY = currentY;
-            isDragging = false;
-        }
-        function drag(e) {
-            if (isDragging) {
-                e.preventDefault();
-                if (e.type === "touchmove") {
-                    currentX = e.touches[0].clientX - initialX;
-                    currentY = e.touches[0].clientY - initialY;
-                } else {
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
-                }
-                xOffset = currentX;
-                yOffset = currentY;
-                setTranslate(currentX, currentY, calculatorWrapper);
-            }
-        }
-        function setTranslate(xPos, yPos, el) {
-            el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
-        }
-
-        // Kalkylator Logic
-        const calcButtons = document.getElementById('calcButtons');
-        const calcDisplay = document.getElementById('calcDisplay'); 
-        let currentInput = '0', operator = null, firstOperand = null, awaitingSecondOperand = false;
         
-        function clearOperatorHighlight() { document.querySelectorAll('.calc-op').forEach(btn => { btn.classList.remove('calc-op-active'); }); }
-        calcButtons.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('calc-button')) return;
-            const value = e.target.dataset.value;
-            if (e.target.classList.contains('calc-num') || value === '.') {
-                clearOperatorHighlight(); 
-                if (awaitingSecondOperand) { currentInput = value === '.' ? '0.' : value; awaitingSecondOperand = false; } 
-                else if (currentInput === '0' && value !== '.') { currentInput = value; } 
-                else if (value === '.' && currentInput.includes('.')) { } 
-                else { currentInput += value; }
-            } else if (e.target.classList.contains('calc-op')) {
-                if (value === '=') {
-                    if (operator && firstOperand !== null) { currentInput = calculate(firstOperand, operator, parseFloat(currentInput)); operator = null; firstOperand = null; awaitingSecondOperand = true; }
-                    clearOperatorHighlight();
-                } else {
-                    clearOperatorHighlight(); e.target.classList.add('calc-op-active');
-                    if (firstOperand === null) { firstOperand = parseFloat(currentInput); } 
-                    else if (operator) { const result = calculate(firstOperand, operator, parseFloat(currentInput)); firstOperand = result; currentInput = result; }
-                    operator = value; awaitingSecondOperand = true;
-                }
-            } else if (e.target.classList.contains('calc-func')) {
-                clearOperatorHighlight();
-                if (value === 'AC') { currentInput = '0'; operator = null; firstOperand = null; awaitingSecondOperand = false; } 
-                else if (value === '±') { currentInput = String(parseFloat(currentInput) * -1); } 
-                else if (value === '%') { currentInput = String(parseFloat(currentInput) / 100); }
-            }
-            calcDisplay.textContent = currentInput.substring(0, 10);
-        });
-        function calculate(n1, op, n2) { switch (op) { case '+': return String(n1 + n2); case '-': return String(n1 - n2); case '×': return String(n1 * n2); case '÷': return String(n1 / n2); default: return n2; } }
-
-
-        // --- START AV APPEN ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // DOM element references
-            const trainingMode = document.getElementById('trainingMode');
-            const campaignNameFilter = document.getElementById('campaignNameFilter');
-            const campaignLevelFilter = document.getElementById('campaignLevelFilter');
-            const chapterPartFilter = document.getElementById('chapterPartFilter');
-            const levelFilter = document.getElementById('levelFilter');
-            const topicFilter = document.getElementById('topicFilter');
-            const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
-            const toggleCalculatorBtn = document.getElementById('toggleCalculatorBtn');
-            const closeCalculator = document.getElementById('closeCalculator');
-
-            // KOPPLA HÄNDELSELYSSNARE
-            trainingMode.addEventListener('change', switchMode);
-            campaignNameFilter.addEventListener('change', () => { resetScore(true); loadAllProblems(); });
-            campaignLevelFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
-            chapterPartFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
-            levelFilter.addEventListener('change', () => { resetScore(true); populateFilters(); applyFiltersAndRender(); });
-            topicFilter.addEventListener('change', () => { resetScore(true); applyFiltersAndRender(); });
-            document.getElementById('checkAnswerBtn').addEventListener('click', checkAnswer);
-            document.getElementById('nextProblemBtn').addEventListener('click', applyFiltersAndRender);
-            document.getElementById('helpBtn').addEventListener('click', startScaffolding);
-            document.getElementById('showSolutionBtn').addEventListener('click', showSolution);
+        // Check if two equations are equivalent (x=b/2 is same as b/2=x)
+        function equationsMatch(userAns, correctAns) {
+            // Direct match
+            if (userAns === correctAns) return true;
             
-            // Drag-händelser
-            if (calcHandle) {
-                calcHandle.addEventListener("mousedown", dragStart);
-                calcHandle.addEventListener("touchstart", dragStart, {passive: false});
-                document.addEventListener("mouseup", dragEnd);
-                document.addEventListener("touchend", dragEnd);
-                document.addEventListener("mousemove", drag);
-                document.addEventListener("touchmove", drag, {passive: false});
+            // Check for reversed equation (x=value vs value=x)
+            if (userAns.includes('=') && correctAns.includes('=')) {
+                const userParts = userAns.split('=');
+                const correctParts = correctAns.split('=');
+                
+                if (userParts.length === 2 && correctParts.length === 2) {
+                    // Try reversed order
+                    const reversedUser = userParts[1] + '=' + userParts[0];
+                    if (reversedUser === correctAns) return true;
+                    
+                    const reversedCorrect = correctParts[1] + '=' + correctParts[0];
+                    if (userAns === reversedCorrect) return true;
+                }
             }
+            
+            return false;
+        }
+        
+        // Get all valid answers from a raw answer string (handles "eller" / "or")
+        function getAllValidAnswers(rawAnswer) {
+            if (!rawAnswer) return [];
+            const raw = rawAnswer.toString();
+            
+            // Split by "eller" or "or" (case insensitive, with optional whitespace)
+            const alternatives = raw.split(/\s+eller\s+|\s+or\s+/i);
+            
+            // Normalize each alternative
+            return alternatives.map(alt => normalizeAnswer(alt)).filter(a => a.length > 0);
+        }
+        
+        // Format a single answer part for nice display
+        function formatSingleAnswerForDisplay(ans) {
+            if (!ans) return '';
+            ans = ans.toString().trim();
+            
+            // Clean LaTeX wrappers
+            ans = ans.replace(/^\$+/, '').replace(/\$+$/, '');
+            
+            // If it contains LaTeX commands, process it
+            if (ans.includes('\\') || ans.includes('^') || ans.includes('/') || ans.includes('sqrt')) {
+                let latex = ans;
+                
+                // Convert keyboard-friendly to LaTeX for display
+                latex = latex.replace(/sqrt\(([^)]+)\)/gi, '\\sqrt{$1}');
+                latex = latex.replace(/\^(\d+)/g, '^{$1}');
+                latex = latex.replace(/\^([a-zA-Z])/g, '^{$1}');
+                latex = latex.replace(/([0-9a-zA-Z]+)\/([0-9a-zA-Z]+)/g, '\\frac{$1}{$2}');
+                
+                return `\\(${latex}\\)`;
+            }
+            
+            return ans;
+        }
+        
+        // Format answer for nice display - handles "eller" gracefully
+        function formatAnswerForDisplay(rawAnswer) {
+            if (!rawAnswer) return '';
+            const raw = rawAnswer.toString();
+            
+            // Check if it has alternatives
+            const parts = raw.split(/\s+eller\s+|\s+or\s+/i);
+            
+            if (parts.length > 1) {
+                // Multiple alternatives - format each one nicely
+                const formatted = parts.map(p => formatSingleAnswerForDisplay(p.trim()));
+                return formatted.join(' <span style="color: #64748b; font-weight: normal;">eller</span> ');
+            }
+            
+            return formatSingleAnswerForDisplay(raw);
+        }
 
-            // Dark mode toggle
-            if(toggleDarkModeBtn) {
-                toggleDarkModeBtn.addEventListener('click', () => {
-                    document.documentElement.classList.toggle('dark');
-                });
-            }
-
-            // Calculator toggle and close
-            if (closeCalculator) {
-                closeCalculator.addEventListener('click', () => {
-                    calculatorWrapper.style.display = 'none';
-                });
-            }
-            if (toggleCalculatorBtn) {
-                toggleCalculatorBtn.addEventListener('click', () => {
-                    calculatorWrapper.style.display = calculatorWrapper.style.display === 'none' ? 'block' : 'none';
-                });
-            }
-
-            // AUTHENTICATION
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                    await loadScore();
-                    loadAllProblems();
-                } else {
-                    try {
-                        await signInAnonymously(auth);
-                    } catch (error) {
-                        console.error("Auth error:", error);
-                        loadAllProblems(); // Load anyway
+        // Check answer with EPIC celebrations!
+        window.checkAnswer = function() {
+            const task = tasks[currentTaskIndex];
+            const userRaw = document.getElementById('answerInput').value;
+            const correctRaw = (task.answer || '').toString();
+            
+            const userAnswer = normalizeAnswer(userRaw);
+            const correctAnswer = normalizeAnswer(correctRaw);
+            
+            // Get all valid answers (handles "eller" / "or")
+            const validAnswers = getAllValidAnswers(correctRaw);
+            
+            // Check if user answer matches any valid answer (including equation order)
+            let isCorrect = validAnswers.some(valid => equationsMatch(userAnswer, valid));
+            
+            // Also check for "x = value" variations
+            if (!isCorrect) {
+                for (const valid of validAnswers) {
+                    // If correct answer has "=", also accept just the value
+                    if (valid.includes('=')) {
+                        const correctValue = valid.split('=').pop();
+                        if (userAnswer === correctValue) {
+                            isCorrect = true;
+                            break;
+                        }
+                        // Also accept left side value
+                        const leftValue = valid.split('=')[0];
+                        if (userAnswer === leftValue && !leftValue.match(/^[a-z]$/)) {
+                            isCorrect = true;
+                            break;
+                        }
+                    }
+                    // If user typed "x = value", extract and compare
+                    if (userAnswer.includes('=')) {
+                        const userValue = userAnswer.split('=').pop();
+                        if (userValue === valid) {
+                            isCorrect = true;
+                            break;
+                        }
+                        // Also check reversed
+                        const userLeft = userAnswer.split('=')[0];
+                        if (userLeft === valid) {
+                            isCorrect = true;
+                            break;
+                        }
                     }
                 }
-            });
-        });
+            }
+
+            const inputEl = document.getElementById('answerInput');
+            const resultEl = document.getElementById('resultMessage');
+            const streakContainer = document.getElementById('streakContainer');
+            const streakCountEl = document.getElementById('streakCount');
+
+            if (isCorrect) {
+                inputEl.className = 'answer-input w-full mb-4 correct';
+                stats.correct++;
+                stats.streak++;
+                
+                // ALWAYS launch confetti on correct answer - amount based on streak!
+                const confettiAmount = Math.min(50 + (stats.streak * 30), 400);
+                launchConfetti(confettiAmount);
+                
+                // EPIC celebration based on streak!
+                if (stats.streak >= 7) {
+                    // LEGENDARY celebration!
+                    resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white';
+                    resultEl.innerHTML = `<span class="text-4xl success-pop">👑🔥💎🔥👑</span><br><span class="text-xl font-bold">LEGENDARISKT! ${stats.streak} i rad!</span>`;
+                    streakContainer.classList.add('streak-glow', 'streak-legendary');
+                    streakCountEl.classList.add('streak-fire');
+                } else if (stats.streak >= 5) {
+                    // MEGA celebration
+                    resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-white';
+                    resultEl.innerHTML = `<span class="text-3xl success-pop">🔥🎉🔥</span><br><span class="text-xl font-bold">FANTASTISKT! ${stats.streak} i rad!</span>`;
+                    streakContainer.classList.add('streak-glow');
+                    streakContainer.classList.remove('streak-legendary');
+                    streakCountEl.classList.add('streak-fire');
+                } else if (stats.streak >= 3) {
+                    // Good streak celebration
+                    resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white';
+                    resultEl.innerHTML = `<span class="text-2xl success-pop">🔥✨</span><br><span class="font-bold">${stats.streak} rätt i rad! Fortsätt så!</span>`;
+                    streakContainer.classList.add('streak-glow');
+                    streakContainer.classList.remove('streak-legendary');
+                    streakCountEl.classList.remove('streak-fire');
+                } else {
+                    // Normal correct - still confetti!
+                    resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-green-100 text-green-800';
+                    resultEl.innerHTML = `<span class="text-2xl success-pop">✅</span> Rätt svar!`;
+                    streakContainer.classList.remove('streak-glow', 'streak-legendary');
+                    streakCountEl.classList.remove('streak-fire');
+                }
+            } else {
+                inputEl.className = 'answer-input w-full mb-4 incorrect';
+                resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-red-100 text-red-800';
+                
+                // Format the correct answer nicely
+                const formattedAnswer = formatAnswerForDisplay(task.answer);
+                resultEl.innerHTML = `<span class="text-2xl">❌</span> Fel! Rätt svar är: <strong><span id="correctAnswerDisplay">${formattedAnswer}</span></strong>`;
+                
+                // Render MathJax on the correct answer
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise([document.getElementById('correctAnswerDisplay')]);
+                }
+                
+                stats.wrong++;
+                stats.streak = 0;
+                streakContainer.classList.remove('streak-glow', 'streak-legendary');
+                streakCountEl.classList.remove('streak-fire');
+            }
+
+            // Update stats display
+            document.getElementById('correctCount').textContent = stats.correct;
+            document.getElementById('wrongCount').textContent = stats.wrong;
+            
+            // Epic streak display
+            if (stats.streak >= 7) {
+                streakCountEl.innerHTML = `<span class="streak-fire">${stats.streak}</span> 👑🔥🔥🔥`;
+            } else if (stats.streak >= 5) {
+                streakCountEl.innerHTML = `<span class="streak-fire">${stats.streak}</span> 🔥🔥🔥`;
+            } else if (stats.streak >= 3) {
+                streakCountEl.textContent = stats.streak + ' 🔥🔥';
+            } else {
+                streakCountEl.textContent = stats.streak + ' 🔥';
+            }
+
+            // Show result and solution
+            document.getElementById('answerInputArea').classList.add('hidden');
+            document.getElementById('resultDisplay').classList.remove('hidden');
+
+            // Show solution if available
+            if (task.explanation_sv && task.explanation_sv.length > 0) {
+                const solutionContainer = document.getElementById('solutionContainer');
+                const solutionContent = document.getElementById('solutionContent');
+                solutionContent.innerHTML = '';
+                
+                let stepCount = 0;
+                task.explanation_sv.forEach(block => {
+                    if (!block.value) return;
+                    const div = document.createElement('div');
+                    
+                    if (block.type === 'text') {
+                        div.className = 'problem-text-block';
+                        div.innerHTML = formatInlineMath(block.value);
+                    } else if (block.type === 'math') {
+                        div.className = 'problem-math-block';
+                        div.innerHTML = `$$${block.value}$$`;
+                    } else if (block.type === 'step') {
+                        stepCount++;
+                        div.className = 'step-block';
+                        div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
+                    }
+                    
+                    solutionContent.appendChild(div);
+                });
+
+                solutionContainer.classList.remove('hidden');
+
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise([solutionContent]);
+                }
+            }
+        };
+
+        // Next task
+        window.nextTask = function() {
+            currentTaskIndex++;
+            showTask();
+        };
+
+        // ============ THEME TOGGLE ============
+        window.toggleTheme = function() {
+            const body = document.body;
+            const sunIcon = document.getElementById('themeIconSun');
+            const moonIcon = document.getElementById('themeIconMoon');
+            
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                localStorage.setItem('praktiska-theme', 'dark');
+            } else {
+                body.classList.add('light-mode');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                localStorage.setItem('praktiska-theme', 'light');
+            }
+        };
+
+        // Load saved theme on page load
+        (function loadTheme() {
+            const savedTheme = localStorage.getItem('praktiska-theme');
+            const sunIcon = document.getElementById('themeIconSun');
+            const moonIcon = document.getElementById('themeIconMoon');
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                if (sunIcon) sunIcon.classList.add('hidden');
+                if (moonIcon) moonIcon.classList.remove('hidden');
+            }
+        })();
     </script>
 </body>
 </html>
