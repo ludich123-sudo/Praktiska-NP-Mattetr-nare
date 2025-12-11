@@ -108,6 +108,54 @@
             margin-right: 0.5rem;
         }
 
+        /* Genomgång styles */
+        .genomgang-tip {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .genomgang-warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .genomgang-example {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .genomgang-h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 1.5rem 0 1rem;
+            color: #1e1b4b;
+        }
+        .genomgang-h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--primary-orange);
+        }
+        .genomgang-h4 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 1rem 0 0.5rem;
+        }
+        .genomgang-paragraph {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        .genomgang-list-item {
+            margin-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
         /* MathJax */
         mjx-container[jax="CHTML"][display="true"] { display: block !important; text-align: center; margin: 0.5rem 0 !important; }
         mjx-container { margin: 0 3px !important; }
@@ -142,6 +190,21 @@
             100% { transform: scale(1); }
         }
         
+        @keyframes multiplierPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+        
+        @keyframes questGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.7); }
+        }
+        
+        @keyframes pointsEarned {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-30px) scale(1.5); opacity: 0; }
+        }
+        
         .streak-glow {
             animation: streakGlow 1.5s ease-in-out infinite;
             background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
@@ -171,6 +234,144 @@
         }
         
         .success-pop { animation: successPop 0.4s ease-out; }
+        
+        .multiplier-badge {
+            animation: multiplierPulse 1s ease-in-out infinite;
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-weight: 800;
+            font-size: 12px;
+            margin-left: 6px;
+        }
+        
+        .quest-active {
+            animation: questGlow 2s ease-in-out infinite;
+        }
+        
+        .points-popup {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10001;
+            font-weight: 900;
+            font-size: 24px;
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
+            animation: pointsEarned 1s ease-out forwards;
+        }
+        
+        .daily-quest-card {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.1));
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+        
+        .daily-quest-card.completed {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.15));
+            border-color: rgba(251, 191, 36, 0.5);
+        }
+        
+        .task-progress-indicator {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+        
+        /* Quest Modal Styles */
+        .quest-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            transition: all 0.3s;
+        }
+        .quest-card.quest-completed {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.1));
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+        .quest-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quest-card.quest-completed .quest-icon {
+            background: rgba(34, 197, 94, 0.2);
+        }
+        .quest-title {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .quest-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+        .quest-reward {
+            color: #fbbf24;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .quest-progress-text {
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+        .quest-status-active {
+            font-size: 0.7rem;
+            color: #a78bfa;
+            font-weight: 600;
+        }
+        .quest-status-done {
+            font-size: 0.7rem;
+            color: #22c55e;
+            font-weight: 700;
+        }
+        .quest-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .quest-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #a855f7);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .quest-bar-fill.quest-bar-streak {
+            background: linear-gradient(90deg, #f97316, #ef4444);
+        }
+        .quest-bar-fill.completed {
+            background: linear-gradient(90deg, #22c55e, #10b981);
+        }
+        
+        .quest-progress-bar {
+            height: 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .quest-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #10b981);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .quest-progress-fill.completed {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+        }
 
         /* ============ CALCULATOR STYLES ============ */
         .calculator {
@@ -487,37 +688,47 @@
             color: white;
         }
 
-        /* Theme Toggle */
-        .theme-toggle {
+        /* Quests Toggle Button */
+        .quests-toggle-btn {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 9999;
-            background: var(--dark-surface);
-            border: 2px solid var(--primary-orange);
-            color: var(--primary-orange);
-            width: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            border: none;
+            color: white;
+            min-width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border-radius: 25px;
+            padding: 0 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            font-weight: 700;
         }
-        body.light-mode .theme-toggle {
-            background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        .quests-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.6);
         }
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            background: var(--primary-orange);
+        .quests-notification {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
             color: white;
-        }
-        .theme-toggle svg {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
         }
 
         /* Topic/Chapter selector */
@@ -564,7 +775,7 @@
         .app-title {
             font-family: 'Poppins', sans-serif;
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             color: white;
             display: flex;
             align-items: center;
@@ -595,6 +806,35 @@
         }
         body.light-mode .app-subtitle {
             color: #6b7280;
+        }
+        
+        /* Points display */
+        .points-display {
+            animation: pointsGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes pointsGlow {
+            from { box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+            to { box-shadow: 0 4px 25px rgba(245, 158, 11, 0.7); }
+        }
+        @media (max-width: 640px) {
+            .points-display {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+        
+        /* Username display */
+        .username-display {
+            font-size: 0.875rem;
+        }
+        @media (max-width: 640px) {
+            .username-display {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.75rem;
+            }
+            .username-display span:first-child {
+                display: none;
+            }
         }
 
         /* Panel backgrounds */
@@ -640,6 +880,116 @@
         }
         .genomgang-btn:hover {
             background: rgba(240, 111, 0, 0.25);
+        }
+
+        /* Leaderboard styles */
+        .leaderboard-container {
+            animation: leaderboardSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes leaderboardSlideIn {
+            from { transform: scale(0.8) translateY(50px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.2s;
+        }
+        .leaderboard-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(4px);
+        }
+        .leaderboard-item.gold {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,193,7,0.1));
+            border-color: rgba(255,215,0,0.4);
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+        }
+        .leaderboard-item.silver {
+            background: linear-gradient(135deg, rgba(192,192,192,0.2), rgba(169,169,169,0.1));
+            border-color: rgba(192,192,192,0.4);
+            box-shadow: 0 0 15px rgba(192,192,192,0.15);
+        }
+        .leaderboard-item.bronze {
+            background: linear-gradient(135deg, rgba(205,127,50,0.2), rgba(184,115,51,0.1));
+            border-color: rgba(205,127,50,0.4);
+            box-shadow: 0 0 15px rgba(205,127,50,0.15);
+        }
+        .leaderboard-item.you {
+            background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.2));
+            border-color: rgba(99,102,241,0.5);
+            animation: pulseYou 2s infinite;
+        }
+        @keyframes pulseYou {
+            0%, 100% { box-shadow: 0 0 10px rgba(99,102,241,0.3); }
+            50% { box-shadow: 0 0 25px rgba(99,102,241,0.5); }
+        }
+        
+        .rank-badge {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 14px;
+            margin-right: 12px;
+        }
+        .rank-badge.gold {
+            background: linear-gradient(135deg, #ffd700, #ffb700);
+            color: #7c5800;
+            font-size: 20px;
+        }
+        .rank-badge.silver {
+            background: linear-gradient(135deg, #e8e8e8, #c0c0c0);
+            color: #555;
+            font-size: 20px;
+        }
+        .rank-badge.bronze {
+            background: linear-gradient(135deg, #cd7f32, #b87333);
+            color: #5a3510;
+            font-size: 20px;
+        }
+        .rank-badge.normal {
+            background: rgba(255,255,255,0.1);
+            color: #888;
+        }
+        
+        .player-name {
+            flex: 1;
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+        }
+        .player-stats {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .player-points {
+            font-weight: 800;
+            color: #fbbf24;
+            font-size: 14px;
+        }
+        .player-quests {
+            font-weight: 700;
+            color: #a78bfa;
+            font-size: 14px;
+        }
+        
+        .leaderboard-header {
+            animation: shimmer 3s infinite;
+            background-size: 200% 100%;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* Task area panel */
@@ -723,32 +1073,136 @@
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle" onclick="toggleTheme()" title="Byt tema">
-        <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-        <svg id="themeIconMoon" class="hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
+    <!-- Quests Button -->
+    <button class="quests-toggle-btn" onclick="showQuestsModal()" title="Visa Quests">
+        <span class="text-xl">📋</span>
+        <span class="hidden sm:inline">Quests</span>
+        <span id="questsNotification" class="quests-notification hidden">!</span>
     </button>
 
     <div class="max-w-4xl mx-auto">
         <!-- Header -->
         <div class="app-header text-center mb-8">
-            <h1 class="app-title">
-                <span class="math-icon">📐</span>
-                Matematiktränare
-            </h1>
-            <p class="app-subtitle">Träna på typiska uppgifter för Nationella proven</p>
+            <div class="flex items-center justify-between w-full">
+                <div class="username-display bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-2 rounded-xl font-bold shadow-lg flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform" onclick="showSyncModal()" title="Synka profil mellan enheter">
+                    <span>🎮</span>
+                    <span id="usernameDisplay" class="text-sm">...</span>
+                    <span class="text-xs opacity-70">🔗</span>
+                </div>
+                <h1 class="app-title">
+                    <span class="math-icon">📐</span>
+                    <span class="hidden sm:inline">Matematiktränare</span>
+                    <span class="sm:hidden">Matte</span>
+                </h1>
+                <div class="points-display bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-2 rounded-xl font-bold shadow-lg flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform" onclick="showLeaderboard()" title="Visa topplista">
+                    <span>⭐</span>
+                    <span id="totalPoints">0</span>
+                    <span class="text-xs opacity-80 hidden sm:inline">poäng</span>
+                    <span class="text-lg">🏆</span>
+                </div>
+            </div>
+            <p class="app-subtitle mt-4">Träna på typiska uppgifter för Nationella proven</p>
+        </div>
+
+        <!-- Leaderboard Modal -->
+        <div id="leaderboardModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+            <div class="leaderboard-container bg-gradient-to-b from-slate-900 to-slate-800 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl border border-amber-500/30">
+                <!-- Header -->
+                <div class="leaderboard-header bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 p-6 text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjMiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvZz48L3N2Zz4=')] opacity-30"></div>
+                    <div class="relative">
+                        <div class="text-5xl mb-2">🏆</div>
+                        <h2 class="text-2xl font-black text-white drop-shadow-lg">TOPPLISTA</h2>
+                        <p class="text-amber-100 text-sm mt-1">Topp 50 mattehjältar</p>
+                    </div>
+                    <button onclick="closeLeaderboard()" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition">✕</button>
+                </div>
+                
+                <!-- Your rank -->
+                <div id="yourRankSection" class="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">👤</span>
+                        <div>
+                            <div class="text-white font-bold text-sm" id="yourUsername">...</div>
+                            <div class="text-indigo-200 text-xs">Din placering</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-white font-black text-xl" id="yourRank">#-</div>
+                        <div class="text-indigo-200 text-xs"><span id="yourPoints">0</span> poäng</div>
+                    </div>
+                </div>
+                
+                <!-- Leaderboard list -->
+                <div class="leaderboard-list overflow-y-auto max-h-[50vh] p-4" id="leaderboardList">
+                    <div class="text-center py-8 text-gray-400">
+                        <div class="animate-spin text-4xl mb-2">⏳</div>
+                        Laddar topplista...
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="bg-slate-900/80 px-4 py-3 text-center border-t border-slate-700">
+                    <button onclick="syncScoreToLeaderboard()" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg">
+                        🔄 Uppdatera min poäng
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Sync Modal -->
+        <div id="syncModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+            <div class="bg-gradient-to-b from-slate-900 to-slate-800 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-indigo-500/30">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 p-6 text-center relative">
+                    <div class="text-4xl mb-2">🔗</div>
+                    <h2 class="text-xl font-black text-white drop-shadow-lg">Synka Profil</h2>
+                    <p class="text-indigo-100 text-sm mt-1">Koppla ihop samma profil på flera enheter</p>
+                    <button onclick="closeSyncModal()" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition">✕</button>
+                </div>
+                
+                <!-- Content -->
+                <div class="p-6">
+                    <!-- Current profile info -->
+                    <div class="bg-slate-700/50 rounded-xl p-4 mb-4 text-center">
+                        <div class="text-sm text-gray-400 mb-1">Din nuvarande profil</div>
+                        <div class="text-white font-bold text-lg" id="syncCurrentUsername">...</div>
+                        <div class="text-amber-400 text-sm"><span id="syncCurrentPoints">0</span> poäng</div>
+                    </div>
+                    
+                    <!-- Two options -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Option 1: Generate code -->
+                        <div id="syncGenerateSection" class="bg-slate-700/30 rounded-xl p-4 border border-slate-600">
+                            <h3 class="text-white font-bold mb-2">📤 Dela denna profil</h3>
+                            <p class="text-gray-400 text-sm mb-3">Skapa en kod som du kan använda på en annan enhet</p>
+                            <button onclick="generateSyncCode()" id="generateCodeBtn" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-3 rounded-xl font-bold hover:scale-105 transition-transform">
+                                Skapa synkkod
+                            </button>
+                            <div id="syncCodeDisplay" class="hidden mt-4 text-center">
+                                <div class="text-gray-400 text-sm mb-2">Din synkkod (giltig 10 min):</div>
+                                <div class="bg-slate-900 rounded-xl p-4 border-2 border-dashed border-indigo-400">
+                                    <span id="syncCodeValue" class="text-3xl font-mono font-bold text-indigo-400 tracking-widest"></span>
+                                </div>
+                                <p class="text-gray-500 text-xs mt-2">Skriv in koden på din andra enhet</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Option 2: Enter code -->
+                        <div class="bg-slate-700/30 rounded-xl p-4 border border-slate-600">
+                            <h3 class="text-white font-bold mb-2">📥 Hämta annan profil</h3>
+                            <p class="text-gray-400 text-sm mb-3">Har du en kod från en annan enhet?</p>
+                            <div class="flex gap-2">
+                                <input type="text" id="syncCodeInput" class="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 text-white text-center font-mono text-xl tracking-widest uppercase" placeholder="ABC123" maxlength="6" oninput="this.value = this.value.toUpperCase()">
+                                <button onclick="applySyncCode()" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
+                                    ✓
+                                </button>
+                            </div>
+                            <div id="syncCodeMessage" class="hidden mt-3 text-center text-sm py-2 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Mode Selection -->
@@ -835,16 +1289,80 @@
             </div>
         </div>
 
+        <!-- Quests Modal -->
+        <div id="questsModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+            <div class="quests-container bg-gradient-to-b from-slate-900 to-slate-800 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-purple-500/30">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-purple-600 via-violet-500 to-purple-600 p-6 text-center relative">
+                    <div class="text-4xl mb-2">📋</div>
+                    <h2 class="text-2xl font-black text-white drop-shadow-lg">DAGENS QUESTS</h2>
+                    <p class="text-purple-100 text-sm mt-1">Klara quests för att få bonuspoäng!</p>
+                    <button onclick="closeQuestsModal()" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition">✕</button>
+                </div>
+                
+                <!-- Quest List -->
+                <div class="p-4 space-y-4">
+                    <!-- Quest 1: 7 correct today -->
+                    <div id="quest1Card" class="quest-card">
+                        <div class="flex items-center gap-3">
+                            <div class="quest-icon">🎯</div>
+                            <div class="flex-1">
+                                <div class="quest-title">Daglig träning</div>
+                                <div class="quest-desc">Klara 7 uppgifter idag</div>
+                                <div class="quest-reward">+10 poäng</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="quest-progress-text" id="quest1Progress">0/7</div>
+                                <div id="quest1Status" class="quest-status-active">Aktiv</div>
+                            </div>
+                        </div>
+                        <div class="quest-bar mt-3">
+                            <div class="quest-bar-fill" id="quest1Bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quest 2: 5 streak -->
+                    <div id="quest2Card" class="quest-card">
+                        <div class="flex items-center gap-3">
+                            <div class="quest-icon">🔥</div>
+                            <div class="flex-1">
+                                <div class="quest-title">Streak-mästare</div>
+                                <div class="quest-desc">Klara 5 uppgifter i rad</div>
+                                <div class="quest-reward">+5 poäng</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="quest-progress-text" id="quest2Progress">0/5</div>
+                                <div id="quest2Status" class="quest-status-active">Aktiv</div>
+                            </div>
+                        </div>
+                        <div class="quest-bar mt-3">
+                            <div class="quest-bar-fill quest-bar-streak" id="quest2Bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="bg-slate-900/80 px-4 py-3 text-center border-t border-slate-700">
+                    <p class="text-gray-400 text-sm">Quests återställs varje dag vid midnatt</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Task Area -->
         <div id="taskArea" class="hidden">
-            <!-- Progress -->
-            <div class="task-progress-panel rounded-xl p-4 mb-6">
+            <!-- Simple Progress Bar -->
+            <div id="taskProgressBar" class="task-progress-indicator mb-4">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-white font-medium">Uppgift <span id="currentTaskNum">1</span> av <span id="totalTasks">0</span></span>
-                    <span class="text-orange-300" id="taskLevel">Åk 9 - Del 1</span>
+                    <span id="currentPartName" class="text-gray-300 text-sm font-medium">Del</span>
+                    <div class="flex items-center gap-3">
+                        <span class="text-white text-sm"><span id="dailyCorrect">0</span>/7 idag</span>
+                        <div id="streakMultiplier" class="hidden">
+                            <span class="multiplier-badge">🔥 2X</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                <div class="quest-progress-bar">
+                    <div class="quest-progress-fill" id="progressBar" style="width: 0%"></div>
                 </div>
             </div>
 
@@ -1181,8 +1699,11 @@
     <!-- JavaScript -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        
+        // Expose setDoc to window for leaderboard functions
+        window.setDoc = setDoc;
 
         // Firebase config
         const firebaseConfig = {
@@ -1196,7 +1717,7 @@
         
         const appId = 'default-app-id';
 
-        // ============ COURSE STRUCTURE - SYNCED WITH ADMIN ============
+        // ============ COURSE STRUCTURE - SYNCED WITH ADMIN (KAPITELTRÄNING) ============
         const COURSE_STRUCTURE = {
             Taluppfattning: {
                 name: 'Taluppfattning',
@@ -1261,9 +1782,64 @@
             }
         };
 
-        // Firebase paths - synced with admin panel (no /tasks/ sublevel)
+        // ============ NP STRUCTURE - SYNCED WITH ADMIN (TYPUPPGIFTER NP) ============
+        const NP_STRUCTURE = {
+            Algebra: {
+                name: 'Algebra',
+                parts: [
+                    { id: 'forenklauttryck', name: 'Förenkling av uttryck' },
+                    { id: 'ekvationer', name: 'Ekvationer' },
+                    { id: 'faktorisera', name: 'Faktorisera' },
+                    { id: 'monsterformler', name: 'Mönster och formler' },
+                    { id: 'losuturformler', name: 'Lös ut ur formler' }
+                ]
+            },
+            FunktionerSamband: {
+                name: 'Funktioner',
+                parts: [
+                    { id: 'funktionsbegreppet', name: 'Funktionsbegreppet f(x)' },
+                    { id: 'linjarafunktioner', name: 'Linjära funktioner' },
+                    { id: 'exponentiellafunktioner', name: 'Exponentiella funktioner' },
+                    { id: 'koordinatsystem', name: 'Koordinatsystem, grafer och punkter' }
+                ]
+            },
+            Taluppfattning: {
+                name: 'Taluppfattning',
+                parts: [
+                    { id: 'Prioriteringsregeln', name: 'Prioriteringsregeln' },
+                    { id: 'braktal', name: 'Bråktal' },
+                    { id: 'potenser', name: 'Potenser' }
+                ]
+            },
+            Procent: {
+                name: 'Procent',
+                parts: [
+                    { id: 'Förändringsfaktorn', name: 'Förändringsfaktorn (intro)' },
+                    { id: 'ff', name: 'Förändringsfaktorn' },
+                    { id: 'upprepadff', name: 'Upprepad förändring' },
+                    { id: 'lanoranta', name: 'Lån, ränta och amortering' }
+                ]
+            },
+            Sannolikhet: {
+                name: 'Sannolikhet',
+                parts: [
+                    { id: 'beroendeoberoende', name: 'Beroende och oberoende-händelse' },
+                    { id: 'komplement', name: 'Komplementhändelse' }
+                ]
+            }
+        };
+
+        // Firebase paths - supports both collections
         function getFirebasePath(topic, partId) {
+            if (currentMode === 'math_tasks') {
+                return `artifacts/${appId}/public/data/math_tasks/${topic}/${partId}`;
+            }
             return `artifacts/${appId}/public/data/campaigns/${topic}/${partId}`;
+        }
+        
+        // Get current structure based on mode
+        function getCurrentStructure() {
+            return currentMode === 'math_tasks' ? NP_STRUCTURE : COURSE_STRUCTURE;
         }
 
         const app = initializeApp(firebaseConfig);
@@ -1276,6 +1852,558 @@
         let currentTaskIndex = 0;
         let currentScaffoldIndex = 0;
         let stats = { correct: 0, wrong: 0, streak: 0 };
+        
+        // ============ DAILY PROGRESS & POINTS SYSTEM ============
+        const DAILY_GOAL = 7;
+        const STREAK_GOAL = 5;
+        const POINTS_PER_PART = 10;
+        const POINTS_PER_STREAK = 5;
+        
+        function getTodayKey() {
+            return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        }
+        
+        function getDailyProgress() {
+            const today = getTodayKey();
+            const stored = localStorage.getItem('mathTrainer_dailyProgress');
+            if (stored) {
+                const data = JSON.parse(stored);
+                if (data.date === today) {
+                    return data;
+                }
+            }
+            // Reset for new day
+            return { date: today, correct: 0, partsCompleted: [], streakQuestDone: false };
+        }
+        
+        function saveDailyProgress(progress) {
+            localStorage.setItem('mathTrainer_dailyProgress', JSON.stringify(progress));
+        }
+        
+        // Check and award streak quest
+        function checkStreakQuest() {
+            const progress = getDailyProgress();
+            if (stats.streak >= STREAK_GOAL && !progress.streakQuestDone) {
+                progress.streakQuestDone = true;
+                saveDailyProgress(progress);
+                addPoints(POINTS_PER_STREAK);
+                addQuest();
+                showStreakQuestCompletion();
+                updateQuestsNotification();
+                return true;
+            }
+            return false;
+        }
+        
+        function showStreakQuestCompletion() {
+            // Flash notification
+            const popup = document.createElement('div');
+            popup.className = 'points-popup';
+            popup.innerHTML = `🔥 STREAK QUEST +${POINTS_PER_STREAK}!`;
+            popup.style.left = '50%';
+            popup.style.top = '30%';
+            popup.style.transform = 'translateX(-50%)';
+            popup.style.fontSize = '28px';
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 1500);
+        }
+        
+        function getTotalPoints() {
+            return parseInt(localStorage.getItem('mathTrainer_totalPoints') || '0');
+        }
+        
+        function addPoints(points) {
+            const current = getTotalPoints();
+            localStorage.setItem('mathTrainer_totalPoints', (current + points).toString());
+            updatePointsDisplay();
+        }
+        
+        function updatePointsDisplay() {
+            const points = getTotalPoints();
+            document.getElementById('totalPoints').textContent = points;
+        }
+        
+        // ============ USERNAME SYSTEM ============
+        const ADJECTIVES = [
+            'crazy', 'super', 'mega', 'turbo', 'epic', 'cool', 'magic', 'swift', 
+            'brave', 'happy', 'smart', 'lucky', 'ninja', 'cosmic', 'stellar', 
+            'thunder', 'blazing', 'mighty', 'golden', 'shadow'
+        ];
+        
+        const ANIMALS = [
+            'panda', 'tiger', 'dragon', 'phoenix', 'wolf', 'eagle', 'fox', 'lion',
+            'shark', 'falcon', 'panther', 'cobra', 'hawk', 'bear', 'lynx',
+            'jaguar', 'viper', 'raven', 'orca', 'leopard'
+        ];
+        
+        function generateUsername() {
+            const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
+            const animal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+            const num = Math.floor(Math.random() * 900) + 100; // 100-999
+            return `${adj}${animal}${num}`;
+        }
+        
+        function getUsername() {
+            let username = localStorage.getItem('mathTrainer_username');
+            if (!username) {
+                username = generateUsername();
+                localStorage.setItem('mathTrainer_username', username);
+            }
+            return username;
+        }
+        
+        function updateUsernameDisplay() {
+            document.getElementById('usernameDisplay').textContent = getUsername();
+        }
+        
+        // ============ LEADERBOARD SYSTEM ============
+        window.showLeaderboard = async function() {
+            document.getElementById('leaderboardModal').classList.remove('hidden');
+            document.getElementById('yourUsername').textContent = getUsername();
+            document.getElementById('yourPoints').textContent = getTotalPoints();
+            await loadLeaderboard();
+        };
+        
+        window.closeLeaderboard = function() {
+            document.getElementById('leaderboardModal').classList.add('hidden');
+        };
+        
+        function getTotalQuests() {
+            return parseInt(localStorage.getItem('totalQuests') || '0');
+        }
+        
+        function addQuest() {
+            const current = getTotalQuests();
+            localStorage.setItem('totalQuests', (current + 1).toString());
+        }
+        
+        window.syncScoreToLeaderboard = async function() {
+            const username = getUsername();
+            const points = getTotalPoints();
+            const quests = getTotalQuests();
+            
+            try {
+                const leaderboardRef = doc(db, `artifacts/${appId}/public/data/leaderboard`, username);
+                await window.setDoc(leaderboardRef, {
+                    username: username,
+                    points: points,
+                    quests: quests,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                // Show success feedback
+                const btn = event.target;
+                btn.innerHTML = '✅ Uppdaterad!';
+                btn.classList.remove('from-green-500', 'to-emerald-500');
+                btn.classList.add('from-blue-500', 'to-indigo-500');
+                
+                setTimeout(() => {
+                    btn.innerHTML = '🔄 Uppdatera min poäng';
+                    btn.classList.remove('from-blue-500', 'to-indigo-500');
+                    btn.classList.add('from-green-500', 'to-emerald-500');
+                }, 2000);
+                
+                // Reload leaderboard
+                await loadLeaderboard();
+            } catch (error) {
+                console.error('Error syncing score:', error);
+            }
+        };
+        
+        async function loadLeaderboard() {
+            const listEl = document.getElementById('leaderboardList');
+            const username = getUsername();
+            
+            try {
+                const leaderboardRef = collection(db, `artifacts/${appId}/public/data/leaderboard`);
+                const snapshot = await getDocs(leaderboardRef);
+                
+                let players = [];
+                snapshot.forEach(docSnap => {
+                    players.push(docSnap.data());
+                });
+                
+                // Sort by points descending
+                players.sort((a, b) => b.points - a.points);
+                
+                // Take top 50
+                players = players.slice(0, 50);
+                
+                if (players.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="text-center py-8 text-gray-400">
+                            <div class="text-4xl mb-2">🏜️</div>
+                            <p>Ingen på topplistan än!</p>
+                            <p class="text-sm mt-2">Var först med att synka dina poäng!</p>
+                        </div>
+                    `;
+                    document.getElementById('yourRank').textContent = '#-';
+                    return;
+                }
+                
+                // Find user's rank
+                const userRank = players.findIndex(p => p.username === username);
+                document.getElementById('yourRank').textContent = userRank >= 0 ? `#${userRank + 1}` : '#-';
+                
+                // Render list
+                listEl.innerHTML = players.map((player, index) => {
+                    const rank = index + 1;
+                    const isYou = player.username === username;
+                    
+                    let rankClass = 'normal';
+                    let itemClass = '';
+                    let trophy = rank.toString();
+                    
+                    if (rank === 1) {
+                        rankClass = 'gold';
+                        itemClass = 'gold';
+                        trophy = '🥇';
+                    } else if (rank === 2) {
+                        rankClass = 'silver';
+                        itemClass = 'silver';
+                        trophy = '🥈';
+                    } else if (rank === 3) {
+                        rankClass = 'bronze';
+                        itemClass = 'bronze';
+                        trophy = '🥉';
+                    }
+                    
+                    if (isYou) itemClass += ' you';
+                    
+                    return `
+                        <div class="leaderboard-item ${itemClass}">
+                            <div class="rank-badge ${rankClass}">${trophy}</div>
+                            <div class="player-name">
+                                ${player.username}
+                                ${isYou ? '<span class="text-xs ml-2 text-indigo-400">(du)</span>' : ''}
+                            </div>
+                            <div class="player-stats">
+                                <span class="player-points">${player.points} <span style="color: #fbbf24;">p</span></span>
+                                <span class="player-quests">${player.quests || 0} ⭐</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                listEl.innerHTML = `
+                    <div class="text-center py-8 text-gray-400">
+                        <div class="text-4xl mb-2">😵</div>
+                        <p>Kunde inte ladda topplistan</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // ============ PROFILE SYNC SYSTEM ============
+        window.showSyncModal = function() {
+            document.getElementById('syncModal').classList.remove('hidden');
+            document.getElementById('syncCurrentUsername').textContent = getUsername();
+            document.getElementById('syncCurrentPoints').textContent = getTotalPoints();
+            document.getElementById('syncCodeDisplay').classList.add('hidden');
+            document.getElementById('syncCodeInput').value = '';
+            document.getElementById('syncCodeMessage').classList.add('hidden');
+        };
+        
+        window.closeSyncModal = function() {
+            document.getElementById('syncModal').classList.add('hidden');
+        };
+        
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Exclude confusing characters
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+        
+        window.generateSyncCode = async function() {
+            const btn = document.getElementById('generateCodeBtn');
+            btn.innerHTML = '⏳ Skapar...';
+            btn.disabled = true;
+            
+            try {
+                const username = getUsername();
+                const points = getTotalPoints();
+                const code = generateRandomCode();
+                const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
+                
+                // Store sync code in Firebase
+                const syncRef = doc(db, `artifacts/${appId}/public/data/sync_codes`, code);
+                await window.setDoc(syncRef, {
+                    code: code,
+                    username: username,
+                    points: points,
+                    dailyProgress: localStorage.getItem('mathTrainer_dailyProgress') || '{}',
+                    createdAt: new Date().toISOString(),
+                    expiresAt: expiresAt
+                });
+                
+                // Show the code
+                document.getElementById('syncCodeValue').textContent = code;
+                document.getElementById('syncCodeDisplay').classList.remove('hidden');
+                btn.innerHTML = '✅ Kod skapad!';
+                
+                setTimeout(() => {
+                    btn.innerHTML = 'Skapa ny kod';
+                    btn.disabled = false;
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error generating sync code:', error);
+                btn.innerHTML = '❌ Fel uppstod';
+                setTimeout(() => {
+                    btn.innerHTML = 'Skapa synkkod';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        };
+        
+        window.applySyncCode = async function() {
+            const codeInput = document.getElementById('syncCodeInput');
+            const messageEl = document.getElementById('syncCodeMessage');
+            const code = codeInput.value.trim().toUpperCase();
+            
+            if (code.length !== 6) {
+                messageEl.textContent = '❌ Koden måste vara 6 tecken';
+                messageEl.className = 'mt-3 text-center text-sm py-2 rounded-lg bg-red-500/20 text-red-400';
+                messageEl.classList.remove('hidden');
+                return;
+            }
+            
+            messageEl.textContent = '⏳ Hämtar profil...';
+            messageEl.className = 'mt-3 text-center text-sm py-2 rounded-lg bg-slate-600/50 text-gray-300';
+            messageEl.classList.remove('hidden');
+            
+            try {
+                const syncRef = doc(db, `artifacts/${appId}/public/data/sync_codes`, code);
+                const syncSnap = await getDoc(syncRef);
+                
+                if (!syncSnap.exists()) {
+                    messageEl.textContent = '❌ Koden finns inte eller har gått ut';
+                    messageEl.className = 'mt-3 text-center text-sm py-2 rounded-lg bg-red-500/20 text-red-400';
+                    return;
+                }
+                
+                const data = syncSnap.data();
+                
+                // Check if expired
+                if (new Date(data.expiresAt) < new Date()) {
+                    messageEl.textContent = '❌ Koden har gått ut';
+                    messageEl.className = 'mt-3 text-center text-sm py-2 rounded-lg bg-red-500/20 text-red-400';
+                    return;
+                }
+                
+                // Apply the profile
+                localStorage.setItem('mathTrainer_username', data.username);
+                localStorage.setItem('mathTrainer_totalPoints', data.points.toString());
+                if (data.dailyProgress) {
+                    localStorage.setItem('mathTrainer_dailyProgress', data.dailyProgress);
+                }
+                
+                // Update displays
+                updateUsernameDisplay();
+                updatePointsDisplay();
+                updateDailyProgressDisplay();
+                
+                messageEl.textContent = `✅ Profil "${data.username}" hämtad med ${data.points} poäng!`;
+                messageEl.className = 'mt-3 text-center text-sm py-2 rounded-lg bg-green-500/20 text-green-400';
+                
+                // Update modal display
+                document.getElementById('syncCurrentUsername').textContent = data.username;
+                document.getElementById('syncCurrentPoints').textContent = data.points;
+                
+                // Close modal after a delay
+                setTimeout(() => {
+                    closeSyncModal();
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error applying sync code:', error);
+                messageEl.textContent = '❌ Något gick fel';
+                messageEl.className = 'mt-3 text-center text-sm py-2 rounded-lg bg-red-500/20 text-red-400';
+            }
+        };
+        
+        function updateDailyProgressDisplay() {
+            const progress = getDailyProgress();
+            document.getElementById('dailyCorrect').textContent = progress.correct;
+            const percentage = Math.min((progress.correct / DAILY_GOAL) * 100, 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${percentage}%`;
+            
+            // Update progress bar styling
+            const streakMultiplier = document.getElementById('streakMultiplier');
+            
+            if (progress.correct >= DAILY_GOAL) {
+                progressBar.classList.add('completed');
+            } else {
+                progressBar.classList.remove('completed');
+                
+                // Show multiplier status based on current streak
+                if (stats && stats.streak >= 3) {
+                    if (streakMultiplier) streakMultiplier.classList.remove('hidden');
+                } else {
+                    if (streakMultiplier) streakMultiplier.classList.add('hidden');
+                }
+            }
+            
+            // Update quests notification
+            updateQuestsNotification();
+        }
+        
+        function updateQuestsNotification() {
+            const progress = getDailyProgress();
+            const quest1Done = progress.correct >= DAILY_GOAL && progress.partsCompleted.length > 0;
+            const quest2Done = progress.streakQuestDone || false;
+            
+            const notificationEl = document.getElementById('questsNotification');
+            if (notificationEl) {
+                // Show notification if quests are incomplete
+                if (!quest1Done || !quest2Done) {
+                    notificationEl.classList.remove('hidden');
+                } else {
+                    notificationEl.classList.add('hidden');
+                }
+            }
+        }
+        
+        // ============ QUESTS MODAL ============
+        window.showQuestsModal = function() {
+            document.getElementById('questsModal').classList.remove('hidden');
+            updateQuestsDisplay();
+        };
+        
+        window.closeQuestsModal = function() {
+            document.getElementById('questsModal').classList.add('hidden');
+        };
+        
+        function updateQuestsDisplay() {
+            const progress = getDailyProgress();
+            
+            // Quest 1: 7 correct today
+            const quest1Card = document.getElementById('quest1Card');
+            const quest1Progress = document.getElementById('quest1Progress');
+            const quest1Bar = document.getElementById('quest1Bar');
+            const quest1Status = document.getElementById('quest1Status');
+            
+            const q1Correct = Math.min(progress.correct, DAILY_GOAL);
+            quest1Progress.textContent = `${q1Correct}/${DAILY_GOAL}`;
+            quest1Bar.style.width = `${(q1Correct / DAILY_GOAL) * 100}%`;
+            
+            const quest1Done = progress.correct >= DAILY_GOAL && progress.partsCompleted.length > 0;
+            if (quest1Done) {
+                quest1Card.classList.add('quest-completed');
+                quest1Bar.classList.add('completed');
+                quest1Status.textContent = '✅ Klar!';
+                quest1Status.className = 'quest-status-done';
+            } else {
+                quest1Card.classList.remove('quest-completed');
+                quest1Bar.classList.remove('completed');
+                quest1Status.textContent = 'Aktiv';
+                quest1Status.className = 'quest-status-active';
+            }
+            
+            // Quest 2: 5 streak
+            const quest2Card = document.getElementById('quest2Card');
+            const quest2Progress = document.getElementById('quest2Progress');
+            const quest2Bar = document.getElementById('quest2Bar');
+            const quest2Status = document.getElementById('quest2Status');
+            
+            const currentStreak = stats ? Math.min(stats.streak, STREAK_GOAL) : 0;
+            const quest2Done = progress.streakQuestDone || false;
+            
+            if (quest2Done) {
+                quest2Progress.textContent = `${STREAK_GOAL}/${STREAK_GOAL}`;
+                quest2Bar.style.width = '100%';
+                quest2Bar.classList.add('completed');
+                quest2Card.classList.add('quest-completed');
+                quest2Status.textContent = '✅ Klar!';
+                quest2Status.className = 'quest-status-done';
+            } else {
+                quest2Progress.textContent = `${currentStreak}/${STREAK_GOAL}`;
+                quest2Bar.style.width = `${(currentStreak / STREAK_GOAL) * 100}%`;
+                quest2Bar.classList.remove('completed');
+                quest2Card.classList.remove('quest-completed');
+                quest2Status.textContent = 'Aktiv';
+                quest2Status.className = 'quest-status-active';
+            }
+        }
+        
+        function showPointsPopup(points, hasMultiplier) {
+            const popup = document.createElement('div');
+            popup.className = 'points-popup';
+            popup.innerHTML = hasMultiplier ? `+${points} 🔥` : `+${points}`;
+            popup.style.left = `${Math.random() * 60 + 20}%`;
+            popup.style.top = '40%';
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                popup.remove();
+            }, 1000);
+        }
+        
+        function getCurrentPartKey() {
+            const topic = document.getElementById('topicSelect').value;
+            const partId = document.getElementById('chapterSelect').value;
+            return `${currentMode}_${topic}_${partId}`;
+        }
+        
+        function checkPartCompletion() {
+            const progress = getDailyProgress();
+            const partKey = getCurrentPartKey();
+            
+            // Check if we reached the goal and haven't already claimed points for this part today
+            if (progress.correct >= DAILY_GOAL && !progress.partsCompleted.includes(partKey)) {
+                progress.partsCompleted.push(partKey);
+                saveDailyProgress(progress);
+                addPoints(POINTS_PER_PART);
+                addQuest();
+                
+                // Show completion message!
+                showPartCompletionCelebration();
+                return true;
+            }
+            return false;
+        }
+        
+        function showPartCompletionCelebration() {
+            const problemContent = document.getElementById('problemContent');
+            problemContent.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="text-7xl mb-4 success-pop">🏆</div>
+                    <div class="text-4xl mb-2">⭐🎉⭐</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">QUEST AVKLARAD!</h3>
+                    <p class="text-gray-600 mb-2">Du klarade dagens mål med 7 uppgifter!</p>
+                    <div class="bg-gradient-to-r from-amber-100 to-yellow-100 rounded-2xl p-4 my-4 border-2 border-amber-300">
+                        <p class="text-3xl font-black text-amber-600 mb-1">+10 BONUS POÄNG!</p>
+                        <p class="text-lg text-amber-700">Totalt: <span class="font-black">${getTotalPoints()}</span> poäng</p>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">Fortsätt för att tjäna fler poäng!</p>
+                    <button onclick="resetDailyAndContinue()" class="btn-primary mt-4">
+                        🚀 Fortsätt träna
+                    </button>
+                </div>
+            `;
+            document.getElementById('answerSection').classList.add('hidden');
+            updateDailyProgressDisplay();
+            launchConfetti(500);
+        }
+        
+        window.resetDailyAndContinue = function() {
+            // Reset daily counter but keep points
+            const progress = getDailyProgress();
+            progress.correct = 0;
+            saveDailyProgress(progress);
+            updateDailyProgressDisplay();
+            
+            // Continue with next task
+            currentTaskIndex++;
+            document.getElementById('answerSection').classList.remove('hidden');
+            showTask();
+        };
 
         // ============ CONFETTI SYSTEM ============
         const confettiCanvas = document.getElementById('confettiCanvas');
@@ -1344,11 +2472,28 @@
             animateConfetti();
         }
 
+        // Update topics dropdown based on mode
+        window.updateTopics = function() {
+            const topicSelect = document.getElementById('topicSelect');
+            const structure = getCurrentStructure();
+            
+            topicSelect.innerHTML = '';
+            
+            Object.keys(structure).forEach(topicKey => {
+                const option = document.createElement('option');
+                option.value = topicKey;
+                option.textContent = structure[topicKey].name;
+                topicSelect.appendChild(option);
+            });
+            
+            updateChapters();
+        };
+
         // Update chapters dropdown based on topic
         window.updateChapters = function() {
             const topic = document.getElementById('topicSelect').value;
             const chapterSelect = document.getElementById('chapterSelect');
-            const structure = COURSE_STRUCTURE[topic];
+            const structure = getCurrentStructure()[topic];
             
             chapterSelect.innerHTML = '';
             
@@ -1371,7 +2516,6 @@
         // Initialize
         signInAnonymously(auth).then(() => {
             console.log('Connected to Firebase');
-            updateChapters(); // Initialize chapters
         }).catch(e => {
             console.error('Firebase error:', e);
         });
@@ -1382,6 +2526,7 @@
             document.getElementById('modeSelection').classList.add('hidden');
             document.getElementById('settingsPanel').classList.remove('hidden');
             document.getElementById('modeTitle').textContent = mode === 'campaigns' ? '🚀 Kapitelträning' : '🎯 Typuppgifter NP';
+            updateTopics();
             loadTasks();
         };
 
@@ -1409,8 +2554,8 @@
             content.innerHTML = '<p class="text-gray-400 text-center py-8 animate-pulse">Laddar genomgång...</p>';
             
             try {
-                // Path: artifacts/{appId}/public/data/campaigns/{topic}/{partId}/genomgang
-                const genomgangPath = `artifacts/${appId}/public/data/campaigns/${topic}/${partId}`;
+                // Use getFirebasePath for correct path
+                const genomgangPath = getFirebasePath(topic, partId);
                 const genomgangRef = doc(db, genomgangPath, 'genomgang');
                 const genomgangSnap = await getDoc(genomgangRef);
                 
@@ -1449,7 +2594,7 @@
         function renderGenomgang(data) {
             // Support flexible content structure
             if (data.content) {
-                // If there's a content field with blocks
+                // If there's a content field with blocks (old format)
                 if (Array.isArray(data.content)) {
                     return data.content.map(block => {
                         if (block.type === 'text') {
@@ -1462,8 +2607,8 @@
                         return `<p>${block.value || ''}</p>`;
                     }).join('');
                 }
-                // If content is just a string
-                return `<div class="prose max-w-none">${data.content}</div>`;
+                // If content is a markdown-like string (new format from admin)
+                return renderMarkdownContent(data.content);
             }
             
             // If there's a text field
@@ -1475,10 +2620,52 @@
             return `<pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>`;
         }
 
+        function renderMarkdownContent(content) {
+            let html = content;
+            
+            // Process special blocks first
+            html = html.replace(/:::tip\n([\s\S]*?)\n:::/g, '<div class="genomgang-tip"><strong>💡 Tips:</strong><br>$1</div>');
+            html = html.replace(/:::warning\n([\s\S]*?)\n:::/g, '<div class="genomgang-warning"><strong>⚠️ Observera:</strong><br>$1</div>');
+            html = html.replace(/:::example\n([\s\S]*?)\n:::/g, '<div class="genomgang-example"><strong>📝 Exempel:</strong><br>$1</div>');
+            
+            // Process headings
+            html = html.replace(/^### (.+)$/gm, '<h4 class="genomgang-h4">$1</h4>');
+            html = html.replace(/^## (.+)$/gm, '<h3 class="genomgang-h3">$1</h3>');
+            html = html.replace(/^# (.+)$/gm, '<h2 class="genomgang-h2">$1</h2>');
+            
+            // Process bold and italic
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            
+            // Process display math ($$...$$)
+            html = html.replace(/\$\$([^$]+)\$\$/g, '<div class="problem-math-block">$$$$1$$</div>');
+            
+            // Process inline math ($...$) - be careful not to double-process
+            html = html.replace(/\$([^$\n]+)\$/g, '\\($1\\)');
+            
+            // Process lists
+            html = html.replace(/^- (.+)$/gm, '<li class="genomgang-list-item">$1</li>');
+            html = html.replace(/^(\d+)\. (.+)$/gm, '<li class="genomgang-list-item" style="list-style-type:decimal;">$2</li>');
+            
+            // Process line breaks
+            html = html.replace(/\n\n/g, '</p><p class="genomgang-paragraph">');
+            html = html.replace(/\n/g, '<br>');
+            
+            // Wrap in paragraph
+            html = '<p class="genomgang-paragraph">' + html + '</p>';
+            
+            return html;
+        }
+
         // Load tasks - now using correct Firebase path synced with admin
         window.loadTasks = async function() {
             const topic = document.getElementById('topicSelect').value;
             const partId = document.getElementById('chapterSelect').value;
+
+            console.log('=== LOADING TASKS ===');
+            console.log('Topic:', topic);
+            console.log('PartId:', partId);
+            console.log('Current mode:', currentMode);
 
             try {
                 tasks = [];
@@ -1486,28 +2673,37 @@
                 if (partId) {
                     // Load specific part
                     const path = getFirebasePath(topic, partId);
-                    console.log('Loading tasks from:', path);
-                    const snap = await getDocs(collection(db, path));
+                    console.log('Firebase path:', path);
+                    const colRef = collection(db, path);
+                    console.log('Collection ref created');
+                    const snap = await getDocs(colRef);
+                    console.log('Got snapshot, size:', snap.size);
                     snap.forEach(docSnap => {
+                        console.log('Found doc:', docSnap.id);
                         tasks.push({ id: docSnap.id, ...docSnap.data() });
                     });
                 } else {
                     // Load all parts for this topic
-                    const structure = COURSE_STRUCTURE[topic];
+                    console.log('Loading ALL parts for topic');
+                    const structure = getCurrentStructure()[topic];
                     if (structure && structure.parts) {
                         for (const part of structure.parts) {
                             const path = getFirebasePath(topic, part.id);
+                            console.log('Trying path:', path);
                             try {
                                 const snap = await getDocs(collection(db, path));
+                                console.log('Part', part.id, 'has', snap.size, 'docs');
                                 snap.forEach(docSnap => {
                                     tasks.push({ id: docSnap.id, ...docSnap.data() });
                                 });
                             } catch (e) {
-                                // Part might not have tasks yet, skip
+                                console.log('Error loading part', part.id, ':', e.message);
                             }
                         }
                     }
                 }
+
+                console.log('Total tasks loaded:', tasks.length);
 
                 // Shuffle tasks
                 tasks = tasks.sort(() => Math.random() - 0.5);
@@ -1518,12 +2714,20 @@
                 } else {
                     document.getElementById('taskArea').classList.remove('hidden');
                     document.getElementById('noTasksMessage').classList.add('hidden');
-                    document.getElementById('totalTasks').textContent = tasks.length;
+                    document.getElementById('answerSection').classList.remove('hidden');
+                    // Reset stats when loading new tasks
+                    stats = { correct: 0, wrong: 0, streak: 0 };
+                    document.getElementById('correctCount').textContent = '0';
+                    document.getElementById('wrongCount').textContent = '0';
+                    document.getElementById('streakCount').textContent = '0 🔥';
+                    document.getElementById('streakContainer').classList.remove('streak-glow', 'streak-legendary');
                     currentTaskIndex = 0;
                     showTask();
                 }
             } catch (e) {
-                console.error('Error loading tasks:', e);
+                console.error('=== ERROR LOADING TASKS ===');
+                console.error('Error:', e);
+                console.error('Error message:', e.message);
                 document.getElementById('taskArea').classList.add('hidden');
                 document.getElementById('noTasksMessage').classList.remove('hidden');
             }
@@ -1532,16 +2736,17 @@
         // Show current task
         function showTask() {
             if (currentTaskIndex >= tasks.length) {
-                // Show completion
+                // Show completion - all tasks done
                 document.getElementById('problemContent').innerHTML = `
                     <div class="text-center py-8">
                         <div class="text-6xl mb-4">🎉</div>
                         <h3 class="text-2xl font-bold text-gray-800 mb-2">Bra jobbat!</h3>
-                        <p class="text-gray-500">Du har slutfört alla ${tasks.length} uppgifter.</p>
+                        <p class="text-gray-500">Du har slutfört alla ${tasks.length} uppgifter i denna del.</p>
                         <p class="text-lg mt-4">
                             <span class="text-green-600 font-bold">${stats.correct}</span> rätt, 
                             <span class="text-red-600 font-bold">${stats.wrong}</span> fel
                         </p>
+                        <button onclick="loadTasks()" class="btn-primary mt-6">Ladda fler uppgifter</button>
                     </div>
                 `;
                 document.getElementById('answerSection').classList.add('hidden');
@@ -1551,10 +2756,16 @@
             const task = tasks[currentTaskIndex];
             currentScaffoldIndex = 0;
 
-            // Update progress
-            document.getElementById('currentTaskNum').textContent = currentTaskIndex + 1;
-            document.getElementById('progressBar').style.width = `${((currentTaskIndex + 1) / tasks.length) * 100}%`;
-            document.getElementById('taskLevel').textContent = `${task.level || 'Åk 9'} - Del ${task.campaignLevel || '?'}`;
+            // Update part name display
+            const partId = document.getElementById('chapterSelect').value;
+            const topic = document.getElementById('topicSelect').value;
+            const structure = getCurrentStructure()[topic];
+            const part = structure?.parts?.find(p => p.id === partId);
+            const partName = part ? part.name : (partId || 'Alla delar');
+            document.getElementById('currentPartName').textContent = partName;
+            
+            // Update daily progress display
+            updateDailyProgressDisplay();
 
             // Render question
             const contentEl = document.getElementById('problemContent');
@@ -1972,37 +3183,59 @@
                 stats.correct++;
                 stats.streak++;
                 
+                // Check streak quest (5 in a row)
+                checkStreakQuest();
+                
+                // Calculate points - 1 per correct, 2x if streak >= 3
+                const hasMultiplier = stats.streak >= 3;
+                const pointsEarned = hasMultiplier ? 2 : 1;
+                addPoints(pointsEarned);
+                showPointsPopup(pointsEarned, hasMultiplier);
+                
+                // Update daily progress
+                const progress = getDailyProgress();
+                progress.correct++;
+                saveDailyProgress(progress);
+                updateDailyProgressDisplay();
+                
                 // ALWAYS launch confetti on correct answer - amount based on streak!
                 const confettiAmount = Math.min(50 + (stats.streak * 30), 400);
                 launchConfetti(confettiAmount);
                 
                 // EPIC celebration based on streak!
+                let pointsText = hasMultiplier ? `<span class="multiplier-badge">🔥 2X</span> +${pointsEarned}p` : `+${pointsEarned}p`;
+                
                 if (stats.streak >= 7) {
                     // LEGENDARY celebration!
                     resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white';
-                    resultEl.innerHTML = `<span class="text-4xl success-pop">👑🔥💎🔥👑</span><br><span class="text-xl font-bold">LEGENDARISKT! ${stats.streak} i rad!</span>`;
+                    resultEl.innerHTML = `<span class="text-4xl success-pop">👑🔥💎🔥👑</span><br><span class="text-xl font-bold">LEGENDARISKT! ${stats.streak} i rad!</span><br><span class="text-sm">${pointsText}</span>`;
                     streakContainer.classList.add('streak-glow', 'streak-legendary');
                     streakCountEl.classList.add('streak-fire');
                 } else if (stats.streak >= 5) {
                     // MEGA celebration
                     resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-white';
-                    resultEl.innerHTML = `<span class="text-3xl success-pop">🔥🎉🔥</span><br><span class="text-xl font-bold">FANTASTISKT! ${stats.streak} i rad!</span>`;
+                    resultEl.innerHTML = `<span class="text-3xl success-pop">🔥🎉🔥</span><br><span class="text-xl font-bold">FANTASTISKT! ${stats.streak} i rad!</span><br><span class="text-sm">${pointsText}</span>`;
                     streakContainer.classList.add('streak-glow');
                     streakContainer.classList.remove('streak-legendary');
                     streakCountEl.classList.add('streak-fire');
                 } else if (stats.streak >= 3) {
-                    // Good streak celebration
+                    // Good streak celebration - MULTIPLIER UNLOCKED!
                     resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white';
-                    resultEl.innerHTML = `<span class="text-2xl success-pop">🔥✨</span><br><span class="font-bold">${stats.streak} rätt i rad! Fortsätt så!</span>`;
+                    resultEl.innerHTML = `<span class="text-2xl success-pop">🔥✨</span><br><span class="font-bold">${stats.streak} rätt i rad!</span><br><span class="text-sm">${pointsText} - 2X MULTIPLIKATOR!</span>`;
                     streakContainer.classList.add('streak-glow');
                     streakContainer.classList.remove('streak-legendary');
                     streakCountEl.classList.remove('streak-fire');
                 } else {
                     // Normal correct - still confetti!
                     resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-green-100 text-green-800';
-                    resultEl.innerHTML = `<span class="text-2xl success-pop">✅</span> Rätt svar!`;
+                    resultEl.innerHTML = `<span class="text-2xl success-pop">✅</span> Rätt svar! <span class="text-sm font-bold text-amber-600">+${pointsEarned}p</span>`;
                     streakContainer.classList.remove('streak-glow', 'streak-legendary');
                     streakCountEl.classList.remove('streak-fire');
+                }
+                
+                // Check if part is completed (7 correct today)
+                if (progress.correct >= DAILY_GOAL) {
+                    checkPartCompletion();
                 }
             } else {
                 inputEl.className = 'answer-input w-full mb-4 incorrect';
@@ -2010,7 +3243,7 @@
                 
                 // Format the correct answer nicely
                 const formattedAnswer = formatAnswerForDisplay(task.answer);
-                resultEl.innerHTML = `<span class="text-2xl">❌</span> Fel! Rätt svar är: <strong><span id="correctAnswerDisplay">${formattedAnswer}</span></strong>`;
+                resultEl.innerHTML = `<span class="text-2xl">❌</span> Fel! Rätt svar är: <strong><span id="correctAnswerDisplay">${formattedAnswer}</span></strong><br><span class="text-sm text-gray-500">Streak förlorad - börja om för 2X multiplikator!</span>`;
                 
                 // Render MathJax on the correct answer
                 if (window.MathJax && window.MathJax.typesetPromise) {
@@ -2021,22 +3254,33 @@
                 stats.streak = 0;
                 streakContainer.classList.remove('streak-glow', 'streak-legendary');
                 streakCountEl.classList.remove('streak-fire');
+                
+                // Update daily progress display to reset multiplier status
+                updateDailyProgressDisplay();
             }
 
             // Update stats display
             document.getElementById('correctCount').textContent = stats.correct;
             document.getElementById('wrongCount').textContent = stats.wrong;
             
-            // Epic streak display
+            // Epic streak display with multiplier badge
+            const streakMultiplier = document.getElementById('streakMultiplier');
             if (stats.streak >= 7) {
                 streakCountEl.innerHTML = `<span class="streak-fire">${stats.streak}</span> 👑🔥🔥🔥`;
+                streakMultiplier.classList.remove('hidden');
             } else if (stats.streak >= 5) {
                 streakCountEl.innerHTML = `<span class="streak-fire">${stats.streak}</span> 🔥🔥🔥`;
+                streakMultiplier.classList.remove('hidden');
             } else if (stats.streak >= 3) {
-                streakCountEl.textContent = stats.streak + ' 🔥🔥';
+                streakCountEl.innerHTML = `${stats.streak} 🔥🔥`;
+                streakMultiplier.classList.remove('hidden');
             } else {
                 streakCountEl.textContent = stats.streak + ' 🔥';
+                streakMultiplier.classList.add('hidden');
             }
+            
+            // Update daily quest status
+            updateDailyProgressDisplay();
 
             // Show result and solution
             document.getElementById('answerInputArea').classList.add('hidden');
@@ -2082,36 +3326,17 @@
             showTask();
         };
 
-        // ============ THEME TOGGLE ============
-        window.toggleTheme = function() {
-            const body = document.body;
-            const sunIcon = document.getElementById('themeIconSun');
-            const moonIcon = document.getElementById('themeIconMoon');
-            
-            if (body.classList.contains('light-mode')) {
-                body.classList.remove('light-mode');
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-                localStorage.setItem('praktiska-theme', 'dark');
-            } else {
-                body.classList.add('light-mode');
-                sunIcon.classList.add('hidden');
-                moonIcon.classList.remove('hidden');
-                localStorage.setItem('praktiska-theme', 'light');
-            }
-        };
+        // ============ QUESTS INITIALIZATION ============
 
-        // Load saved theme on page load
-        (function loadTheme() {
-            const savedTheme = localStorage.getItem('praktiska-theme');
-            const sunIcon = document.getElementById('themeIconSun');
-            const moonIcon = document.getElementById('themeIconMoon');
+        // Load points on page load
+        (function initApp() {
+            // Always use light mode
+            document.body.classList.add('light-mode');
             
-            if (savedTheme === 'light') {
-                document.body.classList.add('light-mode');
-                if (sunIcon) sunIcon.classList.add('hidden');
-                if (moonIcon) moonIcon.classList.remove('hidden');
-            }
+            // Initialize displays
+            updateUsernameDisplay();
+            updatePointsDisplay();
+            updateDailyProgressDisplay();
         })();
     </script>
 </body>
