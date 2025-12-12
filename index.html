@@ -280,6 +280,13 @@
             border-radius: 12px;
             padding: 12px 16px;
         }
+        body.light-mode .task-progress-indicator {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body.light-mode .task-progress-indicator span {
+            color: #374151;
+        }
         
         /* Quest Modal Styles */
         .quest-card {
@@ -688,12 +695,12 @@
             color: white;
         }
 
-        /* Quests Toggle Button */
+        /* Quests Toggle Button - LOWER z-index so it doesn't block modals */
         .quests-toggle-btn {
             position: fixed;
             top: 20px;
             right: 20px;
-            z-index: 9999;
+            z-index: 40;
             background: linear-gradient(135deg, #8b5cf6, #a855f7);
             border: none;
             color: white;
@@ -1104,18 +1111,18 @@
             <p class="app-subtitle mt-4">Träna på typiska uppgifter för Nationella proven</p>
         </div>
 
-        <!-- Leaderboard Modal -->
-        <div id="leaderboardModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <!-- Leaderboard Modal - higher z-index -->
+        <div id="leaderboardModal" class="hidden fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4">
             <div class="leaderboard-container bg-gradient-to-b from-slate-900 to-slate-800 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl border border-amber-500/30">
                 <!-- Header -->
-                <div class="leaderboard-header bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 p-6 text-center relative overflow-hidden">
+                <div class="leaderboard-header bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 p-4 sm:p-6 text-center relative overflow-hidden">
                     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjMiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvZz48L3N2Zz4=')] opacity-30"></div>
                     <div class="relative">
-                        <div class="text-5xl mb-2">🏆</div>
-                        <h2 class="text-2xl font-black text-white drop-shadow-lg">TOPPLISTA</h2>
-                        <p class="text-amber-100 text-sm mt-1">Topp 50 mattehjältar</p>
+                        <div class="text-4xl sm:text-5xl mb-2">🏆</div>
+                        <h2 class="text-xl sm:text-2xl font-black text-white drop-shadow-lg">TOPPLISTA</h2>
+                        <p class="text-amber-100 text-xs sm:text-sm mt-1">Topp 50 mattehjältar</p>
                     </div>
-                    <button onclick="closeLeaderboard()" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition">✕</button>
+                    <button onclick="closeLeaderboard()" class="absolute top-3 right-3 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition z-20">✕</button>
                 </div>
                 
                 <!-- Your rank -->
@@ -1150,55 +1157,55 @@
             </div>
         </div>
 
-        <!-- Profile Sync Modal -->
-        <div id="syncModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-            <div class="bg-gradient-to-b from-slate-900 to-slate-800 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-indigo-500/30">
+        <!-- Profile Sync Modal - higher z-index and scrollable -->
+        <div id="syncModal" class="hidden fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4 overflow-y-auto">
+            <div class="bg-gradient-to-b from-slate-900 to-slate-800 rounded-3xl max-w-md w-full shadow-2xl border border-indigo-500/30 my-4 max-h-[90vh] overflow-y-auto">
                 <!-- Header -->
-                <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 p-6 text-center relative">
-                    <div class="text-4xl mb-2">🔗</div>
-                    <h2 class="text-xl font-black text-white drop-shadow-lg">Synka Profil</h2>
-                    <p class="text-indigo-100 text-sm mt-1">Koppla ihop samma profil på flera enheter</p>
-                    <button onclick="closeSyncModal()" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition">✕</button>
+                <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 p-4 sm:p-6 text-center relative sticky top-0 z-10">
+                    <div class="text-3xl sm:text-4xl mb-2">🔗</div>
+                    <h2 class="text-lg sm:text-xl font-black text-white drop-shadow-lg">Synka Profil</h2>
+                    <p class="text-indigo-100 text-xs sm:text-sm mt-1">Koppla ihop samma profil på flera enheter</p>
+                    <button onclick="closeSyncModal()" class="absolute top-3 right-3 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition z-20">✕</button>
                 </div>
                 
                 <!-- Content -->
-                <div class="p-6">
+                <div class="p-4 sm:p-6">
                     <!-- Current profile info -->
-                    <div class="bg-slate-700/50 rounded-xl p-4 mb-4 text-center">
-                        <div class="text-sm text-gray-400 mb-1">Din nuvarande profil</div>
-                        <div class="text-white font-bold text-lg" id="syncCurrentUsername">...</div>
-                        <div class="text-amber-400 text-sm"><span id="syncCurrentPoints">0</span> poäng</div>
+                    <div class="bg-slate-700/50 rounded-xl p-3 sm:p-4 mb-4 text-center">
+                        <div class="text-xs sm:text-sm text-gray-400 mb-1">Din nuvarande profil</div>
+                        <div class="text-white font-bold text-base sm:text-lg" id="syncCurrentUsername">...</div>
+                        <div class="text-amber-400 text-xs sm:text-sm"><span id="syncCurrentPoints">0</span> poäng</div>
                     </div>
                     
                     <!-- Two options -->
-                    <div class="grid grid-cols-1 gap-4">
+                    <div class="grid grid-cols-1 gap-3 sm:gap-4">
                         <!-- Option 1: Generate code -->
-                        <div id="syncGenerateSection" class="bg-slate-700/30 rounded-xl p-4 border border-slate-600">
-                            <h3 class="text-white font-bold mb-2">📤 Dela denna profil</h3>
-                            <p class="text-gray-400 text-sm mb-3">Skapa en kod som du kan använda på en annan enhet</p>
-                            <button onclick="generateSyncCode()" id="generateCodeBtn" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-3 rounded-xl font-bold hover:scale-105 transition-transform">
+                        <div id="syncGenerateSection" class="bg-slate-700/30 rounded-xl p-3 sm:p-4 border border-slate-600">
+                            <h3 class="text-white font-bold mb-2 text-sm sm:text-base">📤 Dela denna profil</h3>
+                            <p class="text-gray-400 text-xs sm:text-sm mb-3">Skapa en kod som du kan använda på en annan enhet</p>
+                            <button onclick="generateSyncCode()" id="generateCodeBtn" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2.5 sm:py-3 rounded-xl font-bold hover:scale-105 transition-transform text-sm sm:text-base">
                                 Skapa synkkod
                             </button>
-                            <div id="syncCodeDisplay" class="hidden mt-4 text-center">
-                                <div class="text-gray-400 text-sm mb-2">Din synkkod (giltig 10 min):</div>
-                                <div class="bg-slate-900 rounded-xl p-4 border-2 border-dashed border-indigo-400">
-                                    <span id="syncCodeValue" class="text-3xl font-mono font-bold text-indigo-400 tracking-widest"></span>
+                            <div id="syncCodeDisplay" class="hidden mt-3 sm:mt-4 text-center">
+                                <div class="text-gray-400 text-xs sm:text-sm mb-2">Din synkkod (giltig 10 min):</div>
+                                <div class="bg-slate-900 rounded-xl p-3 sm:p-4 border-2 border-dashed border-indigo-400">
+                                    <span id="syncCodeValue" class="text-2xl sm:text-3xl font-mono font-bold text-indigo-400 tracking-widest"></span>
                                 </div>
                                 <p class="text-gray-500 text-xs mt-2">Skriv in koden på din andra enhet</p>
                             </div>
                         </div>
                         
                         <!-- Option 2: Enter code -->
-                        <div class="bg-slate-700/30 rounded-xl p-4 border border-slate-600">
-                            <h3 class="text-white font-bold mb-2">📥 Hämta annan profil</h3>
-                            <p class="text-gray-400 text-sm mb-3">Har du en kod från en annan enhet?</p>
+                        <div class="bg-slate-700/30 rounded-xl p-3 sm:p-4 border border-slate-600">
+                            <h3 class="text-white font-bold mb-2 text-sm sm:text-base">📥 Hämta annan profil</h3>
+                            <p class="text-gray-400 text-xs sm:text-sm mb-3">Har du en kod från en annan enhet?</p>
                             <div class="flex gap-2">
-                                <input type="text" id="syncCodeInput" class="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 text-white text-center font-mono text-xl tracking-widest uppercase" placeholder="ABC123" maxlength="6" oninput="this.value = this.value.toUpperCase()">
-                                <button onclick="applySyncCode()" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
+                                <input type="text" id="syncCodeInput" class="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-white text-center font-mono text-lg sm:text-xl tracking-widest uppercase" placeholder="ABC123" maxlength="6" oninput="this.value = this.value.toUpperCase()">
+                                <button onclick="applySyncCode()" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold hover:scale-105 transition-transform">
                                     ✓
                                 </button>
                             </div>
-                            <div id="syncCodeMessage" class="hidden mt-3 text-center text-sm py-2 rounded-lg"></div>
+                            <div id="syncCodeMessage" class="hidden mt-3 text-center text-xs sm:text-sm py-2 rounded-lg"></div>
                         </div>
                     </div>
                 </div>
@@ -1248,6 +1255,19 @@
                 </div>
             </div>
 
+            <!-- Course Level Selector - Only for Kapitelträning -->
+            <div id="courseLevelSelector" class="hidden mb-6">
+                <label class="block text-sm font-bold text-gray-600 mb-2">Kursnivå</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="levelGrund" onclick="setCourseLevel('grund')" class="course-level-btn py-3 px-4 rounded-xl font-bold text-center transition-all border-2 border-green-500 bg-green-100 text-green-700 hover:bg-green-200">
+                        📗 Matematik Grund
+                    </button>
+                    <button id="levelMa1" onclick="setCourseLevel('ma1')" class="course-level-btn py-3 px-4 rounded-xl font-bold text-center transition-all border-2 border-orange-500 bg-orange-500 text-white">
+                        📙 Matematik 1
+                    </button>
+                </div>
+            </div>
+
             <!-- Genomgång Button -->
             <div class="mb-6">
                 <button onclick="showGenomgang()" id="genomgangBtn" class="genomgang-btn w-full font-semibold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2">
@@ -1289,15 +1309,15 @@
             </div>
         </div>
 
-        <!-- Quests Modal -->
-        <div id="questsModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <!-- Quests Modal - higher z-index -->
+        <div id="questsModal" class="hidden fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4">
             <div class="quests-container bg-gradient-to-b from-slate-900 to-slate-800 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-purple-500/30">
                 <!-- Header -->
-                <div class="bg-gradient-to-r from-purple-600 via-violet-500 to-purple-600 p-6 text-center relative">
-                    <div class="text-4xl mb-2">📋</div>
-                    <h2 class="text-2xl font-black text-white drop-shadow-lg">DAGENS QUESTS</h2>
-                    <p class="text-purple-100 text-sm mt-1">Klara quests för att få bonuspoäng!</p>
-                    <button onclick="closeQuestsModal()" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition">✕</button>
+                <div class="bg-gradient-to-r from-purple-600 via-violet-500 to-purple-600 p-4 sm:p-6 text-center relative">
+                    <div class="text-3xl sm:text-4xl mb-2">📋</div>
+                    <h2 class="text-xl sm:text-2xl font-black text-white drop-shadow-lg">DAGENS QUESTS</h2>
+                    <p class="text-purple-100 text-xs sm:text-sm mt-1">Klara quests för att få bonuspoäng!</p>
+                    <button onclick="closeQuestsModal()" class="absolute top-3 right-3 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center transition z-20">✕</button>
                 </div>
                 
                 <!-- Quest List -->
@@ -1829,12 +1849,14 @@
             }
         };
 
-        // Firebase paths - supports both collections
+        // Firebase paths - supports both collections and course levels
         function getFirebasePath(topic, partId) {
             if (currentMode === 'math_tasks') {
                 return `artifacts/${appId}/public/data/math_tasks/${topic}/${partId}`;
             }
-            return `artifacts/${appId}/public/data/campaigns/${topic}/${partId}`;
+            // For campaigns mode, append 'grund' suffix if course level is 'grund'
+            const suffix = currentCourseLevel === 'grund' ? 'grund' : '';
+            return `artifacts/${appId}/public/data/campaigns/${topic}/${partId}${suffix}`;
         }
         
         // Get current structure based on mode
@@ -1848,6 +1870,8 @@
 
         // State
         let currentMode = 'campaigns';
+        let currentCourseLevel = 'ma1'; // 'ma1' or 'grund' - only used in campaigns mode
+        let consecutiveWrong = 0; // Track consecutive wrong answers for auto-genomgång
         let tasks = [];
         let currentTaskIndex = 0;
         let currentScaffoldIndex = 0;
@@ -2526,7 +2550,36 @@
             document.getElementById('modeSelection').classList.add('hidden');
             document.getElementById('settingsPanel').classList.remove('hidden');
             document.getElementById('modeTitle').textContent = mode === 'campaigns' ? '🚀 Kapitelträning' : '🎯 Typuppgifter NP';
+            
+            // Show/hide course level selector based on mode
+            const courseLevelSelector = document.getElementById('courseLevelSelector');
+            if (mode === 'campaigns') {
+                courseLevelSelector.classList.remove('hidden');
+            } else {
+                courseLevelSelector.classList.add('hidden');
+            }
+            
             updateTopics();
+            loadTasks();
+        };
+
+        // Course level selection (Grund / Ma 1) - only for Kapitelträning
+        window.setCourseLevel = function(level) {
+            currentCourseLevel = level;
+            
+            // Update button styles
+            const grundBtn = document.getElementById('levelGrund');
+            const ma1Btn = document.getElementById('levelMa1');
+            
+            if (level === 'grund') {
+                grundBtn.className = 'course-level-btn py-3 px-4 rounded-xl font-bold text-center transition-all border-2 border-green-500 bg-green-500 text-white';
+                ma1Btn.className = 'course-level-btn py-3 px-4 rounded-xl font-bold text-center transition-all border-2 border-orange-500 bg-orange-100 text-orange-700 hover:bg-orange-200';
+            } else {
+                grundBtn.className = 'course-level-btn py-3 px-4 rounded-xl font-bold text-center transition-all border-2 border-green-500 bg-green-100 text-green-700 hover:bg-green-200';
+                ma1Btn.className = 'course-level-btn py-3 px-4 rounded-xl font-bold text-center transition-all border-2 border-orange-500 bg-orange-500 text-white';
+            }
+            
+            // Reload tasks with new course level
             loadTasks();
         };
 
@@ -3237,6 +3290,9 @@
                 if (progress.correct >= DAILY_GOAL) {
                     checkPartCompletion();
                 }
+                
+                // Reset consecutive wrong counter on correct answer
+                consecutiveWrong = 0;
             } else {
                 inputEl.className = 'answer-input w-full mb-4 incorrect';
                 resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-red-100 text-red-800';
@@ -3254,6 +3310,16 @@
                 stats.streak = 0;
                 streakContainer.classList.remove('streak-glow', 'streak-legendary');
                 streakCountEl.classList.remove('streak-fire');
+                
+                // Track consecutive wrong answers (only in Kapitelträning mode)
+                consecutiveWrong++;
+                if (consecutiveWrong >= 2 && currentMode === 'campaigns') {
+                    // Auto-show genomgång after 2 wrong in a row
+                    consecutiveWrong = 0; // Reset counter
+                    setTimeout(() => {
+                        showGenomgang();
+                    }, 1500); // Delay to let user see the result first
+                }
                 
                 // Update daily progress display to reset multiplier status
                 updateDailyProgressDisplay();
