@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Praktiska Gymnasiets Matematiktränare</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js?v=3" async></script>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
     
     <script>
     window.MathJax = {
@@ -15,10 +15,22 @@
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
         processEscapes: true
       },
-      svg: { fontCache: 'global' },
-      startup: { typeset: false }
+      options: {
+        enableMenu: false,
+        renderActions: {
+          addMenu: []
+        }
+      },
+      startup: {
+        typeset: true,
+        ready: () => {
+          MathJax.startup.defaultReady();
+          console.log('MathJax ready!');
+        }
+      }
     };
     </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
     <style>
         :root {
@@ -203,6 +215,96 @@
         @keyframes pointsEarned {
             0% { transform: translateY(0) scale(1); opacity: 1; }
             100% { transform: translateY(-30px) scale(1.5); opacity: 0; }
+        }
+        
+        /* Shake animation for wrong answers */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        /* Font size classes */
+        body.font-large .problem-text-block { font-size: 1.35rem; }
+        body.font-large .answer-input { font-size: 1.5rem; }
+        body.font-large .scaffold-block, body.font-large .step-block { font-size: 1.2rem; }
+        
+        body.font-xlarge .problem-text-block { font-size: 1.55rem; }
+        body.font-xlarge .answer-input { font-size: 1.75rem; }
+        body.font-xlarge .scaffold-block, body.font-xlarge .step-block { font-size: 1.4rem; }
+        
+        /* Dyslexia font */
+        body.dyslexia-font .problem-text-block,
+        body.dyslexia-font .scaffold-block,
+        body.dyslexia-font .step-block,
+        body.dyslexia-font .answer-input,
+        body.dyslexia-font .genomgang-paragraph,
+        body.dyslexia-font .genomgang-tip,
+        body.dyslexia-font .genomgang-warning,
+        body.dyslexia-font .genomgang-example {
+            font-family: 'OpenDyslexic', 'Merriweather', serif;
+            letter-spacing: 0.05em;
+            line-height: 2;
+        }
+        
+        /* Session progress bar */
+        .session-progress-container {
+            background: rgba(0,0,0,0.1);
+            border-radius: 999px;
+            height: 8px;
+            overflow: hidden;
+        }
+        body.light-mode .session-progress-container {
+            background: #e2e8f0;
+        }
+        .session-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #10b981);
+            border-radius: 999px;
+            transition: width 0.4s ease;
+        }
+        
+        /* Show Solution Button */
+        .btn-show-solution {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        .btn-show-solution:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* Skip button */
+        .btn-skip {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .btn-skip:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        
+        /* Solution reveal animation */
+        @keyframes revealStep {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .solution-step-reveal {
+            animation: revealStep 0.4s ease-out forwards;
+            opacity: 0;
         }
         
         .streak-glow {
@@ -698,8 +800,8 @@
         /* Quests Toggle Button - LOWER z-index so it doesn't block modals */
         .quests-toggle-btn {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            bottom: 20px;
+            left: 20px;
             z-index: 40;
             background: linear-gradient(135deg, #8b5cf6, #a855f7);
             border: none;
@@ -1177,6 +1279,29 @@
                         <div class="text-amber-400 text-xs sm:text-sm"><span id="syncCurrentPoints">0</span> poäng</div>
                     </div>
                     
+                    <!-- Accessibility Settings in Profile -->
+                    <div class="bg-slate-700/30 rounded-xl p-3 sm:p-4 mb-4 border border-slate-600">
+                        <h3 class="text-white font-bold mb-3 text-sm sm:text-base">⚙️ Inställningar</h3>
+                        <div class="space-y-3">
+                            <!-- Font Size -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-2">Textstorlek</label>
+                                <div class="flex gap-2">
+                                    <button onclick="setFontSize('normal')" id="fontNormal" class="flex-1 py-2 px-3 text-sm rounded-lg border-2 border-slate-500 bg-slate-800 text-gray-200 font-medium hover:border-orange-400 transition">Normal</button>
+                                    <button onclick="setFontSize('large')" id="fontLarge" class="flex-1 py-2 px-3 text-sm rounded-lg border-2 border-slate-500 bg-slate-800 text-gray-200 font-medium hover:border-orange-400 transition">Stor</button>
+                                    <button onclick="setFontSize('xlarge')" id="fontXLarge" class="flex-1 py-2 px-3 text-sm rounded-lg border-2 border-slate-500 bg-slate-800 text-gray-200 font-medium hover:border-orange-400 transition">Extra stor</button>
+                                </div>
+                            </div>
+                            <!-- Dyslexia Font -->
+                            <div class="flex items-center justify-between">
+                                <label class="text-xs font-medium text-gray-400">Dyslexivänligt typsnitt</label>
+                                <button onclick="toggleDyslexiaFont()" id="dyslexiaToggle" class="w-12 h-6 rounded-full bg-gray-500 relative transition-colors">
+                                    <span id="dyslexiaToggleKnob" class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Two options -->
                     <div class="grid grid-cols-1 gap-3 sm:gap-4">
                         <!-- Option 1: Generate code -->
@@ -1370,19 +1495,19 @@
 
         <!-- Task Area -->
         <div id="taskArea" class="hidden">
-            <!-- Simple Progress Bar -->
+            <!-- Session Progress Bar -->
             <div id="taskProgressBar" class="task-progress-indicator mb-4">
                 <div class="flex items-center justify-between mb-2">
                     <span id="currentPartName" class="text-gray-300 text-sm font-medium">Del</span>
                     <div class="flex items-center gap-3">
-                        <span class="text-white text-sm"><span id="dailyCorrect">0</span>/7 idag</span>
+                        <span class="text-sm" id="sessionProgressText"><span id="sessionCorrect">0</span> av <span id="sessionTotal">7</span> i denna session</span>
                         <div id="streakMultiplier" class="hidden">
                             <span class="multiplier-badge">🔥 2X</span>
                         </div>
                     </div>
                 </div>
-                <div class="quest-progress-bar">
-                    <div class="quest-progress-fill" id="progressBar" style="width: 0%"></div>
+                <div class="session-progress-container">
+                    <div class="session-progress-fill" id="sessionProgressBar" style="width: 0%"></div>
                 </div>
             </div>
 
@@ -1446,7 +1571,7 @@
                            oninput="updateAnswerPreview()">
                     <p class="answer-hint">💡 Tips: Skriv bråk som <code>1/100</code>, exponenter som <code>y^6</code>, rötter som <code>sqrt(9)</code></p>
                     
-                    <div class="flex flex-wrap gap-3">
+                    <div class="flex flex-wrap gap-3 mb-3">
                         <button onclick="checkAnswer()" class="btn-primary flex-1">
                             ✓ Kontrollera
                         </button>
@@ -1455,6 +1580,14 @@
                         </button>
                         <button onclick="showHint()" class="btn-secondary" id="hintBtn">
                             💡 Ledtråd
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="showSolutionAnimated()" class="btn-show-solution flex-1" id="showSolutionBtn">
+                            👁️ Visa mig hur
+                        </button>
+                        <button onclick="skipTask()" class="btn-skip" id="skipBtn">
+                            ⏭️ Hoppa över
                         </button>
                     </div>
                 </div>
@@ -1877,6 +2010,11 @@
         let currentScaffoldIndex = 0;
         let stats = { correct: 0, wrong: 0, streak: 0 };
         
+        // Session tracking (moved here to ensure availability)
+        let sessionCorrect = 0;
+        const SESSION_GOAL = 7;
+        let skippedTasks = []; // Store skipped tasks to come back later
+        
         // ============ DAILY PROGRESS & POINTS SYSTEM ============
         const DAILY_GOAL = 7;
         const STREAK_GOAL = 5;
@@ -2253,9 +2391,16 @@
         
         function updateDailyProgressDisplay() {
             const progress = getDailyProgress();
-            document.getElementById('dailyCorrect').textContent = progress.correct;
-            const percentage = Math.min((progress.correct / DAILY_GOAL) * 100, 100);
+            const dailyCorrectEl = document.getElementById('dailyCorrect');
             const progressBar = document.getElementById('progressBar');
+            
+            // If old daily progress elements don't exist (new session-based UI), just bail out gracefully
+            if (!dailyCorrectEl || !progressBar) {
+                return;
+            }
+            
+            dailyCorrectEl.textContent = progress.correct;
+            const percentage = Math.min((progress.correct / DAILY_GOAL) * 100, 100);
             progressBar.style.width = `${percentage}%`;
             
             // Update progress bar styling
@@ -2521,19 +2666,20 @@
             
             chapterSelect.innerHTML = '';
             
-            // Add "All" option
-            const allOption = document.createElement('option');
-            allOption.value = '';
-            allOption.textContent = 'Alla delar';
-            chapterSelect.appendChild(allOption);
-            
-            if (structure && structure.parts) {
+            // Add parts first - default to first specific part for better UX
+            if (structure && structure.parts && structure.parts.length > 0) {
                 structure.parts.forEach((part, index) => {
                     const option = document.createElement('option');
                     option.value = part.id;
                     option.textContent = `Del ${index + 1}: ${part.name}`;
                     chapterSelect.appendChild(option);
                 });
+                
+                // Add "All" option at the end
+                const allOption = document.createElement('option');
+                allOption.value = '';
+                allOption.textContent = '📚 Alla delar (blandade)';
+                chapterSelect.appendChild(allOption);
             }
         };
 
@@ -2591,6 +2737,27 @@
         };
 
         // ============ GENOMGÅNG (Walkthrough) SYSTEM ============
+        
+        // Extract base part ID (remove 'grund' suffix if present)
+        function getBasePartId(partId) {
+            return partId.replace(/grund$/, '');
+        }
+        
+        // Get genomgång path - separate folder structure
+        function getGenomgangPath(topic, partId) {
+            const basePartId = getBasePartId(partId);
+            if (currentMode === 'math_tasks') {
+                return `artifacts/${appId}/public/data/math_tasks/${topic}/genomgang`;
+            }
+            return `artifacts/${appId}/public/data/campaigns/${topic}/genomgang`;
+        }
+        
+        // Get genomgång document ID
+        function getGenomgangDocId(partId) {
+            const basePartId = getBasePartId(partId);
+            return `${basePartId}genomgang`;
+        }
+        
         window.showGenomgang = async function() {
             const topic = document.getElementById('topicSelect').value;
             const partId = document.getElementById('chapterSelect').value;
@@ -2607,9 +2774,10 @@
             content.innerHTML = '<p class="text-gray-400 text-center py-8 animate-pulse">Laddar genomgång...</p>';
             
             try {
-                // Use getFirebasePath for correct path
-                const genomgangPath = getFirebasePath(topic, partId);
-                const genomgangRef = doc(db, genomgangPath, 'genomgang');
+                // Use new genomgång path structure
+                const genomgangPath = getGenomgangPath(topic, partId);
+                const genomgangDocId = getGenomgangDocId(partId);
+                const genomgangRef = doc(db, genomgangPath, genomgangDocId);
                 const genomgangSnap = await getDoc(genomgangRef);
                 
                 if (genomgangSnap.exists()) {
@@ -2781,8 +2949,18 @@
                 console.error('=== ERROR LOADING TASKS ===');
                 console.error('Error:', e);
                 console.error('Error message:', e.message);
-                document.getElementById('taskArea').classList.add('hidden');
-                document.getElementById('noTasksMessage').classList.remove('hidden');
+                const noTasksEl = document.getElementById('noTasksMessage');
+                if (noTasksEl) {
+                    const noTasksTextEl = noTasksEl.querySelector('p');
+                    if (noTasksTextEl && e && e.message) {
+                        noTasksTextEl.textContent = `Fel vid laddning av uppgifter: ${e.message}`;
+                    }
+                    document.getElementById('taskArea').classList.add('hidden');
+                    noTasksEl.classList.remove('hidden');
+                } else {
+                    document.getElementById('taskArea').classList.add('hidden');
+                    document.getElementById('noTasksMessage').classList.remove('hidden');
+                }
             }
         };
 
@@ -2843,6 +3021,14 @@
             // Show/hide hint button
             const hasHint = task.hint_sv && task.hint_sv.trim();
             document.getElementById('hintBtn').classList.toggle('hidden', !hasHint);
+            
+            // Show/hide "Visa mig hur" button based on solution availability
+            const hasSolution = task.explanation_sv && task.explanation_sv.length > 0;
+            document.getElementById('showSolutionBtn').classList.toggle('hidden', !hasSolution);
+            
+            // Hide solution container
+            document.getElementById('solutionContainer').classList.add('hidden');
+            document.getElementById('solutionContent').innerHTML = '';
 
             // Typeset MathJax
             if (window.MathJax && window.MathJax.typesetPromise) {
@@ -3251,6 +3437,10 @@
                 saveDailyProgress(progress);
                 updateDailyProgressDisplay();
                 
+                // Update session progress
+                sessionCorrect++;
+                updateSessionProgress();
+                
                 // ALWAYS launch confetti on correct answer - amount based on streak!
                 const confettiAmount = Math.min(50 + (stats.streak * 30), 400);
                 launchConfetti(confettiAmount);
@@ -3296,6 +3486,11 @@
             } else {
                 inputEl.className = 'answer-input w-full mb-4 incorrect';
                 resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-red-100 text-red-800';
+                
+                // SHAKE ANIMATION on wrong answer!
+                const problemContainer = document.getElementById('problemContainer');
+                problemContainer.classList.add('shake');
+                setTimeout(() => problemContainer.classList.remove('shake'), 500);
                 
                 // Format the correct answer nicely
                 const formattedAnswer = formatAnswerForDisplay(task.answer);
@@ -3394,6 +3589,192 @@
 
         // ============ QUESTS INITIALIZATION ============
 
+        // Update session progress bar
+        function updateSessionProgress() {
+            const correctEl = document.getElementById('sessionCorrect');
+            const totalEl = document.getElementById('sessionTotal');
+            const barEl = document.getElementById('sessionProgressBar');
+            
+            if (correctEl) correctEl.textContent = sessionCorrect;
+            if (totalEl) totalEl.textContent = SESSION_GOAL;
+            if (barEl) {
+                const percent = Math.min((sessionCorrect / SESSION_GOAL) * 100, 100);
+                barEl.style.width = percent + '%';
+            }
+        }
+
+        // ============ FONT SIZE & DYSLEXIA SETTINGS ============
+        let currentFontSize = localStorage.getItem('fontSize') || 'normal';
+        let dyslexiaEnabled = localStorage.getItem('dyslexiaFont') === 'true';
+
+        window.setFontSize = function(size) {
+            currentFontSize = size;
+            localStorage.setItem('fontSize', size);
+            
+            // Remove all font size classes
+            document.body.classList.remove('font-large', 'font-xlarge');
+            
+            // Add appropriate class
+            if (size === 'large') document.body.classList.add('font-large');
+            if (size === 'xlarge') document.body.classList.add('font-xlarge');
+            
+            // Update button states (dark theme in profile modal)
+            ['fontNormal', 'fontLarge', 'fontXLarge'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.classList.remove('border-orange-500', 'bg-orange-500', 'text-white');
+                    btn.classList.add('border-slate-500', 'bg-slate-800', 'text-gray-200');
+                }
+            });
+            
+            const activeId = size === 'normal' ? 'fontNormal' : size === 'large' ? 'fontLarge' : 'fontXLarge';
+            const activeBtn = document.getElementById(activeId);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-slate-500', 'bg-slate-800', 'text-gray-200');
+                activeBtn.classList.add('border-orange-500', 'bg-orange-500', 'text-white');
+            }
+        };
+
+        window.toggleDyslexiaFont = function() {
+            dyslexiaEnabled = !dyslexiaEnabled;
+            localStorage.setItem('dyslexiaFont', dyslexiaEnabled);
+            
+            const toggle = document.getElementById('dyslexiaToggle');
+            const knob = document.getElementById('dyslexiaToggleKnob');
+            
+            if (dyslexiaEnabled) {
+                document.body.classList.add('dyslexia-font');
+                toggle.classList.remove('bg-gray-500');
+                toggle.classList.add('bg-green-500');
+                knob.style.transform = 'translateX(24px)';
+            } else {
+                document.body.classList.remove('dyslexia-font');
+                toggle.classList.remove('bg-green-500');
+                toggle.classList.add('bg-gray-500');
+                knob.style.transform = 'translateX(0)';
+            }
+        };
+
+        // Apply saved settings on load
+        function applyAccessibilitySettings() {
+            setFontSize(currentFontSize);
+            if (dyslexiaEnabled) {
+                document.body.classList.add('dyslexia-font');
+                const toggle = document.getElementById('dyslexiaToggle');
+                const knob = document.getElementById('dyslexiaToggleKnob');
+                if (toggle) {
+                    toggle.classList.remove('bg-gray-500');
+                    toggle.classList.add('bg-green-500');
+                }
+                if (knob) knob.style.transform = 'translateX(24px)';
+            }
+        }
+
+        // ============ SHOW SOLUTION ANIMATED ============
+        window.showSolutionAnimated = function() {
+            const task = tasks[currentTaskIndex];
+            if (!task.explanation_sv || task.explanation_sv.length === 0) {
+                // No solution available, just show correct answer
+                alert('Rätt svar: ' + task.answer);
+                return;
+            }
+            
+            // Disable the button
+            const btn = document.getElementById('showSolutionBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Visar...';
+            btn.classList.add('opacity-50');
+            
+            // Show solution container
+            const solutionContainer = document.getElementById('solutionContainer');
+            const solutionContent = document.getElementById('solutionContent');
+            solutionContainer.classList.remove('hidden');
+            solutionContent.innerHTML = '';
+            
+            // Animate steps one by one
+            let stepCount = 0;
+            let currentStepIndex = 0;
+            
+            function showNextStep() {
+                if (currentStepIndex >= task.explanation_sv.length) {
+                    // All steps shown - now show correct answer
+                    const answerDiv = document.createElement('div');
+                    answerDiv.className = 'mt-4 p-3 bg-green-100 rounded-lg border-2 border-green-300 solution-step-reveal';
+                    answerDiv.style.animationDelay = '0.2s';
+                    answerDiv.innerHTML = `<strong class="text-green-700">✓ Svar:</strong> <span id="animatedAnswer">${formatAnswerForDisplay(task.answer)}</span>`;
+                    solutionContent.appendChild(answerDiv);
+                    
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([answerDiv]);
+                    }
+                    
+                    btn.textContent = '👁️ Visa mig hur';
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50');
+                    return;
+                }
+                
+                const block = task.explanation_sv[currentStepIndex];
+                if (!block.value) {
+                    currentStepIndex++;
+                    showNextStep();
+                    return;
+                }
+                
+                const div = document.createElement('div');
+                div.className = 'solution-step-reveal';
+                div.style.animationDelay = '0.1s';
+                
+                if (block.type === 'text') {
+                    div.className += ' problem-text-block';
+                    div.innerHTML = formatInlineMath(block.value);
+                } else if (block.type === 'math') {
+                    div.className += ' problem-math-block';
+                    div.innerHTML = `$$${block.value}$$`;
+                } else if (block.type === 'step') {
+                    stepCount++;
+                    div.className += ' step-block';
+                    div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
+                }
+                
+                solutionContent.appendChild(div);
+                
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise([div]);
+                }
+                
+                currentStepIndex++;
+                setTimeout(showNextStep, 800); // 800ms delay between steps
+            }
+            
+            showNextStep();
+        };
+
+        // ============ SKIP TASK ============
+        window.skipTask = function() {
+            const task = tasks[currentTaskIndex];
+            
+            // Add to skipped tasks to revisit later
+            skippedTasks.push({
+                index: currentTaskIndex,
+                task: task
+            });
+            
+            // Move to next task
+            currentTaskIndex++;
+            
+            // If we've gone through all tasks but have skipped some, offer them again
+            if (currentTaskIndex >= tasks.length && skippedTasks.length > 0) {
+                // Re-add skipped tasks to the end
+                skippedTasks.forEach(skipped => {
+                    tasks.push(skipped.task);
+                });
+                skippedTasks = [];
+            }
+            
+            showTask();
+        };
+
         // Load points on page load
         (function initApp() {
             // Always use light mode
@@ -3403,6 +3784,10 @@
             updateUsernameDisplay();
             updatePointsDisplay();
             updateDailyProgressDisplay();
+            updateSessionProgress();
+            
+            // Apply accessibility settings after a small delay to ensure DOM is ready
+            setTimeout(applyAccessibilitySettings, 100);
         })();
     </script>
 </body>
