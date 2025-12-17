@@ -1583,10 +1583,7 @@
                         </button>
                     </div>
                     <div class="flex flex-wrap gap-3">
-                        <button onclick="showSolutionAnimated()" class="btn-show-solution flex-1" id="showSolutionBtn">
-                            👁️ Visa mig hur
-                        </button>
-                        <button onclick="skipTask()" class="btn-skip" id="skipBtn">
+                        <button onclick="skipTask()" class="btn-skip flex-1" id="skipBtn">
                             ⏭️ Hoppa över
                         </button>
                     </div>
@@ -3021,10 +3018,6 @@
             // Show/hide hint button
             const hasHint = task.hint_sv && task.hint_sv.trim();
             document.getElementById('hintBtn').classList.toggle('hidden', !hasHint);
-            
-            // Show/hide "Visa mig hur" button based on solution availability
-            const hasSolution = task.explanation_sv && task.explanation_sv.length > 0;
-            document.getElementById('showSolutionBtn').classList.toggle('hidden', !hasSolution);
             
             // Hide solution container
             document.getElementById('solutionContainer').classList.add('hidden');
