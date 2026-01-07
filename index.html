@@ -666,45 +666,260 @@
             transition: width 0.3s ease;
         }
 
-        /* Answer input */
-        .answer-input {
-            font-size: 1.25rem;
-            padding: 1rem 1.5rem;
-            border: 3px solid #e2e8f0;
-            border-radius: 1rem;
-            transition: all 0.2s;
+        /* Modern Answer Area - Mappi-inspired */
+        .answer-container {
+            background: var(--dark-surface);
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
         }
-        .answer-input:focus {
-            border-color: #818cf8;
-            box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.2);
+        body.light-mode .answer-container {
+            background: white;
+        }
+        
+        .answer-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #2a2a2e;
+            border: 3px solid var(--primary-orange);
+            border-radius: 12px;
+            transition: all 0.2s;
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
+        }
+        body.light-mode .answer-input-wrapper {
+            background: #f8fafc;
+            border-color: var(--primary-orange);
+        }
+        .answer-input-wrapper:focus-within {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.25);
+        }
+        
+        .answer-input {
+            flex: 1;
+            font-size: 1.1rem;
+            padding: 8px 0;
+            border: none;
+            background: transparent;
+            color: white;
+            font-weight: 500;
             outline: none;
         }
+        body.light-mode .answer-input {
+            color: #1f2937;
+        }
+        .answer-input::placeholder {
+            color: #9ca3af;
+        }
         .answer-input.correct {
-            border-color: #16a34a;
-            background: #f0fdf4;
+            color: #22c55e;
         }
         .answer-input.incorrect {
-            border-color: #dc2626;
-            background: #fef2f2;
+            color: #ef4444;
         }
 
-        /* Math Input Toolbar */
-        .math-toolbar {
+        /* Math Toggle Button */
+        .math-toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #333;
+            border: 1px solid #444;
+            color: #9ca3af;
+            cursor: pointer;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+        body.light-mode .math-toggle-btn {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            color: #64748b;
+        }
+        .math-toggle-btn:hover {
+            background: #444;
+            color: #8b5cf6;
+        }
+        body.light-mode .math-toggle-btn:hover {
+            background: #e2e8f0;
+        }
+        .math-toggle-btn.active {
+            background: #8b5cf6;
+            color: white;
+            border-color: #8b5cf6;
+        }
+
+        /* Submit Button - Message style arrow */
+        .submit-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+            flex-shrink: 0;
+        }
+        .submit-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
+        }
+        .submit-btn:active {
+            transform: scale(0.95);
+        }
+        .submit-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background: #1f1f23;
+            border-top: 1px solid #333;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        body.light-mode .preview-section {
+            background: #fafafa;
+            border-color: #e5e7eb;
+        }
+        .preview-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+        body.light-mode .preview-label {
+            color: #9ca3af;
+        }
+        .preview-content {
+            flex: 1;
+            font-size: 1rem;
+            color: #d1d5db;
+            min-height: 24px;
+        }
+        body.light-mode .preview-content {
+            color: #374151;
+        }
+        .preview-empty {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* Hint Section - Smooth Slide Animation */
+        .hint-section-collapsed {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            margin-bottom: 0;
+            transition: max-height 0.35s ease-out, opacity 0.25s ease-out, margin-bottom 0.35s ease-out;
+        }
+        .hint-section-expanded {
+            max-height: 150px;
+            opacity: 1;
+            margin-bottom: 12px;
+            transition: max-height 0.35s ease-out, opacity 0.25s ease-in, margin-bottom 0.35s ease-out;
+        }
+        .hint-inner {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            border-radius: 0 12px 12px 0;
+            padding: 12px 16px;
+            color: #92400e;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        body.light-mode .hint-inner {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+
+        /* Scaffold Section - Smooth Slide Animation */
+        .scaffold-section-collapsed {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            margin-bottom: 0;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin-bottom 0.4s ease-out;
+        }
+        .scaffold-section-expanded {
+            max-height: 500px;
+            opacity: 1;
+            margin-bottom: 12px;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-in, margin-bottom 0.4s ease-out;
+        }
+        .scaffold-inner {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-radius: 12px;
+            border: 1px solid #fcd34d;
+            overflow: hidden;
+        }
+        .scaffold-header {
+            background: #fde68a;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .scaffold-content {
+            padding: 12px 16px;
+        }
+        .scaffold-step {
+            background: white;
+            border-left: 3px solid #f59e0b;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border-radius: 0 8px 8px 0;
+            color: #1f2937;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .scaffold-step:last-child {
+            margin-bottom: 0;
+        }
+        .scaffold-step-number {
+            font-weight: 700;
+            color: #d97706;
+            margin-right: 8px;
+        }
+
+        /* Math Input Toolbar - Collapsible */
+        .math-toolbar {
+            display: none;
             flex-wrap: wrap;
             gap: 6px;
-            margin-bottom: 8px;
-            padding: 8px;
-            background: #f8fafc;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            background: #252529;
+            border-top: 1px solid #333;
+            animation: slideDown 0.2s ease;
+        }
+        .math-toolbar.visible {
+            display: flex;
+        }
+        body.light-mode .math-toolbar {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .math-btn {
-            background: white;
-            border: 2px solid #e2e8f0;
+            background: #333;
+            border: 1px solid #444;
             border-radius: 8px;
-            padding: 8px 12px;
+            padding: 10px 14px;
             font-size: 16px;
             cursor: pointer;
             transition: all 0.15s;
@@ -713,12 +928,21 @@
             justify-content: center;
             min-width: 44px;
             font-family: 'Inter', sans-serif;
+            color: white;
+        }
+        body.light-mode .math-btn {
+            background: white;
+            border-color: #e2e8f0;
+            color: #374151;
         }
         
         .math-btn:hover {
-            border-color: #818cf8;
-            background: #f5f3ff;
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.2);
             transform: translateY(-1px);
+        }
+        body.light-mode .math-btn:hover {
+            background: #f5f3ff;
         }
         
         .math-btn:active {
@@ -727,38 +951,70 @@
         
         .math-btn-label {
             font-size: 11px;
-            color: #64748b;
+            color: #9ca3af;
             margin-left: 4px;
         }
+        body.light-mode .math-btn-label {
+            color: #64748b;
+        }
 
-        /* Answer Preview */
-        .answer-preview {
-            background: #fefce8;
-            border: 2px dashed #fbbf24;
-            border-radius: 10px;
+        /* Action Buttons Row */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .action-btn {
+            flex: 1;
             padding: 12px 16px;
-            margin-bottom: 12px;
-            text-align: center;
-            min-height: 50px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 6px;
+            background: #2a2a2e;
+            border: 1px solid #404040;
+            color: #9ca3af;
         }
-        
-        .answer-preview-label {
-            font-size: 12px;
+        body.light-mode .action-btn {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            color: #64748b;
+        }
+        .action-btn:hover {
+            background: #333;
+            color: #d1d5db;
+        }
+        body.light-mode .action-btn:hover {
+            background: #e2e8f0;
+            color: #374151;
+        }
+        .action-btn.help-btn {
+            background: #fef3c7;
+            border-color: #fcd34d;
             color: #92400e;
-            font-weight: 600;
-            margin-bottom: 4px;
         }
-        
-        .answer-preview-empty {
-            color: #a3a3a3;
-            font-style: italic;
+        .action-btn.help-btn:hover {
+            background: #fde68a;
+        }
+        .action-btn.skip-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        body.light-mode .action-btn.skip-btn:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+            color: #dc2626;
         }
 
+        /* Answer hint */
         .answer-hint {
-            font-size: 12px;
+            font-size: 11px;
             color: #64748b;
             margin-top: 6px;
         }
@@ -1139,37 +1395,6 @@
             border-color: #404040;
             color: white;
         }
-        .math-btn:hover {
-            border-color: var(--primary-orange);
-            background: rgba(240, 111, 0, 0.1);
-        }
-
-        body.light-mode .answer-preview {
-            background: #fefce8;
-            border-color: #fbbf24;
-        }
-        .answer-preview {
-            background: rgba(251, 191, 36, 0.1);
-            border-color: #fbbf24;
-        }
-
-        body.light-mode .answer-input {
-            background: white;
-            border-color: #e2e8f0;
-            color: #1f2937;
-        }
-        .answer-input {
-            background: var(--dark-card);
-            border-color: #404040;
-            color: white;
-        }
-        .answer-input:focus {
-            border-color: var(--primary-orange);
-            box-shadow: 0 0 0 4px rgba(240, 111, 0, 0.2);
-        }
-        .answer-input::placeholder {
-            color: #6b7280;
-        }
 
         /* Mode title */
         .mode-title {
@@ -1364,7 +1589,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-bold text-gray-600 mb-2">Ämne</label>
-                    <select id="topicSelect" class="w-full p-3 border-2 border-gray-200 rounded-xl font-medium" onchange="updateChapters(); loadTasks()">
+                    <select id="topicSelect" class="w-full p-3 border-2 border-gray-200 rounded-xl font-medium" onchange="updateChapters(); loadTasks(false)">
                         <option value="Taluppfattning">Taluppfattning</option>
                         <option value="Algebra">Algebra</option>
                         <option value="Procent">Procent</option>
@@ -1374,7 +1599,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-gray-600 mb-2">Del</label>
-                    <select id="chapterSelect" class="w-full p-3 border-2 border-gray-200 rounded-xl font-medium" onchange="loadTasks()">
+                    <select id="chapterSelect" class="w-full p-3 border-2 border-gray-200 rounded-xl font-medium" onchange="handleChapterChange()">
                         <!-- Populated dynamically -->
                     </select>
                 </div>
@@ -1511,33 +1736,63 @@
                 </div>
             </div>
 
-            <!-- Problem Display -->
-            <div class="problem-container shadow-2xl mb-6" id="problemContainer">
+            <!-- Problem Display with integrated help -->
+            <div class="problem-container shadow-2xl mb-4" id="problemContainer">
                 <div id="problemContent">
                     <p class="text-gray-400 text-center py-8 animate-pulse">Laddar uppgifter...</p>
                 </div>
+                <!-- Help buttons integrated with task -->
+                <div class="flex items-center gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700" id="helpButtonsRow">
+                    <button onclick="showNextScaffold()" class="action-btn help-btn" id="scaffoldBtn">
+                        🪜 Hjälp
+                    </button>
+                    <button onclick="showHint()" class="action-btn help-btn" id="hintBtn">
+                        💡 Ledtråd
+                    </button>
+                </div>
             </div>
 
-            <!-- Scaffolding Section (hidden by default) -->
-            <div id="scaffoldingSection" class="hidden mb-6 animate-in">
-                <div class="bg-amber-50 rounded-xl border border-amber-200 overflow-hidden">
-                    <div class="bg-amber-100 px-4 py-3 flex items-center justify-between">
-                        <span class="font-bold text-amber-800">🪜 Steg-för-steg hjälp</span>
-                        <span class="text-sm text-amber-600" id="scaffoldProgress">Steg 0/0</span>
+            <!-- Scaffolding Section - Smooth slide down -->
+            <div id="scaffoldingSection" class="scaffold-section-collapsed">
+                <div class="scaffold-inner">
+                    <div class="scaffold-header">
+                        <span class="font-semibold text-amber-800 flex items-center gap-2">🪜 Steg-för-steg hjälp</span>
+                        <span class="text-xs text-amber-600 bg-amber-200/50 px-2 py-0.5 rounded-full" id="scaffoldProgress">Steg 0/0</span>
                     </div>
-                    <div class="p-4" id="scaffoldContent">
+                    <div class="scaffold-content" id="scaffoldContent">
                         <!-- Scaffold steps shown here -->
                     </div>
                 </div>
             </div>
 
-            <!-- Answer Section -->
-            <div class="answer-section rounded-2xl shadow-2xl p-6" id="answerSection">
+            <!-- Hint display - Smooth slide down -->
+            <div id="hintDisplay" class="hint-section-collapsed">
+                <div class="hint-inner">
+                    <span class="text-amber-700 font-semibold flex items-center gap-2">💡 <span id="hintText"></span></span>
+                </div>
+            </div>
+
+            <!-- Answer Section - Modern Mappi-inspired design -->
+            <div class="answer-container mb-4" id="answerSection">
                 <div id="answerInputArea">
-                    <label class="block text-sm font-bold text-gray-600 mb-2">Ditt svar:</label>
+                    <!-- Input Row with math toggle and submit -->
+                    <div class="answer-input-wrapper">
+                        <input type="text" id="answerInput" class="answer-input" placeholder="Svar" 
+                               onkeydown="handleAnswerKeydown(event)" 
+                               oninput="updateAnswerPreview()"
+                               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                        <button type="button" class="math-toggle-btn" onclick="toggleMathToolbar()" title="Matematiska symboler" id="mathToggleBtn">
+                            π
+                        </button>
+                        <button onclick="checkAnswer()" class="submit-btn" title="Skicka svar">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
                     
-                    <!-- Math Input Toolbar -->
-                    <div class="math-toolbar">
+                    <!-- Math Input Toolbar (hidden by default) -->
+                    <div class="math-toolbar" id="mathToolbar">
                         <button type="button" class="math-btn" onclick="insertMath('fraction')" title="Bråk (skriv a/b)">
                             <span style="font-size: 14px;">⅟</span><span class="math-btn-label">Bråk</span>
                         </button>
@@ -1560,43 +1815,16 @@
                             ⌫
                         </button>
                     </div>
-
-                    <!-- Live Preview -->
-                    <div class="answer-preview">
-                        <div id="answerPreview" class="answer-preview-empty">Ditt svar visas här...</div>
-                    </div>
-
-                    <input type="text" id="answerInput" class="answer-input w-full mb-2" placeholder="T.ex: 1/2, x^3, sqrt(16), 3.14..." 
-                           onkeypress="if(event.key==='Enter')checkAnswer()" 
-                           oninput="updateAnswerPreview()">
-                    <p class="answer-hint">💡 Tips: Skriv bråk som <code>1/100</code>, exponenter som <code>y^6</code>, rötter som <code>sqrt(9)</code></p>
                     
-                    <div class="flex flex-wrap gap-3 mb-3">
-                        <button onclick="checkAnswer()" class="btn-primary flex-1">
-                            ✓ Kontrollera
-                        </button>
-                        <button onclick="showNextScaffold()" class="btn-secondary" id="scaffoldBtn">
-                            🪜 Hjälp
-                        </button>
-                        <button onclick="showHint()" class="btn-secondary" id="hintBtn">
-                            💡 Ledtråd
-                        </button>
+                    <!-- Live Preview -->
+                    <div class="preview-section">
+                        <span class="preview-label">Så här ser ditt svar ut:</span>
+                        <div id="answerPreview" class="preview-content preview-empty">...</div>
                     </div>
-                    <div class="flex flex-wrap gap-3">
-                        <button onclick="skipTask()" class="btn-skip flex-1" id="skipBtn">
-                            ⏭️ Hoppa över
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Hint display -->
-                <div id="hintDisplay" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                    <div class="flex items-center gap-2 text-yellow-700 font-bold mb-2">💡 Ledtråd</div>
-                    <p id="hintText" class="text-yellow-800"></p>
                 </div>
 
                 <!-- Result display -->
-                <div id="resultDisplay" class="hidden mt-4">
+                <div id="resultDisplay" class="hidden p-4">
                     <div id="resultMessage" class="text-center py-4 rounded-xl mb-4"></div>
                     
                     <!-- Solution -->
@@ -1609,6 +1837,13 @@
                         Nästa uppgift →
                     </button>
                 </div>
+            </div>
+
+            <!-- Skip button -->
+            <div class="action-buttons">
+                <button onclick="skipTask()" class="action-btn skip-btn" id="skipBtn">
+                    ⏭️ Hoppa över
+                </button>
             </div>
         </div>
 
@@ -2655,6 +2890,15 @@
             updateChapters();
         };
 
+        // Handle chapter (del) selection - scroll to task in math_tasks mode (Typuppgifter NP)
+        window.handleChapterChange = function() {
+            // In math_tasks mode (Typuppgifter NP), there's no course level selection,
+            // so selecting a part is the final step -> scroll to task
+            // In campaigns mode (Kapitelträning), user still needs to select course level -> no scroll
+            const shouldScroll = currentMode === 'math_tasks';
+            loadTasks(shouldScroll);
+        };
+
         // Update chapters dropdown based on topic
         window.updateChapters = function() {
             const topic = document.getElementById('topicSelect').value;
@@ -2703,7 +2947,9 @@
             }
             
             updateTopics();
-            loadTasks();
+            // In math_tasks mode (Typuppgifter NP), scroll will happen when selecting a part
+            // So we pass scrollToTask=false here and let part selection trigger scroll
+            loadTasks(false);
         };
 
         // Course level selection (Grund / Ma 1) - only for Kapitelträning
@@ -2722,8 +2968,8 @@
                 ma1Btn.className = 'course-level-btn py-3 px-4 rounded-xl font-bold text-center transition-all border-2 border-orange-500 bg-orange-500 text-white';
             }
             
-            // Reload tasks with new course level
-            loadTasks();
+            // Reload tasks with new course level - scroll to task since user made final selection
+            loadTasks(true);
         };
 
         window.showModeSelection = function() {
@@ -2876,7 +3122,8 @@
         }
 
         // Load tasks - now using correct Firebase path synced with admin
-        window.loadTasks = async function() {
+        // scrollToTask: if true, scroll to task area after loading (used when user made final selection)
+        window.loadTasks = async function(scrollToTask = false) {
             const topic = document.getElementById('topicSelect').value;
             const partId = document.getElementById('chapterSelect').value;
 
@@ -2884,10 +3131,11 @@
             console.log('Topic:', topic);
             console.log('PartId:', partId);
             console.log('Current mode:', currentMode);
+            console.log('Scroll to task:', scrollToTask);
 
             try {
                 tasks = [];
-                
+
                 if (partId) {
                     // Load specific part
                     const path = getFirebasePath(topic, partId);
@@ -2933,6 +3181,7 @@
                     document.getElementById('taskArea').classList.remove('hidden');
                     document.getElementById('noTasksMessage').classList.add('hidden');
                     document.getElementById('answerSection').classList.remove('hidden');
+
                     // Reset stats when loading new tasks
                     stats = { correct: 0, wrong: 0, streak: 0 };
                     document.getElementById('correctCount').textContent = '0';
@@ -2940,7 +3189,18 @@
                     document.getElementById('streakCount').textContent = '0 🔥';
                     document.getElementById('streakContainer').classList.remove('streak-glow', 'streak-legendary');
                     currentTaskIndex = 0;
+
                     showTask();
+
+                    // Only scroll to task if explicitly requested (final user selection)
+                    if (scrollToTask) {
+                        setTimeout(() => {
+                            const taskArea = document.getElementById('taskArea');
+                            if (taskArea) {
+                                taskArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }, 50);
+                    }
                 }
             } catch (e) {
                 console.error('=== ERROR LOADING TASKS ===');
@@ -3002,14 +3262,25 @@
 
             // Reset UI
             document.getElementById('answerInput').value = '';
-            document.getElementById('answerInput').className = 'answer-input w-full mb-2';
-            document.getElementById('answerPreview').className = 'answer-preview-empty';
-            document.getElementById('answerPreview').textContent = 'Ditt svar visas här...';
+            document.getElementById('answerInput').className = 'answer-input';
+            document.getElementById('answerPreview').className = 'preview-content preview-empty';
+            document.getElementById('answerPreview').textContent = '...';
             document.getElementById('answerInputArea').classList.remove('hidden');
             document.getElementById('resultDisplay').classList.add('hidden');
-            document.getElementById('hintDisplay').classList.add('hidden');
-            document.getElementById('scaffoldingSection').classList.add('hidden');
+            
+            // Reset hint and scaffold sections to collapsed state
+            const hintSection = document.getElementById('hintDisplay');
+            hintSection.classList.remove('hint-section-expanded');
+            hintSection.classList.add('hint-section-collapsed');
+            
+            const scaffoldSection = document.getElementById('scaffoldingSection');
+            scaffoldSection.classList.remove('scaffold-section-expanded');
+            scaffoldSection.classList.add('scaffold-section-collapsed');
             document.getElementById('scaffoldContent').innerHTML = '';
+            
+            // Hide math toolbar by default
+            document.getElementById('mathToolbar').classList.remove('visible');
+            document.getElementById('mathToggleBtn').classList.remove('active');
 
             // Show/hide scaffold button
             const hasScaffolding = task.scaffolding_sv && task.scaffolding_sv.length > 0;
@@ -3018,6 +3289,9 @@
             // Show/hide hint button
             const hasHint = task.hint_sv && task.hint_sv.trim();
             document.getElementById('hintBtn').classList.toggle('hidden', !hasHint);
+            
+            // Show/hide help buttons row
+            document.getElementById('helpButtonsRow').classList.toggle('hidden', !hasScaffolding && !hasHint);
             
             // Hide solution container
             document.getElementById('solutionContainer').classList.add('hidden');
@@ -3028,6 +3302,14 @@
                 MathJax.typesetPromise([contentEl]);
             }
         }
+        
+        // Toggle math toolbar visibility - exposed globally
+        window.toggleMathToolbar = function() {
+            const toolbar = document.getElementById('mathToolbar');
+            const btn = document.getElementById('mathToggleBtn');
+            toolbar.classList.toggle('visible');
+            btn.classList.toggle('active');
+        };
 
         function renderBlocks(container, blocks) {
             if (!blocks) return;
@@ -3092,7 +3374,7 @@
             return cleaned;
         }
 
-        // Show scaffolding step
+        // Show scaffolding step - smooth slide down animation
         window.showNextScaffold = function() {
             const task = tasks[currentTaskIndex];
             if (!task.scaffolding_sv || currentScaffoldIndex >= task.scaffolding_sv.length) return;
@@ -3100,12 +3382,14 @@
             const scaffoldSection = document.getElementById('scaffoldingSection');
             const scaffoldContent = document.getElementById('scaffoldContent');
             
-            scaffoldSection.classList.remove('hidden');
+            // Expand the section with smooth animation
+            scaffoldSection.classList.remove('scaffold-section-collapsed');
+            scaffoldSection.classList.add('scaffold-section-expanded');
 
             const scaffold = task.scaffolding_sv[currentScaffoldIndex];
             const div = document.createElement('div');
-            div.className = 'scaffold-block animate-in';
-            div.innerHTML = `<span class="scaffold-number">${currentScaffoldIndex + 1}.</span><span>${formatInlineMath(scaffold.value)}</span>`;
+            div.className = 'scaffold-step animate-in';
+            div.innerHTML = `<span class="scaffold-step-number">${currentScaffoldIndex + 1}.</span><span>${formatInlineMath(scaffold.value)}</span>`;
             scaffoldContent.appendChild(div);
 
             currentScaffoldIndex++;
@@ -3121,13 +3405,15 @@
             }
         };
 
-        // Show hint
+        // Show hint - smooth slide down animation
         window.showHint = function() {
             const task = tasks[currentTaskIndex];
             if (!task.hint_sv) return;
 
-            document.getElementById('hintDisplay').classList.remove('hidden');
+            const hintSection = document.getElementById('hintDisplay');
             document.getElementById('hintText').textContent = task.hint_sv;
+            hintSection.classList.remove('hint-section-collapsed');
+            hintSection.classList.add('hint-section-expanded');
             document.getElementById('hintBtn').classList.add('hidden');
         };
 
@@ -3207,18 +3493,41 @@
             return latex;
         }
 
+        // Handle Enter key - submit answer or go to next task
+        window.handleAnswerKeydown = function(event) {
+            if (event.key !== 'Enter') return;
+
+            // Prevent the global Enter listener from also firing on the same key press.
+            event.preventDefault();
+            event.stopPropagation();
+
+            const resultDisplay = document.getElementById('resultDisplay');
+            const answerInputArea = document.getElementById('answerInputArea');
+
+            // If we're showing result (already answered) -> next task
+            if (resultDisplay && !resultDisplay.classList.contains('hidden')) {
+                nextTask();
+                return;
+            }
+
+            // If we're still answering -> check answer
+            if (answerInputArea && !answerInputArea.classList.contains('hidden')) {
+                checkAnswer();
+            }
+        };
+
         window.updateAnswerPreview = function() {
             const input = document.getElementById('answerInput').value;
             const preview = document.getElementById('answerPreview');
             
             if (!input || input.trim() === '') {
-                preview.className = 'answer-preview-empty';
-                preview.textContent = 'Ditt svar visas här...';
+                preview.className = 'preview-content preview-empty';
+                preview.textContent = '...';
                 return;
             }
             
             const latex = userInputToLatex(input);
-            preview.className = '';
+            preview.className = 'preview-content';
             preview.innerHTML = `$$${latex}$$`;
             
             if (window.MathJax && window.MathJax.typesetPromise) {
@@ -3277,7 +3586,75 @@
             // Also remove spaces around = and comparisons
             normalized = normalized.replace(/\s*=\s*/g, '=');
             
+            // ====== REMOVE TRAILING ZEROS from decimals (1.50 -> 1.5, 1.500 -> 1.5) ======
+            normalized = normalized.replace(/(\d+\.\d*?)0+$/g, '$1');
+            normalized = normalized.replace(/\.$/g, ''); // Remove trailing dot if all zeros removed
+            
             return normalized;
+        }
+        
+        // Check if two algebraic terms are equivalent (4a = a*4 = 4*a)
+        function algebraicMatch(userAns, correctAns) {
+            // Direct match
+            if (userAns === correctAns) return true;
+            
+            // Try to parse simple algebraic terms like 4a, a*4, 4*a
+            function parseAlgebraicTerm(term) {
+                // Remove multiplication signs
+                const cleaned = term.replace(/\*/g, '');
+                
+                // Match patterns like "4a", "a4", "4ab", "ab4"
+                const match = cleaned.match(/^(\d*\.?\d*)([a-z]+)(\d*\.?\d*)$/i);
+                if (match) {
+                    const coef1 = match[1] || '1';
+                    const coef2 = match[3] || '1';
+                    const vars = match[2].split('').sort().join('');
+                    const totalCoef = (parseFloat(coef1) || 1) * (parseFloat(coef2) || 1);
+                    return { coef: totalCoef, vars: vars };
+                }
+                
+                // Try pattern like "4*a" or "a*4"
+                const parts = term.split('*').filter(p => p);
+                if (parts.length >= 2) {
+                    let coef = 1;
+                    let vars = [];
+                    for (const part of parts) {
+                        if (/^\d+\.?\d*$/.test(part)) {
+                            coef *= parseFloat(part);
+                        } else if (/^[a-z]+$/i.test(part)) {
+                            vars.push(...part.split(''));
+                        } else {
+                            return null;
+                        }
+                    }
+                    return { coef: coef, vars: vars.sort().join('') };
+                }
+                
+                return null;
+            }
+            
+            const userParsed = parseAlgebraicTerm(userAns);
+            const correctParsed = parseAlgebraicTerm(correctAns);
+            
+            if (userParsed && correctParsed) {
+                return userParsed.coef === correctParsed.coef && userParsed.vars === correctParsed.vars;
+            }
+            
+            return false;
+        }
+        
+        // Check numeric equivalence (50 = 50% when comparing with percentage context)
+        function numericMatch(userAns, correctAns) {
+            // Try to parse as numbers
+            const userNum = parseFloat(userAns);
+            const correctNum = parseFloat(correctAns);
+            
+            if (!isNaN(userNum) && !isNaN(correctNum)) {
+                // Direct numeric equality (handles 1.5 = 1.50 after normalization)
+                if (Math.abs(userNum - correctNum) < 0.0000001) return true;
+            }
+            
+            return false;
         }
         
         // Check if two equations are equivalent (x=b/2 is same as b/2=x)
@@ -3371,19 +3748,29 @@
             // Check if user answer matches any valid answer (including equation order)
             let isCorrect = validAnswers.some(valid => equationsMatch(userAnswer, valid));
             
+            // Also check algebraic equivalence (4a = a*4 = 4*a)
+            if (!isCorrect) {
+                isCorrect = validAnswers.some(valid => algebraicMatch(userAnswer, valid));
+            }
+            
+            // Also check numeric equivalence (handles decimal variations like 1.5 = 1.50)
+            if (!isCorrect) {
+                isCorrect = validAnswers.some(valid => numericMatch(userAnswer, valid));
+            }
+            
             // Also check for "x = value" variations
             if (!isCorrect) {
                 for (const valid of validAnswers) {
                     // If correct answer has "=", also accept just the value
                     if (valid.includes('=')) {
                         const correctValue = valid.split('=').pop();
-                        if (userAnswer === correctValue) {
+                        if (userAnswer === correctValue || numericMatch(userAnswer, correctValue)) {
                             isCorrect = true;
                             break;
                         }
                         // Also accept left side value
                         const leftValue = valid.split('=')[0];
-                        if (userAnswer === leftValue && !leftValue.match(/^[a-z]$/)) {
+                        if ((userAnswer === leftValue || numericMatch(userAnswer, leftValue)) && !leftValue.match(/^[a-z]$/)) {
                             isCorrect = true;
                             break;
                         }
@@ -3391,13 +3778,13 @@
                     // If user typed "x = value", extract and compare
                     if (userAnswer.includes('=')) {
                         const userValue = userAnswer.split('=').pop();
-                        if (userValue === valid) {
+                        if (userValue === valid || numericMatch(userValue, valid)) {
                             isCorrect = true;
                             break;
                         }
                         // Also check reversed
                         const userLeft = userAnswer.split('=')[0];
-                        if (userLeft === valid) {
+                        if ((userLeft === valid || numericMatch(userLeft, valid))) {
                             isCorrect = true;
                             break;
                         }
@@ -3411,7 +3798,7 @@
             const streakCountEl = document.getElementById('streakCount');
 
             if (isCorrect) {
-                inputEl.className = 'answer-input w-full mb-4 correct';
+                inputEl.className = 'answer-input correct';
                 stats.correct++;
                 stats.streak++;
                 
@@ -3477,7 +3864,7 @@
                 // Reset consecutive wrong counter on correct answer
                 consecutiveWrong = 0;
             } else {
-                inputEl.className = 'answer-input w-full mb-4 incorrect';
+                inputEl.className = 'answer-input incorrect';
                 resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-red-100 text-red-800';
                 
                 // SHAKE ANIMATION on wrong answer!
@@ -3540,37 +3927,68 @@
             document.getElementById('answerInputArea').classList.add('hidden');
             document.getElementById('resultDisplay').classList.remove('hidden');
 
-            // Show solution if available
-            if (task.explanation_sv && task.explanation_sv.length > 0) {
+            // Show solution if answer is WRONG
+            if (!isCorrect) {
                 const solutionContainer = document.getElementById('solutionContainer');
                 const solutionContent = document.getElementById('solutionContent');
                 solutionContent.innerHTML = '';
                 
-                let stepCount = 0;
-                task.explanation_sv.forEach(block => {
-                    if (!block.value) return;
-                    const div = document.createElement('div');
-                    
-                    if (block.type === 'text') {
-                        div.className = 'problem-text-block';
-                        div.innerHTML = formatInlineMath(block.value);
-                    } else if (block.type === 'math') {
-                        div.className = 'problem-math-block';
-                        div.innerHTML = `$$${block.value}$$`;
-                    } else if (block.type === 'step') {
-                        stepCount++;
-                        div.className = 'step-block';
-                        div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
+                // Try multiple possible explanation fields
+                const explanation = task.explanation_sv || task.explanation || task.solution || task.losning;
+                
+                if (explanation && Array.isArray(explanation) && explanation.length > 0) {
+                    let stepCount = 0;
+                    explanation.forEach(block => {
+                        if (!block.value) return;
+                        const div = document.createElement('div');
+                        
+                        if (block.type === 'text') {
+                            div.className = 'problem-text-block';
+                            div.innerHTML = formatInlineMath(block.value);
+                        } else if (block.type === 'math') {
+                            div.className = 'problem-math-block';
+                            div.innerHTML = `$$${block.value}$$`;
+                        } else if (block.type === 'step') {
+                            stepCount++;
+                            div.className = 'step-block';
+                            div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
+                        }
+                        
+                        solutionContent.appendChild(div);
+                    });
+
+                    solutionContainer.classList.remove('hidden');
+
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([solutionContent]);
                     }
-                    
+                } else if (typeof explanation === 'string' && explanation.trim()) {
+                    // Handle string explanation
+                    const div = document.createElement('div');
+                    div.className = 'problem-text-block';
+                    div.innerHTML = formatInlineMath(explanation);
                     solutionContent.appendChild(div);
-                });
-
-                solutionContainer.classList.remove('hidden');
-
-                if (window.MathJax && window.MathJax.typesetPromise) {
-                    MathJax.typesetPromise([solutionContent]);
+                    solutionContainer.classList.remove('hidden');
+                    
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([solutionContent]);
+                    }
+                } else {
+                    // No explanation available - just show correct answer prominently
+                    const formattedAnswer = formatAnswerForDisplay(task.answer);
+                    const div = document.createElement('div');
+                    div.className = 'problem-text-block text-center';
+                    div.innerHTML = `<strong>Rätt svar:</strong> <span id="solutionAnswer">${formattedAnswer}</span>`;
+                    solutionContent.appendChild(div);
+                    solutionContainer.classList.remove('hidden');
+                    
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([solutionContent]);
+                    }
                 }
+            } else {
+                // Hide solution if answer is correct
+                document.getElementById('solutionContainer').classList.add('hidden');
             }
         };
 
@@ -3781,6 +4199,22 @@
             
             // Apply accessibility settings after a small delay to ensure DOM is ready
             setTimeout(applyAccessibilitySettings, 100);
+            
+            // Global Enter key listener for navigating after answer
+            document.addEventListener('keydown', function(event) {
+                if (event.key !== 'Enter') return;
+                if (event.defaultPrevented) return;
+
+                const resultDisplay = document.getElementById('resultDisplay');
+                const taskArea = document.getElementById('taskArea');
+
+                // Only handle if task area is visible and result is showing
+                if (taskArea && !taskArea.classList.contains('hidden') &&
+                    resultDisplay && !resultDisplay.classList.contains('hidden')) {
+                    event.preventDefault();
+                    nextTask();
+                }
+            });
         })();
     </script>
 </body>
