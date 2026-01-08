@@ -650,6 +650,35 @@
             z-index: 9999;
         }
 
+        /* Copy to AI button */
+        .copy-ai-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            z-index: 10;
+        }
+        .copy-ai-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            transform: scale(1.05);
+        }
+        body.light-mode .copy-ai-btn {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+        body.light-mode .copy-ai-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+        .problem-container {
+            position: relative;
+        }
+
         /* Progress bar */
         .progress-bar {
             height: 8px;
@@ -1738,6 +1767,10 @@
 
             <!-- Problem Display with integrated help -->
             <div class="problem-container shadow-2xl mb-4" id="problemContainer">
+                <!-- Copy to AI button -->
+                <button onclick="copyTaskForAI()" class="copy-ai-btn" title="Kopiera till AI">
+                    <span id="copyAiIcon">📋</span>
+                </button>
                 <div id="problemContent">
                     <p class="text-gray-400 text-center py-8 animate-pulse">Laddar uppgifter...</p>
                 </div>
@@ -3297,9 +3330,15 @@
             document.getElementById('solutionContainer').classList.add('hidden');
             document.getElementById('solutionContent').innerHTML = '';
 
-            // Typeset MathJax
+            // Typeset MathJax and then focus the answer input (without scrolling)
             if (window.MathJax && window.MathJax.typesetPromise) {
-                MathJax.typesetPromise([contentEl]);
+                MathJax.typesetPromise([contentEl]).then(() => {
+                    // Auto-focus answer input after MathJax is done, prevent scroll
+                    document.getElementById('answerInput').focus({ preventScroll: true });
+                });
+            } else {
+                // Focus immediately if no MathJax, prevent scroll
+                document.getElementById('answerInput').focus({ preventScroll: true });
             }
         }
         
@@ -3405,7 +3444,45 @@
             }
         };
 
-        // Show hint - smooth slide down animation
+        // Copy task to clipboard for AI
+        window.copyTaskForAI = async function() {
+            const task = tasks[currentTaskIndex];
+            if (!task) return;
+            
+            // Extract plain text from question
+            let questionText = '';
+            if (Array.isArray(task.question_sv)) {
+                questionText = task.question_sv.map(block => {
+                    if (block.type === 'text') return block.value || '';
+                    if (block.type === 'math') return block.value || '';
+                    return '';
+                }).join(' ').trim();
+            } else {
+                questionText = String(task.question_sv || '');
+            }
+            
+            // Clean up the question text - remove $ signs and clean LaTeX
+            questionText = questionText.replace(/\$/g, '');
+            
+            // Get current level for context
+            const levelSelect = document.getElementById('levelSelect');
+            const levelText = levelSelect?.options[levelSelect.selectedIndex]?.text || 'Ma 1';
+            
+            // Create the full text to copy
+            const textToCopy = `${questionText}\n\nFörklara uppgiften pedagogiskt på flera olika sätt så att jag förstår. ${levelText}`;
+            
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                // Show feedback
+                const icon = document.getElementById('copyAiIcon');
+                icon.textContent = '✅';
+                setTimeout(() => {
+                    icon.textContent = '📋';
+                }, 1500);
+            } catch (err) {
+                console.error('Could not copy to clipboard:', err);
+            }
+        };
         window.showHint = function() {
             const task = tasks[currentTaskIndex];
             if (!task.hint_sv) return;
