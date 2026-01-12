@@ -655,25 +655,30 @@
             position: absolute;
             top: 12px;
             right: 12px;
-            background: rgba(139, 92, 246, 0.15);
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: linear-gradient(135deg, rgba(16, 163, 127, 0.2), rgba(16, 163, 127, 0.1));
+            border: 1px solid rgba(16, 163, 127, 0.4);
             border-radius: 8px;
-            padding: 8px 10px;
+            padding: 8px 12px;
             cursor: pointer;
             transition: all 0.2s;
             font-size: 16px;
             z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #10a37f;
         }
         .copy-ai-btn:hover {
-            background: rgba(139, 92, 246, 0.3);
+            background: linear-gradient(135deg, rgba(16, 163, 127, 0.35), rgba(16, 163, 127, 0.2));
             transform: scale(1.05);
         }
         body.light-mode .copy-ai-btn {
-            background: rgba(139, 92, 246, 0.1);
-            border-color: rgba(139, 92, 246, 0.2);
+            background: linear-gradient(135deg, rgba(16, 163, 127, 0.15), rgba(16, 163, 127, 0.08));
+            border-color: rgba(16, 163, 127, 0.3);
+            color: #0d8c6d;
         }
         body.light-mode .copy-ai-btn:hover {
-            background: rgba(139, 92, 246, 0.2);
+            background: linear-gradient(135deg, rgba(16, 163, 127, 0.25), rgba(16, 163, 127, 0.15));
         }
         .problem-container {
             position: relative;
@@ -1767,9 +1772,9 @@
 
             <!-- Problem Display with integrated help -->
             <div class="problem-container shadow-2xl mb-4" id="problemContainer">
-                <!-- Copy to AI button -->
-                <button onclick="copyTaskForAI()" class="copy-ai-btn" title="Kopiera till AI">
-                    <span id="copyAiIcon">📋</span>
+                <!-- ChatGPT button -->
+                <button onclick="openChatGPT()" class="copy-ai-btn" title="Öppna i ChatGPT">
+                    <span id="copyAiIcon">🤖</span> <span style="font-size: 12px; font-weight: 600;">ChatGPT</span>
                 </button>
                 <div id="problemContent">
                     <p class="text-gray-400 text-center py-8 animate-pulse">Laddar uppgifter...</p>
@@ -3444,8 +3449,8 @@
             }
         };
 
-        // Copy task to clipboard for AI
-        window.copyTaskForAI = async function() {
+        // Open ChatGPT with the task
+        window.openChatGPT = function() {
             const task = tasks[currentTaskIndex];
             if (!task) return;
             
@@ -3468,20 +3473,22 @@
             const levelSelect = document.getElementById('levelSelect');
             const levelText = levelSelect?.options[levelSelect.selectedIndex]?.text || 'Ma 1';
             
-            // Create the full text to copy
-            const textToCopy = `${questionText}\n\nFörklara uppgiften pedagogiskt på flera olika sätt så att jag förstår. ${levelText}`;
+            // Create the full prompt
+            const prompt = `${questionText}\n\nFörklara uppgiften pedagogiskt på flera olika sätt så att jag förstår. ${levelText}`;
             
-            try {
-                await navigator.clipboard.writeText(textToCopy);
-                // Show feedback
-                const icon = document.getElementById('copyAiIcon');
-                icon.textContent = '✅';
-                setTimeout(() => {
-                    icon.textContent = '📋';
-                }, 1500);
-            } catch (err) {
-                console.error('Could not copy to clipboard:', err);
-            }
+            // Encode and open ChatGPT
+            const encodedPrompt = encodeURIComponent(prompt);
+            const chatGPTUrl = `https://chat.openai.com/?q=${encodedPrompt}`;
+            
+            // Show feedback
+            const icon = document.getElementById('copyAiIcon');
+            icon.textContent = '✅';
+            setTimeout(() => {
+                icon.textContent = '🤖';
+            }, 1500);
+            
+            // Open ChatGPT in new tab
+            window.open(chatGPTUrl, '_blank');
         };
         window.showHint = function() {
             const task = tasks[currentTaskIndex];
