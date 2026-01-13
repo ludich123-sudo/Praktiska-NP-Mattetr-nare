@@ -3298,7 +3298,8 @@
             contentEl.innerHTML = '';
             renderBlocks(contentEl, task.question_sv);
 
-            // Reset UI
+            // Reset UI - ensure answer section is always visible
+            document.getElementById('answerSection').classList.remove('hidden');
             document.getElementById('answerInput').value = '';
             document.getElementById('answerInput').className = 'answer-input';
             document.getElementById('answerPreview').className = 'preview-content preview-empty';
