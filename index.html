@@ -1437,6 +1437,196 @@
         body.light-mode .mode-title {
             color: #1f2937;
         }
+
+        /* ============ KAPITELTEST STYLES ============ */
+        .kapiteltest-container {
+            background: linear-gradient(135deg, #0f0a1e 0%, #1a1035 50%, #0f0a1e 100%);
+            border-radius: 24px;
+            padding: 24px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.1);
+        }
+        
+        .kapiteltest-tower {
+            position: relative;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 0;
+            padding: 16px 0;
+        }
+        
+        .kapiteltest-level {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .kapiteltest-level-line {
+            position: absolute;
+            left: 31px;
+            top: -2px;
+            bottom: -2px;
+            width: 4px;
+            background: rgba(255,255,255,0.1);
+            z-index: 0;
+        }
+        
+        .kapiteltest-level-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            z-index: 1;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .kapiteltest-level-dot.locked {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.1);
+        }
+        
+        .kapiteltest-level-dot.active {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            border-color: #c084fc;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(139, 92, 246, 0.3);
+            animation: kapiteltestPulse 2s ease-in-out infinite;
+        }
+        
+        .kapiteltest-level-dot.completed {
+            background: linear-gradient(135deg, #22c55e, #10b981);
+            color: white;
+            border-color: #4ade80;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+        
+        .kapiteltest-level-info {
+            flex: 1;
+        }
+        
+        .kapiteltest-level-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .kapiteltest-level-name.locked { color: rgba(255,255,255,0.3); }
+        .kapiteltest-level-name.active { color: #c084fc; }
+        .kapiteltest-level-name.completed { color: #4ade80; }
+        
+        .kapiteltest-level-score {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        
+        .kapiteltest-score-pip {
+            width: 24px;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .kapiteltest-score-pip.filled {
+            background: linear-gradient(90deg, #8b5cf6, #a855f7);
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+        }
+        
+        .kapiteltest-score-pip.completed {
+            background: linear-gradient(90deg, #22c55e, #10b981);
+        }
+        
+        @keyframes kapiteltestPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(139, 92, 246, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.8), 0 0 60px rgba(139, 92, 246, 0.4); transform: scale(1.1); }
+        }
+        
+        @keyframes kapiteltestLevelUp {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.3); }
+            60% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        
+        .kapiteltest-levelup {
+            animation: kapiteltestLevelUp 0.6s ease-out;
+        }
+        
+        .kapiteltest-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .kapiteltest-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c084fc, #f472b6, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .kapiteltest-subtitle {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        
+        .kapiteltest-current-label {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 10px 16px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        
+        .kapiteltest-current-label span {
+            color: #c084fc;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .kapiteltest-fail-msg {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            text-align: center;
+            color: #fca5a5;
+            font-weight: 600;
+            animation: shake 0.5s ease-out;
+        }
+        
+        .kapiteltest-victory {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .kapiteltest-victory-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 16px 0;
+        }
+
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -1885,6 +2075,89 @@
             </div>
         </div>
 
+        <!-- Kapiteltest Area -->
+        <div id="kapiteltestArea" class="hidden">
+            <div class="kapiteltest-container">
+                <div class="kapiteltest-header">
+                    <div class="kapiteltest-title">🏆 KAPITELTEST</div>
+                    <div class="kapiteltest-subtitle" id="kapiteltestTopicName">Funktioner och Samband</div>
+                </div>
+                
+                <!-- Tower / Progress Meter -->
+                <div class="kapiteltest-tower" id="kapiteltestTower">
+                    <!-- Levels rendered dynamically -->
+                </div>
+                
+                <!-- Current level label -->
+                <div class="kapiteltest-current-label">
+                    <span id="kapiteltestCurrentLabel">Del 1: ...</span>
+                </div>
+                
+                <!-- Fail message (shown temporarily) -->
+                <div id="kapiteltestFailMsg" class="kapiteltest-fail-msg hidden">
+                    💥 Fel! Tillbaka till 0 poäng på denna del.
+                </div>
+                
+                <!-- Problem display (reuse same structure) -->
+                <div class="problem-container shadow-2xl mb-4" id="kapiteltestProblemContainer">
+                    <div id="kapiteltestProblemContent">
+                        <p class="text-gray-400 text-center py-8 animate-pulse">Laddar uppgifter...</p>
+                    </div>
+                </div>
+                
+                <!-- Scaffolding for kapiteltest -->
+                <div id="kapiteltestScaffoldingSection" class="scaffold-section-collapsed">
+                    <div class="scaffold-inner">
+                        <div class="scaffold-header">
+                            <span class="font-semibold text-amber-800 flex items-center gap-2">🪜 Steg-för-steg hjälp</span>
+                            <span class="text-xs text-amber-600 bg-amber-200/50 px-2 py-0.5 rounded-full" id="kapiteltestScaffoldProgress">Steg 0/0</span>
+                        </div>
+                        <div class="scaffold-content" id="kapiteltestScaffoldContent"></div>
+                    </div>
+                </div>
+                
+                <!-- Hint for kapiteltest -->
+                <div id="kapiteltestHintDisplay" class="hint-section-collapsed">
+                    <div class="hint-inner">
+                        <span class="text-amber-700 font-semibold flex items-center gap-2">💡 <span id="kapiteltestHintText"></span></span>
+                    </div>
+                </div>
+                
+                <!-- Answer Section for kapiteltest -->
+                <div class="answer-container mb-4" id="kapiteltestAnswerSection">
+                    <div id="kapiteltestAnswerInputArea">
+                        <div class="answer-input-wrapper">
+                            <input type="text" id="kapiteltestAnswerInput" class="answer-input" placeholder="Svar" 
+                                   onkeydown="handleKapiteltestKeydown(event)" 
+                                   oninput="updateKapiteltestPreview()"
+                                   autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                            <button onclick="checkKapiteltestAnswer()" class="submit-btn" title="Skicka svar">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="preview-section">
+                            <span class="preview-label">Så här ser ditt svar ut:</span>
+                            <div id="kapiteltestAnswerPreview" class="preview-content preview-empty">...</div>
+                        </div>
+                    </div>
+                    
+                    <div id="kapiteltestResultDisplay" class="hidden p-4">
+                        <div id="kapiteltestResultMessage" class="text-center py-4 rounded-xl mb-4"></div>
+                        <button onclick="kapiteltestNextTask()" class="btn-primary w-full mt-4">
+                            Nästa uppgift →
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Back button -->
+                <div class="text-center mt-4">
+                    <button onclick="exitKapiteltest()" class="text-purple-300 hover:text-white font-medium transition">← Tillbaka</button>
+                </div>
+            </div>
+        </div>
+
         <!-- No tasks message -->
         <div id="noTasksMessage" class="hidden bg-white rounded-2xl shadow-2xl p-8 text-center">
             <div class="text-6xl mb-4">📭</div>
@@ -2198,9 +2471,19 @@
                 parts: [
                     { id: 'anvandaformler', name: 'Använda formler f(x)' },
                     { id: 'ratalinjen', name: 'Den räta linjen' },
+                    { id: 'koordinatsystem', name: 'Koordinatsystem' },
                     { id: 'procentuell', name: 'Procentuell förändring' },
                     { id: 'jamfortolka', name: 'Jämföra och tolka' },
                     { id: 'funktionerblandade', name: 'Blandade uppgifter' }
+                ]
+            },
+            Statistik: {
+                name: 'Statistik',
+                parts: [
+                    { id: 'lagesmatt', name: 'Lägesmått och variationsbredd' },
+                    { id: 'diagramtolkning', name: 'Diagram och tolkning' },
+                    { id: 'begreppsamhallet', name: 'Begrepp i samhället' },
+                    { id: 'kritiskttankande', name: 'Kritiskt tänkande' }
                 ]
             }
         };
@@ -2284,6 +2567,14 @@
         let sessionCorrect = 0;
         const SESSION_GOAL = 7;
         let skippedTasks = []; // Store skipped tasks to come back later
+        
+        // ============ KAPITELTEST STATE ============
+        let isKapiteltestMode = false;
+        let kapiteltestParts = []; // Array of parts for this topic
+        let kapiteltestTasksByPart = {}; // { partId: [tasks...] }
+        let kapiteltestCurrentPartIndex = 0; // Which part level we're on
+        let kapiteltestPartScore = 0; // Correct in a row for current part (need 3)
+        const KAPITELTEST_GOAL = 3; // Need 3 correct in a row per part
         
         // ============ DAILY PROGRESS & POINTS SYSTEM ============
         const DAILY_GOAL = 7;
@@ -2930,6 +3221,14 @@
 
         // Handle chapter (del) selection - scroll to task in math_tasks mode (Typuppgifter NP)
         window.handleChapterChange = function() {
+            const partId = document.getElementById('chapterSelect').value;
+            
+            // Check if Kapiteltest was selected
+            if (partId === '__kapiteltest__') {
+                startKapiteltest();
+                return;
+            }
+            
             // In math_tasks mode (Typuppgifter NP), there's no course level selection,
             // so selecting a part is the final step -> scroll to task
             // In campaigns mode (Kapitelträning), user still needs to select course level -> no scroll
@@ -2954,11 +3253,18 @@
                     chapterSelect.appendChild(option);
                 });
                 
-                // Add "All" option at the end
-                const allOption = document.createElement('option');
-                allOption.value = '';
-                allOption.textContent = '📚 Alla delar (blandade)';
-                chapterSelect.appendChild(allOption);
+                // Add "Kapiteltest" option at the end (only for Kapitelträning)
+                if (currentMode === 'campaigns') {
+                    const allOption = document.createElement('option');
+                    allOption.value = '__kapiteltest__';
+                    allOption.textContent = '🏆 Kapiteltest';
+                    chapterSelect.appendChild(allOption);
+                } else {
+                    const allOption = document.createElement('option');
+                    allOption.value = '';
+                    allOption.textContent = '📚 Alla delar (blandade)';
+                    chapterSelect.appendChild(allOption);
+                }
             }
         };
 
@@ -3165,6 +3471,9 @@
             const topic = document.getElementById('topicSelect').value;
             const partId = document.getElementById('chapterSelect').value;
 
+            // Skip if kapiteltest is selected - handled separately
+            if (partId === '__kapiteltest__') return;
+
             console.log('=== LOADING TASKS ===');
             console.log('Topic:', topic);
             console.log('PartId:', partId);
@@ -3281,6 +3590,9 @@
 
             const task = tasks[currentTaskIndex];
             currentScaffoldIndex = 0;
+            
+            // Reset second attempt flag when showing new task
+            isSecondAttempt = false;
 
             // Update part name display
             const partId = document.getElementById('chapterSelect').value;
@@ -3818,6 +4130,9 @@
             return formatSingleAnswerForDisplay(raw);
         }
 
+        // Track if user is on second attempt after wrong answer
+        let isSecondAttempt = false;
+        
         // Check answer with EPIC celebrations!
         window.checkAnswer = function() {
             const task = tasks[currentTaskIndex];
@@ -3887,6 +4202,9 @@
                 stats.correct++;
                 stats.streak++;
                 
+                // Reset second attempt flag on correct answer
+                isSecondAttempt = false;
+                
                 // Check streak quest (5 in a row)
                 checkStreakQuest();
                 
@@ -3948,61 +4266,190 @@
                 
                 // Reset consecutive wrong counter on correct answer
                 consecutiveWrong = 0;
+                
+                // Show result and next button
+                document.getElementById('answerInputArea').classList.add('hidden');
+                document.getElementById('resultDisplay').classList.remove('hidden');
             } else {
+                // WRONG ANSWER HANDLING - NEW PEDAGOGICAL FLOW
                 inputEl.className = 'answer-input incorrect';
-                resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-red-100 text-red-800';
                 
                 // SHAKE ANIMATION on wrong answer!
                 const problemContainer = document.getElementById('problemContainer');
                 problemContainer.classList.add('shake');
                 setTimeout(() => problemContainer.classList.remove('shake'), 500);
                 
-                // Format the correct answer nicely
-                const formattedAnswer = formatAnswerForDisplay(task.answer);
-                resultEl.innerHTML = `<span class="text-2xl">❌</span> Fel! Rätt svar är: <strong><span id="correctAnswerDisplay">${formattedAnswer}</span></strong><br><span class="text-sm text-gray-500">Streak förlorad - börja om för 2X multiplikator!</span>`;
-                
-                // Render MathJax on the correct answer
-                if (window.MathJax && window.MathJax.typesetPromise) {
-                    MathJax.typesetPromise([document.getElementById('correctAnswerDisplay')]);
+                if (!isSecondAttempt) {
+                    // FIRST WRONG ATTEMPT: Show hints/scaffolding ONLY (NOT solution) and allow retry
+                    isSecondAttempt = true;
+                    
+                    resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-amber-100 text-amber-800';
+                    resultEl.innerHTML = `
+                        <span class="text-2xl">🤔</span> <strong>Inte riktigt rätt!</strong>
+                        <br><span class="text-sm">Titta på ledtrådarna nedan och försök igen.</span>
+                    `;
+                    resultEl.classList.remove('hidden');
+                    
+                    // AUTO-SHOW ALL SCAFFOLDING/HINTS (but NOT the solution!)
+                    const task = tasks[currentTaskIndex];
+                    
+                    // Show hint if available
+                    if (task.hint_sv && task.hint_sv.trim()) {
+                        const hintSection = document.getElementById('hintDisplay');
+                        document.getElementById('hintText').textContent = task.hint_sv;
+                        hintSection.classList.remove('hint-section-collapsed');
+                        hintSection.classList.add('hint-section-expanded');
+                        document.getElementById('hintBtn').classList.add('hidden');
+                    }
+                    
+                    // Show ALL scaffolding steps (these are HINTS, not the solution)
+                    if (task.scaffolding_sv && task.scaffolding_sv.length > 0) {
+                        const scaffoldSection = document.getElementById('scaffoldingSection');
+                        const scaffoldContent = document.getElementById('scaffoldContent');
+                        
+                        scaffoldSection.classList.remove('scaffold-section-collapsed');
+                        scaffoldSection.classList.add('scaffold-section-expanded');
+                        
+                        // Add all scaffolding steps at once
+                        scaffoldContent.innerHTML = '';
+                        task.scaffolding_sv.forEach((scaffold, idx) => {
+                            const div = document.createElement('div');
+                            div.className = 'scaffold-step animate-in';
+                            div.style.animationDelay = `${idx * 0.1}s`;
+                            div.innerHTML = `<span class="scaffold-step-number">${idx + 1}.</span><span>${formatInlineMath(scaffold.value)}</span>`;
+                            scaffoldContent.appendChild(div);
+                        });
+                        
+                        currentScaffoldIndex = task.scaffolding_sv.length;
+                        document.getElementById('scaffoldProgress').textContent = `Alla ${task.scaffolding_sv.length} steg visas`;
+                        document.getElementById('scaffoldBtn').classList.add('hidden');
+                        
+                        if (window.MathJax && window.MathJax.typesetPromise) {
+                            MathJax.typesetPromise([scaffoldContent]);
+                        }
+                    }
+                    
+                    // IMPORTANT: Make sure solution is HIDDEN on first wrong attempt
+                    const solutionContainer = document.getElementById('solutionContainer');
+                    if (solutionContainer) {
+                        solutionContainer.classList.add('hidden');
+                    }
+                    
+                    // Clear input and keep answer section visible for retry
+                    document.getElementById('answerInput').value = '';
+                    document.getElementById('answerInput').className = 'answer-input';
+                    document.getElementById('answerInput').focus({ preventScroll: true });
+                    
+                    // DON'T hide answer input area - user gets another chance!
+                    // DON'T show result display with next button yet
+                    
+                    return; // Exit early - wait for second attempt
+                    
+                } else {
+                    // SECOND WRONG ATTEMPT: Show solution and move on
+                    isSecondAttempt = false; // Reset for next task
+                    
+                    // Format the correct answer nicely
+                    const formattedAnswer = formatAnswerForDisplay(task.answer);
+                    resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-red-100 text-red-800';
+                    resultEl.innerHTML = `<span class="text-2xl">❌</span> Fel! Rätt svar är: <strong><span id="correctAnswerDisplay">${formattedAnswer}</span></strong><br><span class="text-sm text-gray-500">Streak förlorad - börja om för 2X multiplikator!</span>`;
+                    
+                    // Render MathJax on the correct answer
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([document.getElementById('correctAnswerDisplay')]);
+                    }
+                    
+                    stats.wrong++;
+                    stats.streak = 0;
+                    streakContainer.classList.remove('streak-glow', 'streak-legendary');
+                    streakCountEl.classList.remove('streak-fire');
+                    
+                    // Track consecutive wrong answers (only in Kapitelträning mode)
+                    consecutiveWrong++;
+                    if (consecutiveWrong >= 2 && currentMode === 'campaigns') {
+                        // Auto-show genomgång after 2 wrong in a row
+                        consecutiveWrong = 0; // Reset counter
+                        setTimeout(() => {
+                            showGenomgang();
+                        }, 1500); // Delay to let user see the result first
+                    }
+                    
+                    // Update daily progress display to reset multiplier status
+                    updateDailyProgressDisplay();
+                    
+                    // Update stats display
+                    document.getElementById('correctCount').textContent = stats.correct;
+                    document.getElementById('wrongCount').textContent = stats.wrong;
+                    
+                    // Epic streak display with multiplier badge
+                    const streakMultiplier = document.getElementById('streakMultiplier');
+                    streakCountEl.textContent = '0 🔥';
+                    streakMultiplier.classList.add('hidden');
+
+                    // Show result and solution
+                    document.getElementById('answerInputArea').classList.add('hidden');
+                    document.getElementById('resultDisplay').classList.remove('hidden');
+
+                    // Show solution
+                    const solutionContainer = document.getElementById('solutionContainer');
+                    const solutionContent = document.getElementById('solutionContent');
+                    solutionContent.innerHTML = '';
+                    
+                    // Try multiple possible explanation fields
+                    const explanation = task.explanation_sv || task.explanation || task.solution || task.losning;
+                    
+                    if (explanation && Array.isArray(explanation) && explanation.length > 0) {
+                        let stepCount = 0;
+                        explanation.forEach(block => {
+                            if (!block.value) return;
+                            const div = document.createElement('div');
+                            
+                            if (block.type === 'text') {
+                                div.className = 'problem-text-block';
+                                div.innerHTML = formatInlineMath(block.value);
+                            } else if (block.type === 'math') {
+                                div.className = 'problem-math-block';
+                                div.innerHTML = `$$${block.value}$$`;
+                            } else if (block.type === 'step') {
+                                stepCount++;
+                                div.className = 'step-block';
+                                div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
+                            }
+                            
+                            solutionContent.appendChild(div);
+                        });
+                        
+                        solutionContainer.classList.remove('hidden');
+                        
+                        if (window.MathJax && window.MathJax.typesetPromise) {
+                            MathJax.typesetPromise([solutionContent]);
+                        }
+                    }
+                    
+                    return; // Exit early - we've handled everything for second attempt
                 }
-                
-                stats.wrong++;
-                stats.streak = 0;
-                streakContainer.classList.remove('streak-glow', 'streak-legendary');
-                streakCountEl.classList.remove('streak-fire');
-                
-                // Track consecutive wrong answers (only in Kapitelträning mode)
-                consecutiveWrong++;
-                if (consecutiveWrong >= 2 && currentMode === 'campaigns') {
-                    // Auto-show genomgång after 2 wrong in a row
-                    consecutiveWrong = 0; // Reset counter
-                    setTimeout(() => {
-                        showGenomgang();
-                    }, 1500); // Delay to let user see the result first
-                }
-                
-                // Update daily progress display to reset multiplier status
-                updateDailyProgressDisplay();
             }
 
-            // Update stats display
-            document.getElementById('correctCount').textContent = stats.correct;
-            document.getElementById('wrongCount').textContent = stats.wrong;
-            
-            // Epic streak display with multiplier badge
-            const streakMultiplier = document.getElementById('streakMultiplier');
-            if (stats.streak >= 7) {
-                streakCountEl.innerHTML = `<span class="streak-fire">${stats.streak}</span> 👑🔥🔥🔥`;
-                streakMultiplier.classList.remove('hidden');
-            } else if (stats.streak >= 5) {
-                streakCountEl.innerHTML = `<span class="streak-fire">${stats.streak}</span> 🔥🔥🔥`;
-                streakMultiplier.classList.remove('hidden');
-            } else if (stats.streak >= 3) {
-                streakCountEl.innerHTML = `${stats.streak} 🔥🔥`;
-                streakMultiplier.classList.remove('hidden');
-            } else {
-                streakCountEl.textContent = stats.streak + ' 🔥';
-                streakMultiplier.classList.add('hidden');
+            // Update stats display (for correct answers)
+            if (isCorrect) {
+                document.getElementById('correctCount').textContent = stats.correct;
+                document.getElementById('wrongCount').textContent = stats.wrong;
+                
+                // Epic streak display with multiplier badge
+                const streakMultiplier = document.getElementById('streakMultiplier');
+                if (stats.streak >= 7) {
+                    streakCountEl.innerHTML = `<span class="streak-fire">${stats.streak}</span> 👑🔥🔥🔥`;
+                    streakMultiplier.classList.remove('hidden');
+                } else if (stats.streak >= 5) {
+                    streakCountEl.innerHTML = `<span class="streak-fire">${stats.streak}</span> 🔥🔥🔥`;
+                    streakMultiplier.classList.remove('hidden');
+                } else if (stats.streak >= 3) {
+                    streakCountEl.innerHTML = `${stats.streak} 🔥🔥`;
+                    streakMultiplier.classList.remove('hidden');
+                } else {
+                    streakCountEl.textContent = stats.streak + ' 🔥';
+                    streakMultiplier.classList.add('hidden');
+                }
             }
             
             // Update daily quest status
@@ -4081,6 +4528,350 @@
         window.nextTask = function() {
             currentTaskIndex++;
             showTask();
+        };
+
+        // ============ KAPITELTEST SYSTEM ============
+        
+        function startKapiteltest() {
+            const topic = document.getElementById('topicSelect').value;
+            const structure = getCurrentStructure()[topic];
+            if (!structure || !structure.parts) return;
+            
+            isKapiteltestMode = true;
+            kapiteltestParts = structure.parts.slice(); // Copy parts array
+            kapiteltestTasksByPart = {};
+            kapiteltestCurrentPartIndex = 0;
+            kapiteltestPartScore = 0;
+            
+            // Hide normal task area, show kapiteltest
+            document.getElementById('taskArea').classList.add('hidden');
+            document.getElementById('noTasksMessage').classList.add('hidden');
+            document.getElementById('kapiteltestArea').classList.remove('hidden');
+            document.getElementById('settingsPanel').classList.add('hidden');
+            
+            // Set topic name
+            document.getElementById('kapiteltestTopicName').textContent = structure.name;
+            
+            // Load all tasks for all parts
+            loadKapiteltestTasks(topic);
+        }
+        
+        async function loadKapiteltestTasks(topic) {
+            kapiteltestTasksByPart = {};
+            
+            for (const part of kapiteltestParts) {
+                try {
+                    const path = getFirebasePath(topic, part.id);
+                    const snap = await getDocs(collection(db, path));
+                    const partTasks = [];
+                    snap.forEach(docSnap => {
+                        partTasks.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    // Shuffle
+                    kapiteltestTasksByPart[part.id] = partTasks.sort(() => Math.random() - 0.5);
+                } catch (e) {
+                    console.log('Error loading kapiteltest part', part.id, e.message);
+                    kapiteltestTasksByPart[part.id] = [];
+                }
+            }
+            
+            renderKapiteltestTower();
+            showKapiteltestTask();
+        }
+        
+        function renderKapiteltestTower() {
+            const tower = document.getElementById('kapiteltestTower');
+            tower.innerHTML = '';
+            
+            kapiteltestParts.forEach((part, index) => {
+                let status = 'locked';
+                if (index < kapiteltestCurrentPartIndex) status = 'completed';
+                else if (index === kapiteltestCurrentPartIndex) status = 'active';
+                
+                const scoreForPart = (index === kapiteltestCurrentPartIndex) ? kapiteltestPartScore : 
+                                     (index < kapiteltestCurrentPartIndex ? KAPITELTEST_GOAL : 0);
+                
+                const level = document.createElement('div');
+                level.className = 'kapiteltest-level';
+                level.id = `kapiteltest-level-${index}`;
+                
+                // Connection line (not on first)
+                if (index > 0) {
+                    const line = document.createElement('div');
+                    line.className = 'kapiteltest-level-line';
+                    if (index <= kapiteltestCurrentPartIndex) {
+                        line.style.background = index < kapiteltestCurrentPartIndex ? 
+                            'linear-gradient(180deg, #22c55e, #22c55e)' : 
+                            'linear-gradient(180deg, #22c55e, #8b5cf6)';
+                    }
+                    level.appendChild(line);
+                }
+                
+                // Dot
+                const dot = document.createElement('div');
+                dot.className = `kapiteltest-level-dot ${status}`;
+                if (status === 'completed') dot.textContent = '✓';
+                else if (status === 'active') dot.textContent = index + 1;
+                else dot.textContent = index + 1;
+                level.appendChild(dot);
+                
+                // Info
+                const info = document.createElement('div');
+                info.className = 'kapiteltest-level-info';
+                
+                const name = document.createElement('div');
+                name.className = `kapiteltest-level-name ${status}`;
+                name.textContent = `Del ${index + 1}: ${part.name}`;
+                info.appendChild(name);
+                
+                // Score pips
+                const scorePips = document.createElement('div');
+                scorePips.className = 'kapiteltest-level-score';
+                for (let i = 0; i < KAPITELTEST_GOAL; i++) {
+                    const pip = document.createElement('div');
+                    pip.className = 'kapiteltest-score-pip';
+                    if (i < scoreForPart) {
+                        pip.classList.add(status === 'completed' ? 'completed' : 'filled');
+                    }
+                    scorePips.appendChild(pip);
+                }
+                info.appendChild(scorePips);
+                
+                level.appendChild(info);
+                tower.appendChild(level);
+            });
+            
+            // Update current label
+            if (kapiteltestCurrentPartIndex < kapiteltestParts.length) {
+                const currentPart = kapiteltestParts[kapiteltestCurrentPartIndex];
+                document.getElementById('kapiteltestCurrentLabel').innerHTML = 
+                    `⚡ Del ${kapiteltestCurrentPartIndex + 1}: <strong>${currentPart.name}</strong> — ${kapiteltestPartScore}/${KAPITELTEST_GOAL}`;
+            }
+        }
+        
+        // Track task index per part for kapiteltest
+        let kapiteltestPartTaskIndex = {};
+        
+        function showKapiteltestTask() {
+            if (kapiteltestCurrentPartIndex >= kapiteltestParts.length) {
+                // VICTORY!
+                showKapiteltestVictory();
+                return;
+            }
+            
+            const currentPart = kapiteltestParts[kapiteltestCurrentPartIndex];
+            const partTasks = kapiteltestTasksByPart[currentPart.id] || [];
+            
+            if (partTasks.length === 0) {
+                // Skip empty parts
+                kapiteltestCurrentPartIndex++;
+                kapiteltestPartScore = 0;
+                renderKapiteltestTower();
+                showKapiteltestTask();
+                return;
+            }
+            
+            // Get task index for this part
+            if (!kapiteltestPartTaskIndex[currentPart.id]) kapiteltestPartTaskIndex[currentPart.id] = 0;
+            let idx = kapiteltestPartTaskIndex[currentPart.id] % partTasks.length;
+            const task = partTasks[idx];
+            
+            // Hide fail message
+            document.getElementById('kapiteltestFailMsg').classList.add('hidden');
+            
+            // Render problem
+            const contentEl = document.getElementById('kapiteltestProblemContent');
+            contentEl.innerHTML = '';
+            renderBlocks(contentEl, task.question_sv);
+            
+            // Reset answer UI
+            document.getElementById('kapiteltestAnswerInput').value = '';
+            document.getElementById('kapiteltestAnswerInput').className = 'answer-input';
+            document.getElementById('kapiteltestAnswerPreview').className = 'preview-content preview-empty';
+            document.getElementById('kapiteltestAnswerPreview').textContent = '...';
+            document.getElementById('kapiteltestAnswerInputArea').classList.remove('hidden');
+            document.getElementById('kapiteltestResultDisplay').classList.add('hidden');
+            
+            // Reset scaffolding/hints
+            const scaffoldSection = document.getElementById('kapiteltestScaffoldingSection');
+            scaffoldSection.classList.remove('scaffold-section-expanded');
+            scaffoldSection.classList.add('scaffold-section-collapsed');
+            document.getElementById('kapiteltestScaffoldContent').innerHTML = '';
+            
+            const hintSection = document.getElementById('kapiteltestHintDisplay');
+            hintSection.classList.remove('hint-section-expanded');
+            hintSection.classList.add('hint-section-collapsed');
+            
+            // Typeset MathJax
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([contentEl]).then(() => {
+                    document.getElementById('kapiteltestAnswerInput').focus({ preventScroll: true });
+                });
+            } else {
+                document.getElementById('kapiteltestAnswerInput').focus({ preventScroll: true });
+            }
+        }
+        
+        window.handleKapiteltestKeydown = function(event) {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const resultDisplay = document.getElementById('kapiteltestResultDisplay');
+            if (resultDisplay && !resultDisplay.classList.contains('hidden')) {
+                kapiteltestNextTask();
+                return;
+            }
+            
+            const inputArea = document.getElementById('kapiteltestAnswerInputArea');
+            if (inputArea && !inputArea.classList.contains('hidden')) {
+                checkKapiteltestAnswer();
+            }
+        };
+        
+        window.updateKapiteltestPreview = function() {
+            const input = document.getElementById('kapiteltestAnswerInput').value;
+            const preview = document.getElementById('kapiteltestAnswerPreview');
+            
+            if (!input || input.trim() === '') {
+                preview.className = 'preview-content preview-empty';
+                preview.textContent = '...';
+                return;
+            }
+            
+            const latex = userInputToLatex(input);
+            preview.className = 'preview-content';
+            preview.innerHTML = `$$${latex}$$`;
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([preview]).catch(() => {
+                    preview.textContent = input;
+                });
+            }
+        };
+        
+        window.checkKapiteltestAnswer = function() {
+            const currentPart = kapiteltestParts[kapiteltestCurrentPartIndex];
+            const partTasks = kapiteltestTasksByPart[currentPart.id] || [];
+            let idx = (kapiteltestPartTaskIndex[currentPart.id] || 0) % partTasks.length;
+            const task = partTasks[idx];
+            
+            const userRaw = document.getElementById('kapiteltestAnswerInput').value;
+            const correctRaw = (task.answer || '').toString();
+            const userAnswer = normalizeAnswer(userRaw);
+            const validAnswers = getAllValidAnswers(correctRaw);
+            
+            let isCorrect = validAnswers.some(valid => equationsMatch(userAnswer, valid));
+            if (!isCorrect) isCorrect = validAnswers.some(valid => algebraicMatch(userAnswer, valid));
+            if (!isCorrect) isCorrect = validAnswers.some(valid => numericMatch(userAnswer, valid));
+            if (!isCorrect) {
+                for (const valid of validAnswers) {
+                    if (valid.includes('=')) {
+                        const correctValue = valid.split('=').pop();
+                        if (userAnswer === correctValue || numericMatch(userAnswer, correctValue)) { isCorrect = true; break; }
+                    }
+                    if (userAnswer.includes('=')) {
+                        const userValue = userAnswer.split('=').pop();
+                        if (userValue === valid || numericMatch(userValue, valid)) { isCorrect = true; break; }
+                    }
+                }
+            }
+            
+            const inputEl = document.getElementById('kapiteltestAnswerInput');
+            const resultEl = document.getElementById('kapiteltestResultMessage');
+            
+            if (isCorrect) {
+                inputEl.className = 'answer-input correct';
+                kapiteltestPartScore++;
+                
+                // Confetti
+                launchConfetti(100 + kapiteltestPartScore * 50);
+                
+                if (kapiteltestPartScore >= KAPITELTEST_GOAL) {
+                    // LEVEL UP!
+                    resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 text-white';
+                    resultEl.innerHTML = `<span class="text-4xl success-pop">🎉⬆️🎉</span><br><span class="text-xl font-bold">LEVEL UP!</span><br><span class="text-sm">Du klarade ${currentPart.name}!</span>`;
+                    
+                    // Move to next part on next task click
+                } else {
+                    resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-green-100 text-green-800';
+                    resultEl.innerHTML = `<span class="text-2xl success-pop">✅</span> Rätt! <strong>${kapiteltestPartScore}/${KAPITELTEST_GOAL}</strong>`;
+                }
+                
+                // Advance task index
+                kapiteltestPartTaskIndex[currentPart.id] = (kapiteltestPartTaskIndex[currentPart.id] || 0) + 1;
+                
+            } else {
+                inputEl.className = 'answer-input incorrect';
+                
+                // Shake
+                const container = document.getElementById('kapiteltestProblemContainer');
+                container.classList.add('shake');
+                setTimeout(() => container.classList.remove('shake'), 500);
+                
+                // Show correct answer
+                const formattedAnswer = formatAnswerForDisplay(task.answer);
+                resultEl.className = 'text-center py-4 rounded-xl mb-4 bg-red-100 text-red-800';
+                resultEl.innerHTML = `<span class="text-2xl">❌</span> Fel! Rätt svar: <strong>${formattedAnswer}</strong>`;
+                
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise([resultEl]);
+                }
+                
+                // Reset score to 0
+                kapiteltestPartScore = 0;
+                
+                // Show fail message
+                document.getElementById('kapiteltestFailMsg').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('kapiteltestFailMsg').classList.add('hidden');
+                }, 3000);
+                
+                // Advance task index
+                kapiteltestPartTaskIndex[currentPart.id] = (kapiteltestPartTaskIndex[currentPart.id] || 0) + 1;
+            }
+            
+            renderKapiteltestTower();
+            
+            document.getElementById('kapiteltestAnswerInputArea').classList.add('hidden');
+            document.getElementById('kapiteltestResultDisplay').classList.remove('hidden');
+        };
+        
+        window.kapiteltestNextTask = function() {
+            // Check if we leveled up
+            if (kapiteltestPartScore >= KAPITELTEST_GOAL) {
+                kapiteltestCurrentPartIndex++;
+                kapiteltestPartScore = 0;
+                renderKapiteltestTower();
+                
+                // Animate level-up on the dot
+                const dot = document.querySelector(`#kapiteltest-level-${kapiteltestCurrentPartIndex - 1} .kapiteltest-level-dot`);
+                if (dot) dot.classList.add('kapiteltest-levelup');
+            }
+            
+            showKapiteltestTask();
+        };
+        
+        function showKapiteltestVictory() {
+            const contentEl = document.getElementById('kapiteltestProblemContent');
+            contentEl.innerHTML = `
+                <div class="kapiteltest-victory">
+                    <div class="text-7xl success-pop">👑</div>
+                    <div class="kapiteltest-victory-title">KAPITELTEST KLARAT!</div>
+                    <div class="text-4xl mb-4">🏆⭐🏆</div>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 16px;">Du klarade alla ${kapiteltestParts.length} delar!</p>
+                    <button onclick="exitKapiteltest()" class="btn-primary mt-4">🎉 Tillbaka</button>
+                </div>
+            `;
+            document.getElementById('kapiteltestAnswerSection').classList.add('hidden');
+            launchConfetti(500);
+        }
+        
+        window.exitKapiteltest = function() {
+            isKapiteltestMode = false;
+            document.getElementById('kapiteltestArea').classList.add('hidden');
+            document.getElementById('settingsPanel').classList.remove('hidden');
+            document.getElementById('kapiteltestAnswerSection').classList.remove('hidden');
         };
 
         // ============ QUESTS INITIALIZATION ============
