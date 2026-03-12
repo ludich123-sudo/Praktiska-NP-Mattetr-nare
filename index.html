@@ -71,6 +71,7 @@
             border-radius: 1rem;
             padding: 2rem;
             min-height: 200px;
+            position: relative;
         }
         
         .problem-text-block {
@@ -541,6 +542,23 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
+        }
+        
+        .calc-sci-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .calc-btn-sci {
+            background: #1a1a2e;
+            color: #7c83ff;
+            font-size: 16px;
+        }
+        
+        .calc-btn-sci:hover {
+            background: #2a2a4e;
         }
         
         .calc-btn {
@@ -1962,6 +1980,8 @@
 
             <!-- Problem Display with integrated help -->
             <div class="problem-container shadow-2xl mb-4" id="problemContainer">
+                <!-- Task ID badge -->
+                <div id="taskIdBadge" class="absolute top-2 left-2 text-[10px] text-gray-400 font-mono cursor-pointer hover:text-gray-600 transition select-all" title="Klicka för att kopiera ID" onclick="copyTaskId()"></div>
                 <!-- ChatGPT button -->
                 <button onclick="openChatGPT()" class="copy-ai-btn" title="Öppna i ChatGPT">
                     <span id="copyAiIcon">🤖</span> <span style="font-size: 12px; font-weight: 600;">ChatGPT</span>
@@ -2194,6 +2214,12 @@
             <button class="calc-close" onclick="toggleCalculator()">×</button>
         </div>
         <div class="calc-display" id="calcDisplay">0</div>
+        <div class="calc-sci-row">
+            <button class="calc-btn calc-btn-sci" onclick="calcPower()">xʸ</button>
+            <button class="calc-btn calc-btn-sci" onclick="calcSquare()">x²</button>
+            <button class="calc-btn calc-btn-sci" onclick="calcSqrt()">√x</button>
+            <button class="calc-btn calc-btn-sci" onclick="calcPi()">π</button>
+        </div>
         <div class="calc-buttons">
             <button class="calc-btn calc-btn-func" onclick="calcClear()">AC</button>
             <button class="calc-btn calc-btn-func" onclick="calcToggleSign()">±</button>
@@ -2323,6 +2349,28 @@
             document.querySelectorAll('.calc-btn-op').forEach(b => b.classList.remove('active'));
         };
 
+        window.calcPower = function() {
+            calcOp('^');
+        };
+
+        window.calcSquare = function() {
+            const val = parseFloat(calcDisplayValue);
+            calcDisplayValue = String(val * val);
+            updateCalcDisplay();
+        };
+
+        window.calcSqrt = function() {
+            const val = parseFloat(calcDisplayValue);
+            calcDisplayValue = val < 0 ? 'Error' : String(Math.sqrt(val));
+            updateCalcDisplay();
+        };
+
+        window.calcPi = function() {
+            calcDisplayValue = String(Math.PI);
+            calcWaitingForSecond = false;
+            updateCalcDisplay();
+        };
+
         function calculate(first, second, op) {
             let result;
             switch (op) {
@@ -2330,6 +2378,7 @@
                 case '-': result = first - second; break;
                 case '*': result = first * second; break;
                 case '/': result = second !== 0 ? first / second : 'Error'; break;
+                case '^': result = Math.pow(first, second); break;
                 default: result = second;
             }
             // Fix floating point precision (e.g., 0.7200000000000001 -> 0.72)
@@ -2348,6 +2397,9 @@
         document.getElementById('calcHeader').addEventListener('touchstart', startDrag, { passive: false });
 
         function startDrag(e) {
+            // Don't start drag if user tapped the close button
+            if (e.target.closest('.calc-close')) return;
+            
             isDragging = true;
             const calc = document.getElementById('calculator');
             const rect = calc.getBoundingClientRect();
@@ -3604,6 +3656,13 @@
             
             // Update daily progress display
             updateDailyProgressDisplay();
+            
+            // Show task ID badge
+            const taskIdBadge = document.getElementById('taskIdBadge');
+            if (taskIdBadge) {
+                taskIdBadge.textContent = 'ID: ' + task.id.substring(0, 8);
+                taskIdBadge.dataset.fullId = task.id;
+            }
 
             // Render question
             const contentEl = document.getElementById('problemContent');
@@ -3671,6 +3730,19 @@
         function renderBlocks(container, blocks) {
             if (!blocks) return;
             if (typeof blocks === 'string') {
+                // Check if the string itself is a base64 image
+                if (blocks.startsWith('data:image')) {
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-center mb-4';
+                    const img = document.createElement('img');
+                    img.src = blocks;
+                    img.className = 'max-w-full rounded-lg border border-gray-200';
+                    img.style.maxHeight = '250px';
+                    img.alt = 'Graf';
+                    div.appendChild(img);
+                    container.appendChild(div);
+                    return;
+                }
                 const div = document.createElement('div');
                 div.className = 'problem-text-block';
                 div.innerHTML = formatInlineMath(blocks);
@@ -3684,7 +3756,49 @@
                 
                 const div = document.createElement('div');
                 
-                if (block.type === 'text') {
+                // Auto-detect base64 image data in any block type
+                if (block.type === 'image' || (typeof block.value === 'string' && block.value.startsWith('data:image'))) {
+                    div.className = 'flex justify-center mb-4';
+                    const img = document.createElement('img');
+                    img.src = block.value;
+                    img.className = 'max-w-full rounded-lg border border-gray-200';
+                    img.style.maxHeight = '250px';
+                    img.alt = 'Graf';
+                    div.appendChild(img);
+                } else if (block.type === 'text') {
+                    // Check if text contains embedded base64 - extract and render separately
+                    const base64Match = block.value.match(/(data:image\/[^;]+;base64,[A-Za-z0-9+/=]+)/);
+                    if (base64Match) {
+                        // Split text around the base64 data
+                        const textBefore = block.value.substring(0, block.value.indexOf(base64Match[0])).trim();
+                        const textAfter = block.value.substring(block.value.indexOf(base64Match[0]) + base64Match[0].length).trim();
+                        
+                        if (textBefore) {
+                            const textDiv = document.createElement('div');
+                            textDiv.className = 'problem-text-block';
+                            textDiv.innerHTML = formatInlineMath(textBefore);
+                            container.appendChild(textDiv);
+                        }
+                        
+                        // Render the image
+                        div.className = 'flex justify-center mb-4';
+                        const img = document.createElement('img');
+                        img.src = base64Match[0];
+                        img.className = 'max-w-full rounded-lg border border-gray-200';
+                        img.style.maxHeight = '250px';
+                        img.alt = 'Graf';
+                        div.appendChild(img);
+                        container.appendChild(div);
+                        
+                        if (textAfter) {
+                            const textDiv2 = document.createElement('div');
+                            textDiv2.className = 'problem-text-block';
+                            textDiv2.innerHTML = formatInlineMath(textAfter);
+                            container.appendChild(textDiv2);
+                        }
+                        return; // Already appended
+                    }
+                    
                     div.className = 'problem-text-block';
                     div.innerHTML = formatInlineMath(block.value);
                 } else if (block.type === 'math') {
@@ -3694,15 +3808,6 @@
                     stepCount++;
                     div.className = 'step-block';
                     div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
-                } else if (block.type === 'image') {
-                    // Handle graph images
-                    div.className = 'flex justify-center mb-4';
-                    const img = document.createElement('img');
-                    img.src = block.value;
-                    img.className = 'max-w-full rounded-lg border border-gray-200';
-                    img.style.maxHeight = '250px';
-                    img.alt = 'Graf';
-                    div.appendChild(img);
                 }
                 
                 container.appendChild(div);
@@ -4399,25 +4504,7 @@
                     const explanation = task.explanation_sv || task.explanation || task.solution || task.losning;
                     
                     if (explanation && Array.isArray(explanation) && explanation.length > 0) {
-                        let stepCount = 0;
-                        explanation.forEach(block => {
-                            if (!block.value) return;
-                            const div = document.createElement('div');
-                            
-                            if (block.type === 'text') {
-                                div.className = 'problem-text-block';
-                                div.innerHTML = formatInlineMath(block.value);
-                            } else if (block.type === 'math') {
-                                div.className = 'problem-math-block';
-                                div.innerHTML = `$$${block.value}$$`;
-                            } else if (block.type === 'step') {
-                                stepCount++;
-                                div.className = 'step-block';
-                                div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
-                            }
-                            
-                            solutionContent.appendChild(div);
-                        });
+                        renderBlocks(solutionContent, explanation);
                         
                         solutionContainer.classList.remove('hidden');
                         
@@ -4469,25 +4556,7 @@
                 const explanation = task.explanation_sv || task.explanation || task.solution || task.losning;
                 
                 if (explanation && Array.isArray(explanation) && explanation.length > 0) {
-                    let stepCount = 0;
-                    explanation.forEach(block => {
-                        if (!block.value) return;
-                        const div = document.createElement('div');
-                        
-                        if (block.type === 'text') {
-                            div.className = 'problem-text-block';
-                            div.innerHTML = formatInlineMath(block.value);
-                        } else if (block.type === 'math') {
-                            div.className = 'problem-math-block';
-                            div.innerHTML = `$$${block.value}$$`;
-                        } else if (block.type === 'step') {
-                            stepCount++;
-                            div.className = 'step-block';
-                            div.innerHTML = `<span class="step-number">${stepCount}.</span><span>${formatInlineMath(block.value)}</span>`;
-                        }
-                        
-                        solutionContent.appendChild(div);
-                    });
+                    renderBlocks(solutionContent, explanation);
 
                     solutionContainer.classList.remove('hidden');
 
@@ -4578,6 +4647,22 @@
             renderKapiteltestTower();
             showKapiteltestTask();
         }
+        
+        // Copy task ID to clipboard
+        window.copyTaskId = function() {
+            const badge = document.getElementById('taskIdBadge');
+            if (badge && badge.dataset.fullId) {
+                navigator.clipboard.writeText(badge.dataset.fullId).then(() => {
+                    const orig = badge.textContent;
+                    badge.textContent = '✓ Kopierad!';
+                    badge.style.color = '#16a34a';
+                    setTimeout(() => {
+                        badge.textContent = orig;
+                        badge.style.color = '';
+                    }, 1500);
+                });
+            }
+        };
         
         function renderKapiteltestTower() {
             const tower = document.getElementById('kapiteltestTower');
@@ -4888,7 +4973,58 @@
                 const percent = Math.min((sessionCorrect / SESSION_GOAL) * 100, 100);
                 barEl.style.width = percent + '%';
             }
+            
+            // Auto-advance to next part after SESSION_GOAL correct in Typuppgifter NP
+            if (sessionCorrect >= SESSION_GOAL && currentMode === 'math_tasks') {
+                showAutoAdvanceModal();
+            }
         }
+        
+        // Auto-advance modal for NP mode
+        function showAutoAdvanceModal() {
+            const topic = document.getElementById('topicSelect').value;
+            const currentPartId = document.getElementById('chapterSelect').value;
+            const structure = getCurrentStructure()[topic];
+            if (!structure || !structure.parts) return;
+            
+            const currentIndex = structure.parts.findIndex(p => p.id === currentPartId);
+            const nextPart = structure.parts[currentIndex + 1];
+            
+            if (!nextPart) return; // No more parts
+            
+            // Create overlay modal
+            const modal = document.createElement('div');
+            modal.id = 'autoAdvanceModal';
+            modal.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-[200] p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center transform scale-95 animate-bounce-in">
+                    <div class="text-6xl mb-4">🎉</div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Bra jobbat!</h2>
+                    <p class="text-gray-600 mb-1">${SESSION_GOAL} uppgifter avklarade i denna del!</p>
+                    <p class="text-lg font-semibold text-indigo-600 mb-6">Nu går vi vidare till: ${nextPart.name}</p>
+                    <button onclick="advanceToNextPart('${nextPart.id}')" class="btn-primary w-full text-lg py-4">
+                        Vidare! →
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Confetti celebration
+            launchConfetti(300);
+        }
+        
+        window.advanceToNextPart = function(nextPartId) {
+            // Remove modal
+            const modal = document.getElementById('autoAdvanceModal');
+            if (modal) modal.remove();
+            
+            // Reset session
+            sessionCorrect = 0;
+            
+            // Switch to next part
+            document.getElementById('chapterSelect').value = nextPartId;
+            loadTasks(true);
+        };
 
         // ============ FONT SIZE & DYSLEXIA SETTINGS ============
         let currentFontSize = localStorage.getItem('fontSize') || 'normal';
