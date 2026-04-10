@@ -2475,8 +2475,7 @@
                     { id: 'potenser', name: 'Potenser' },
                     { id: 'brak', name: 'Bråktal' },
                     { id: 'forlangforkort', name: 'Förläng och förkorta' },
-                    { id: 'overslags', name: 'Överslagsräkning' },
-                    { id: 'blandadetal', name: 'Blandade uppgifter' }
+                    { id: 'overslags', name: 'Överslagsräkning' }
                 ]
             },
             Algebra: {
@@ -2491,8 +2490,7 @@
                     { id: 'ekvplusminus', name: 'Ekvationer plus och minus' },
                     { id: 'ekvmultidiv', name: 'Ekvationer multiplikation/division' },
                     { id: 'ekvparentes', name: 'Ekvationer med parentes' },
-                    { id: 'ekvbadasida', name: 'Ekvation med x på båda sidor' },
-                    { id: 'algebrablandat', name: 'Blandade uppgifter' }
+                    { id: 'ekvbadasida', name: 'Ekvation med x på båda sidor' }
                 ]
             },
             Procent: {
@@ -2503,8 +2501,7 @@
                     { id: 'procentenheter', name: 'Procentenheter' },
                     { id: 'forandringsfaktorn', name: 'Förändringsfaktorn' },
                     { id: 'upprepadforandring', name: 'Upprepad förändring' },
-                    { id: 'baklänges', name: 'Baklänges räkning' },
-                    { id: 'procentblandat', name: 'Blandade uppgifter' }
+                    { id: 'baklänges', name: 'Baklänges räkning' }
                 ]
             },
             Sannolikhet: {
@@ -2514,8 +2511,7 @@
                     { id: 'enklasannolikheter', name: 'Enkla sannolikheter' },
                     { id: 'flerautfall', name: 'Flera utfall' },
                     { id: 'oberoendeberoende', name: 'Oberoende o beroende' },
-                    { id: 'komplement', name: 'Komplementhändelse' },
-                    { id: 'sannolikhetblandade', name: 'Blandade uppgifter' }
+                    { id: 'komplement', name: 'Komplementhändelse' }
                 ]
             },
             FunktionerSamband: {
@@ -2525,8 +2521,7 @@
                     { id: 'ratalinjen', name: 'Den räta linjen' },
                     { id: 'koordinatsystem', name: 'Koordinatsystem' },
                     { id: 'procentuell', name: 'Procentuell förändring' },
-                    { id: 'jamfortolka', name: 'Jämföra och tolka' },
-                    { id: 'funktionerblandade', name: 'Blandade uppgifter' }
+                    { id: 'jamfortolka', name: 'Jämföra och tolka' }
                 ]
             },
             Statistik: {
@@ -3305,18 +3300,11 @@
                     chapterSelect.appendChild(option);
                 });
                 
-                // Add "Kapiteltest" option at the end (only for Kapitelträning)
-                if (currentMode === 'campaigns') {
-                    const allOption = document.createElement('option');
-                    allOption.value = '__kapiteltest__';
-                    allOption.textContent = '🏆 Kapiteltest';
-                    chapterSelect.appendChild(allOption);
-                } else {
-                    const allOption = document.createElement('option');
-                    allOption.value = '';
-                    allOption.textContent = '📚 Alla delar (blandade)';
-                    chapterSelect.appendChild(allOption);
-                }
+                // Add "Kapiteltest" option at the end (for both modes)
+                const allOption = document.createElement('option');
+                allOption.value = '__kapiteltest__';
+                allOption.textContent = '🏆 Kapiteltest';
+                chapterSelect.appendChild(allOption);
             }
         };
 
