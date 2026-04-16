@@ -228,6 +228,30 @@
             animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
         
+        /* Image lightbox */
+        .image-lightbox-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
+            cursor: zoom-out; animation: fadeInLb 0.2s ease;
+        }
+        @keyframes fadeInLb { from { opacity: 0; } to { opacity: 1; } }
+        .image-lightbox-overlay img {
+            max-width: 92vw; max-height: 90vh; border-radius: 12px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5); cursor: default;
+        }
+        .image-lightbox-close {
+            position: absolute; top: 16px; right: 20px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4);
+            color: white; font-size: 22px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .image-lightbox-close:hover { background: rgba(255,255,255,0.3); }
+        .clickable-task-image { cursor: zoom-in; transition: transform 0.15s; }
+        .clickable-task-image:hover { transform: scale(1.03); }
+        
         /* Font size classes */
         body.font-large .problem-text-block { font-size: 1.35rem; }
         body.font-large .answer-input { font-size: 1.5rem; }
@@ -3715,6 +3739,28 @@
             btn.classList.toggle('active');
         };
 
+        function openImageLightbox(src) {
+            const overlay = document.createElement('div');
+            overlay.className = 'image-lightbox-overlay';
+            overlay.onclick = () => overlay.remove();
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'image-lightbox-close';
+            closeBtn.innerHTML = '✕';
+            closeBtn.onclick = (e) => { e.stopPropagation(); overlay.remove(); };
+            const img = document.createElement('img');
+            img.src = src;
+            img.onclick = (e) => e.stopPropagation();
+            overlay.appendChild(closeBtn);
+            overlay.appendChild(img);
+            document.body.appendChild(overlay);
+        }
+
+        function makeClickableImage(img) {
+            img.classList.add('clickable-task-image');
+            img.style.cursor = 'zoom-in';
+            img.onclick = () => openImageLightbox(img.src);
+        }
+
         function renderBlocks(container, blocks) {
             if (!blocks) return;
             if (typeof blocks === 'string') {
@@ -3727,6 +3773,7 @@
                     img.className = 'max-w-full rounded-lg border border-gray-200';
                     img.style.maxHeight = '250px';
                     img.alt = 'Graf';
+                    makeClickableImage(img);
                     div.appendChild(img);
                     container.appendChild(div);
                     return;
@@ -3752,6 +3799,7 @@
                     img.className = 'max-w-full rounded-lg border border-gray-200';
                     img.style.maxHeight = '250px';
                     img.alt = 'Graf';
+                    makeClickableImage(img);
                     div.appendChild(img);
                 } else if (block.type === 'text') {
                     // Check if text contains embedded base64 - extract and render separately
@@ -3775,6 +3823,7 @@
                         img.className = 'max-w-full rounded-lg border border-gray-200';
                         img.style.maxHeight = '250px';
                         img.alt = 'Graf';
+                        makeClickableImage(img);
                         div.appendChild(img);
                         container.appendChild(div);
                         
